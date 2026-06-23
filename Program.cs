@@ -9,7 +9,7 @@ namespace FightClub
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            Console.WriteLine(builder.Configuration.GetConnectionString("Default"));
 
             builder.Services.AddControllers();
 
@@ -17,7 +17,8 @@ namespace FightClub
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<FightClubDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+                options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddScoped<IBoxerService, BoxerService>();
 
