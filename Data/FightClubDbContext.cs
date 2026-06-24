@@ -1,4 +1,4 @@
-﻿using FightClub.Models;
+﻿using FightClub.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FightClub.Data;

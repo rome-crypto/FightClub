@@ -1,63 +1,95 @@
-﻿using FightClub.Data;
-using FightClub.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using FightClub.DTOs;
+using FightClub.Entities;
+using FightClub.Exceptions;
+using FightClub.Mappers;
+using FightClub.Repositories.Interfaces;
+using FightClub.Specifications;
 
 namespace FightClub.Services;
 
 public class BoxerService : IBoxerService
 {
-    private readonly FightClubDbContext _db;
+    private readonly IBoxerRepository _repo;
 
-    public BoxerService(FightClubDbContext db)
+    public BoxerService(IBoxerRepository repo)
     {
-        _db = db;
+        _repo = repo;
     }
 
-    public async Task<Boxer> CreateBoxer(BoxerCreateDto dto)
+    public async Task<BoxerResponseDto> CreateAsync(BoxerCreateDto dto)
     {
         var boxer = new Boxer(dto.FirstName, dto.LastName, dto.Age, dto.WeightCategory);
         
-        _db.Boxers.Add(boxer);
-        await _db.SaveChangesAsync();
+        await _repo.AddAsync(boxer);
+        await _repo.SaveChangesAsync();
         
-        return boxer;
+        return BoxerMapper.ToDto(boxer);
     }
 
-    public async Task DeleteBoxer(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        var boxer = await _db.Boxers.FirstOrDefaultAsync(x => x.Id == id); ;
+        var boxer = await _repo.GetByIdAsync(id);
 
         if (boxer is null)
-            return;
-        
-        _db.Boxers.Remove(boxer);
-        await _db.SaveChangesAsync();
+            throw new NotFoundException($"Boxer with ID ({id}) not found");
 
+        _repo.Delete(boxer);
+        await _repo.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Boxer>> GetAllBoxers()
+    public async Task<List<BoxerResponseDto>> GetAllAsync()
     {
-        return await _db.Boxers.ToListAsync();
+        var boxers = await _repo.GetAllAsync();
+
+        return boxers
+            .Select(BoxerMapper.ToDto)
+            .ToList();
     }
 
-    public async Task<Boxer?> GetBoxerById(Guid id)
+    public async Task<BoxerResponseDto> GetByIdAsync(Guid id)
     {
-        return await _db.Boxers.FirstOrDefaultAsync(x => x.Id == id);
+        var boxer = await _repo.GetByIdAsync(id);
+
+        return boxer is null 
+            ? throw new NotFoundException($"Boxer with ID ({id}) not found") 
+            : BoxerMapper.ToDto(boxer);
     }
 
-    public async Task<Boxer?> UpdateBoxer(Guid id, BoxerUpdateDto dto)
+    public async Task<BoxerResponseDto> UpdateAsync(Guid id, BoxerUpdateDto dto)
     {
-        var boxer = await _db.Boxers.FirstOrDefaultAsync(x => x.Id == id);
-        
-        if (boxer is not null)
-        {
-            if (dto.Age is not null) boxer.Age = dto.Age.Value;
-            if (dto.WeightCategory is not null) boxer.WeightCategory = dto.WeightCategory;
-            if (dto.FirstName is not null) boxer.FirstName = dto.FirstName;
-            if (dto.LastName is not null) boxer.LastName = dto.LastName;
-            await _db.SaveChangesAsync();
-            return boxer;
-        }
-        return null;
+        var boxer = await _repo.GetByIdAsync(id);
+
+        if (boxer is null) 
+            throw new NotFoundException($"Boxer with ID ({id}) not found");
+
+
+        if (dto.FirstName is not null)
+            boxer.FirstName = dto.FirstName;
+
+        if (dto.LastName is not null)
+            boxer.LastName = dto.LastName;
+
+        if (dto.Age is not null)
+            boxer.Age = dto.Age.Value;
+
+        if (dto.WeightCategory is not null)
+            boxer.WeightCategory = dto.WeightCategory;
+
+        _repo.Update(boxer);
+        await _repo.SaveChangesAsync();
+
+        return BoxerMapper.ToDto(boxer);
+    }
+
+    public async Task<List<BoxerResponseDto>> GetFilteredAsync(
+        string? weightCategory,
+        int? minAge, 
+        int? maxAge)
+    {
+        var spec = new BoxerFilterSpecification(weightCategory, minAge, maxAge);
+
+        var boxers = await _repo.GetAllAsync(spec.Criteria);
+
+        return boxers.Select(BoxerMapper.ToDto).ToList();
     }
 }

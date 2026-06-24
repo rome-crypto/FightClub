@@ -1,4 +1,4 @@
-﻿namespace FightClub.Models;
+﻿namespace FightClub.DTOs;
 
 public class BoxerCreateDto
 {

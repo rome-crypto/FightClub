@@ -1,4 +1,4 @@
-﻿namespace FightClub.Models;
+﻿namespace FightClub.Entities;
 
 public class Boxer
 {
