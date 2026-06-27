@@ -11,4 +11,15 @@ public class FightClubDbContext : DbContext
     }
 
     public DbSet<Boxer> Boxers => Set<Boxer>();
+    public DbSet<Trainer> Trainers => Set<Trainer>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Boxer>()
+            .HasOne(x => x.Trainer)
+            .WithMany(x => x.Boxers)
+            .HasForeignKey(x => x.TrainerId);
+    }
 }

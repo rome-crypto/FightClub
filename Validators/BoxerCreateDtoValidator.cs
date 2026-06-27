@@ -19,11 +19,11 @@ public class BoxerCreateDtoValidator : AbstractValidator<BoxerCreateDto>
         RuleFor(x => x.Age)
             .GreaterThan(0).WithMessage("Age must be a positive number.")
             .LessThanOrEqualTo(120).WithMessage("Age cannot exceed 120.");
-        
+
         RuleFor(x => x.WeightCategory)
             .NotEmpty().WithMessage("Weight category is required.")
             .MinimumLength(2).WithMessage("Weight category must be at least 2 characters long.")
-            .MaximumLength(50).WithMessage("Weight category cannot exceed 50 characters.")
+            .MaximumLength(50).WithMessage("Weight category cannot exceed 50 characters.");
     }
 
 }

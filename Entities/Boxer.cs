@@ -18,13 +18,18 @@ public class Boxer
 
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
+    public Guid TrainerId { get; set; }
+    public Trainer Trainer { get; set; }
+
     public Boxer() {}
 
-    public Boxer(string firstName, string lastName, int age, string weightCategory)
+    public Boxer(string firstName, string lastName, int age, string weightCategory, Trainer trainer)
     {
         FirstName = firstName;
         LastName = lastName;
         Age = age;
         WeightCategory = weightCategory;
+        TrainerId = trainer.Id;
+        Trainer = trainer;
     }
 }

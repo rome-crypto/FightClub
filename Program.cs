@@ -21,6 +21,8 @@ namespace FightClub
                 .AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
 
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
             builder.Services.AddEndpointsApiExplorer();

@@ -1,4 +1,7 @@
-﻿using FightClub.DTOs;
+﻿using AutoMapper;
+using FightClub.DTOs;
+using FightClub.DTOs.Common;
+using FightClub.DTOs.Queries;
 using FightClub.Entities;
 using FightClub.Exceptions;
 using FightClub.Mappers;
@@ -10,15 +13,17 @@ namespace FightClub.Services;
 public class BoxerService : IBoxerService
 {
     private readonly IBoxerRepository _repo;
+    private readonly IMapper _mapper;
 
-    public BoxerService(IBoxerRepository repo)
+    public BoxerService(IBoxerRepository repo, IMapper mapper)
     {
         _repo = repo;
+        _mapper = mapper;
     }
 
     public async Task<BoxerResponseDto> CreateAsync(BoxerCreateDto dto)
     {
-        var boxer = new Boxer(dto.FirstName, dto.LastName, dto.Age, dto.WeightCategory);
+        var boxer = _mapper.Map<Boxer>(dto);
         
         await _repo.AddAsync(boxer);
         await _repo.SaveChangesAsync();
@@ -37,15 +42,6 @@ public class BoxerService : IBoxerService
         await _repo.SaveChangesAsync();
     }
 
-    public async Task<List<BoxerResponseDto>> GetAllAsync()
-    {
-        var boxers = await _repo.GetAllAsync();
-
-        return boxers
-            .Select(BoxerMapper.ToDto)
-            .ToList();
-    }
-
     public async Task<BoxerResponseDto> GetByIdAsync(Guid id)
     {
         var boxer = await _repo.GetByIdAsync(id);
@@ -62,18 +58,7 @@ public class BoxerService : IBoxerService
         if (boxer is null) 
             throw new NotFoundException($"Boxer with ID ({id}) not found");
 
-
-        if (dto.FirstName is not null)
-            boxer.FirstName = dto.FirstName;
-
-        if (dto.LastName is not null)
-            boxer.LastName = dto.LastName;
-
-        if (dto.Age is not null)
-            boxer.Age = dto.Age.Value;
-
-        if (dto.WeightCategory is not null)
-            boxer.WeightCategory = dto.WeightCategory;
+        _mapper.Map(dto, boxer);
 
         _repo.Update(boxer);
         await _repo.SaveChangesAsync();
@@ -81,15 +66,13 @@ public class BoxerService : IBoxerService
         return BoxerMapper.ToDto(boxer);
     }
 
-    public async Task<List<BoxerResponseDto>> GetFilteredAsync(
-        string? weightCategory,
-        int? minAge, 
-        int? maxAge)
+    public async Task<PagedResult<BoxerResponseDto>> GetAllAsync(
+        BoxerQueryDto query)
     {
-        var spec = new BoxerFilterSpecification(weightCategory, minAge, maxAge);
+        var spec = new BoxerSpecification(query);
 
-        var boxers = await _repo.GetAllAsync(spec.Criteria);
+        var result = await _repo.GetPagedAsync(spec);
 
-        return boxers.Select(BoxerMapper.ToDto).ToList();
+        return _mapper.Map<PagedResult<BoxerResponseDto>>(result);
     }
 }

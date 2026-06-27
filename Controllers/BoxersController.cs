@@ -1,4 +1,6 @@
 ﻿using FightClub.DTOs;
+using FightClub.DTOs.Common;
+using FightClub.DTOs.Queries;
 using FightClub.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -76,7 +78,7 @@ public class BoxersController : ControllerBase
     {
         if (_logger.IsEnabled(LogLevel.Information))
         {
-            _logger.LogInformation("Deleting boxer with id {Id}", id);
+            _logger.LogInformation("Deleting boxer with id {id}", id);
         }
             
         await _boxerService.DeleteAsync(id);
@@ -85,18 +87,16 @@ public class BoxersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get(
-        string? weightCategory,
-        int? minAge,
-        int? maxAge)
+    public async Task<ActionResult<PagedResult<BoxerResponseDto>>> Get(
+        [FromQuery] BoxerQueryDto query)
     {
         if (_logger.IsEnabled(LogLevel.Information))
         {
-            _logger.LogInformation("GET /api/boxers called with weight={Weight}, minAge={MinAge}, maxAge={MaxAge}", 
-                weightCategory, minAge, maxAge);
+            _logger.LogInformation("GET /api/boxers called with weight={WeightCategory}, minAge={MinAge}, maxAge={MaxAge}",
+                query.WeightCategory, query.MinAge, query.MaxAge);
         }
 
-        var result = await _boxerService.GetFilteredAsync(weightCategory, minAge, maxAge);
+        var result = await _boxerService.GetAllAsync(query);
         
         return Ok(result);
     }
