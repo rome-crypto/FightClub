@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using FightClub.DTOs.Common;
 
 namespace FightClub.Specifications;
 
@@ -30,6 +31,9 @@ public abstract class BaseSpecification<T> : ISpecification<T>
 
     protected void ApplyPaging(int skip, int take)
     {
+        if (skip < 0) skip = 0;
+        if (take <= 0) take = 10;
+
         Skip = skip;
         Take = take;
         IsPagingEnabled = true;
@@ -43,6 +47,10 @@ public abstract class BaseSpecification<T> : ISpecification<T>
             ApplyOrderByDescending(selector);
         else 
             ApplyOrderBy(selector);
+    }
 
+    protected void AddInclude(params Expression<Func<T, object>>[] includes)
+    {
+        _includes.AddRange(includes);
     }
 }

@@ -102,4 +102,9 @@ public class Repository<T> : IRepository<T> where T : class
 
         return await query.AnyAsync();
     }
+
+    public IQueryable<T> Query(BaseSpecification<T> spec)
+    {
+        return SpecificationEvaluator.GetQuery(_dbSet.AsQueryable(), spec);
+    }
 }

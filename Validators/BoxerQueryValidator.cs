@@ -1,4 +1,5 @@
-﻿using FightClub.DTOs.Queries;
+﻿using FightClub.DTOs.Boxers;
+using FightClub.DTOs.Common;
 using FluentValidation;
 namespace FightClub.Validators;
 
@@ -25,7 +26,7 @@ public class BoxerQueryValidator : AbstractValidator<BoxerQueryDto>
             .WithMessage("PageSize must be inclusive between 1 anf 300");
         
         RuleFor(x => x.SortOrder)
-            .Must(x => x == "asc" || x == "desc")
+            .Must(x => x == SortOrder.Asc || x == SortOrder.Desc)
             .WithMessage("SortOrder must be either 'asc' or 'desc'.");
     }
 }

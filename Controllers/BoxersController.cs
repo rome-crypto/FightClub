@@ -1,7 +1,6 @@
-﻿using FightClub.DTOs;
+﻿using FightClub.DTOs.Boxers;
 using FightClub.DTOs.Common;
-using FightClub.DTOs.Queries;
-using FightClub.Services;
+using FightClub.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FightClub.Controllers;

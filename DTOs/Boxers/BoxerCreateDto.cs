@@ -1,8 +1,7 @@
-﻿namespace FightClub.DTOs;
+﻿namespace FightClub.DTOs.Boxers;
 
-public class BoxerResponseDto
+public class BoxerCreateDto
 {
-    public Guid Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public int Age { get; set; }

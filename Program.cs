@@ -6,6 +6,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using FightClub.Middleware;
+using FightClub.Services.Interfaces;
 
 namespace FightClub
 {
@@ -61,7 +62,6 @@ namespace FightClub
                 db.Database.Migrate();
             }
 
-           
             app.Run();
         }
     }

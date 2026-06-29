@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using FightClub.DTOs;
+using FightClub.DTOs.Boxers;
 using FightClub.DTOs.Common;
-using FightClub.DTOs.Queries;
 using FightClub.Entities;
 using FightClub.Exceptions;
 using FightClub.Mappers;
 using FightClub.Repositories.Interfaces;
+using FightClub.Services.Interfaces;
 using FightClub.Specifications;
 
 namespace FightClub.Services;

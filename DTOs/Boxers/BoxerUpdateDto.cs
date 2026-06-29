@@ -1,4 +1,4 @@
-﻿namespace FightClub.DTOs;
+﻿namespace FightClub.DTOs.Boxers;
 
 public class BoxerUpdateDto
 {

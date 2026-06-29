@@ -1,11 +1,11 @@
 ﻿using FightClub.Entities;
 using AutoMapper;
-using FightClub.DTOs;
+using FightClub.DTOs.Boxers;
 namespace FightClub.Mappings;
 
-public class MappingProfile : Profile
+public class BoxerProfile : Profile
 {
-    public MappingProfile()
+    public BoxerProfile()
     {
         CreateMap<Boxer, BoxerResponseDto>();
 

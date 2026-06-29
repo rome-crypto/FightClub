@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using FightClub.DTOs.Common;
+using System.Linq.Expressions;
 
 namespace FightClub.Specifications;
 
@@ -11,5 +12,4 @@ public interface ISpecification<T>
     int Take { get; }
     int Skip { get; }
     bool IsPagingEnabled { get; }
-
 }

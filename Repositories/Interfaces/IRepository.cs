@@ -18,4 +18,6 @@ public interface IRepository<T> where T : class
     void Update(T entity);
 
     Task SaveChangesAsync();
+
+    IQueryable<T> Query(BaseSpecification<T> spec);
 }

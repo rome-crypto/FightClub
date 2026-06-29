@@ -25,11 +25,7 @@ public static class SpecificationEvaluator
         ISpecification<T> spec)
         where T : class
     {
-        var query = inputQuery;
-        query = ApplyCriteria(query, spec);
-        query = ApplyIncludes(query, spec);
-
-        return query;
+        return ApplyCriteria(inputQuery, spec);
     }
 
     private static IQueryable<T> ApplyCriteria<T>(
@@ -48,9 +44,6 @@ public static class SpecificationEvaluator
         ISpecification<T> spec)
         where T : class
     {
-        if (spec.Criteria is not null)
-            query = query.Where(spec.Criteria);
-
         return spec.Includes.Aggregate(
             query, 
             (current, include) => current.Include(include));
@@ -62,11 +55,11 @@ public static class SpecificationEvaluator
         where T : class
     {
         if (spec.OrderBy is not null)
-            query = query.OrderBy(spec.OrderBy);
+            return query.OrderBy(spec.OrderBy);
 
         if (spec.OrderByDescending is not null)
-            query = query.OrderByDescending(spec.OrderByDescending);
-        
+            return query.OrderByDescending(spec.OrderByDescending);
+
         return query;
     }
 

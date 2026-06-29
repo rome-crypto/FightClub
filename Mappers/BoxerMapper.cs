@@ -1,4 +1,4 @@
-﻿using FightClub.DTOs;
+﻿using FightClub.DTOs.Boxers;
 using FightClub.Entities;
 
 namespace FightClub.Mappers;

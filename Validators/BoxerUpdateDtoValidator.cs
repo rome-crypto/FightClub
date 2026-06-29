@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FightClub.DTOs;
+using FightClub.DTOs.Boxers;
 namespace FightClub.Validators;
 
 public class BoxerUpdateDtoValidator : AbstractValidator<BoxerUpdateDto>

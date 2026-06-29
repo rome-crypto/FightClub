@@ -1,6 +1,7 @@
-﻿using FightClub.DTOs.Queries;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using FightClub.Entities;
+using FightClub.DTOs.Boxers;
+using FightClub.DTOs.Common;
 namespace FightClub.Specifications;
 
 public class BoxerSpecification : BaseSpecification<Boxer>
@@ -27,18 +28,21 @@ public class BoxerSpecification : BaseSpecification<Boxer>
                 || boxer.Age <= query.MaxAge.Value)
         );
 
-        ApplySorting(query);
+        ApplySorting(query.SortBy, query.SortOrder);
 
-        ApplyPaging((query.Page -1) * query.PageSize, query.PageSize);
+        ApplyPaging(
+            (query.Page - 1) * query.PageSize,
+            query.PageSize);
     }
-    private void ApplySorting(BoxerQueryDto query)
+    
+    private void ApplySorting(string? sortBy, SortOrder sortOrder)
     {
-        if (!SortSelectors.TryGetValue(query.SortBy ?? "lastname", out var selector))
+        if (!SortSelectors.TryGetValue(sortBy ?? "lastname", out var selector))
         {
             selector = x => x.LastName;
         }
 
-        if (query.SortOrder.Equals("decs", StringComparison.OrdinalIgnoreCase))
+        if (sortOrder == DTOs.Common.SortOrder.Desc)
             ApplyOrderByDescending(selector);
         else
             ApplyOrderBy(selector);

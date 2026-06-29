@@ -2,9 +2,12 @@
 
 public class Trainer
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
-    public string Name { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
 
-    public List<Boxer> Boxers { get; set; } = new();
+    public int Age { get; set; }
+
+    public ICollection<Boxer> Boxers { get; set; } = new List<Boxer>();
 }
