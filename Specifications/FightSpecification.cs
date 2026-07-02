@@ -1,5 +1,6 @@
 ﻿using FightClub.DTOs.Fights;
 using FightClub.Entities.Fight;
+
 namespace FightClub.Specifications;
 
 public class FightSpecification : BaseSpecification<Fight>
@@ -7,23 +8,17 @@ public class FightSpecification : BaseSpecification<Fight>
     public FightSpecification(FightQueryDto query)
     {
         AddCriteria(f =>
-            (!query.BoxerId.HasValue ||
-                f.BoxerAId == query.BoxerId || f.BoxerBId == query.BoxerId)
-            &&
-            (!query.WinnerId.HasValue ||
-                f.WinnerId == query.WinnerId)
-            &&
-            (!query.From.HasValue ||
-                f.FightDate >= query.From)
-            &&
-            (!query.To.HasValue ||
-                f.FightDate <= query.To)
+            !query.BoxerId.HasValue || f.BoxerAId == query.BoxerId || f.BoxerBId == query.BoxerId
         );
 
-        ApplyPaging((query.Page - 1) * query.PageSize, query.PageSize);
+        ApplyOrderByDescending(f => f.Id);
 
-        AddInclude(x => x.BoxerA);
-        AddInclude(x => x.BoxerB);
-        AddInclude(x => x.Winner);
+        int page = query.Page <= 0 ? 1 : query.Page;
+        int pageSize = query.PageSize <= 0 ? 10 : query.PageSize;
+        int skip = (page - 1) * pageSize;
+
+        ApplyPaging(skip, pageSize);
+
+        AddInclude(x => x.BoxerA, x => x.BoxerB);
     }
 }

@@ -2,6 +2,7 @@
 using FightClub.DTOs.Common;
 using FightClub.DTOs.Trainers;
 using FightClub.Entities;
+using FightClub.Exceptions;
 using FightClub.Repositories.Interfaces;
 using FightClub.Services.Interfaces;
 using FightClub.Specifications;
@@ -34,11 +35,11 @@ public class TrainerService : ITrainerService
         return _mapper.Map<TrainerResponseDto>(trainer);
     }
 
-    public async Task<TrainerResponseDto?> GetByIdAsync(Guid id)
+    public async Task<TrainerResponseDto> GetByIdAsync(Guid id)
     {
         var trainer = await _repo.GetByIdAsync(id);
         return trainer is null 
-            ? null 
+            ? throw new NotFoundException($"Trainer with id ({id}) not founded")
             : _mapper.Map<TrainerResponseDto>(trainer);
     }
 
@@ -58,10 +59,10 @@ public class TrainerService : ITrainerService
         };
     }
 
-    public async Task<TrainerResponseDto?> UpdateAsync(Guid id, TrainerUpdateDto dto)
+    public async Task<TrainerResponseDto> UpdateAsync(Guid id, TrainerUpdateDto dto)
     {
-        var trainer = await _repo.GetByIdAsync(id);
-        if (trainer is null) return null;
+        var trainer = await _repo.GetByIdAsync(id) 
+            ?? throw new NotFoundException($"Trainer with id ({id}) not founded");
 
         trainer.FirstName = dto.FirstName;
         trainer.LastName = dto.LastName;
@@ -82,6 +83,5 @@ public class TrainerService : ITrainerService
 
         _repo.Delete(trainer);
         await _repo.SaveChangesAsync();
-
     }
 }

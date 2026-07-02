@@ -7,6 +7,7 @@ using FightClub.Engine;
 using FightClub.Entities;
 using FightClub.Entities.Fight;
 using FightClub.Exceptions;
+using FightClub.Mappers;
 using FightClub.Repositories.Interfaces;
 using FightClub.Services.Interfaces;
 using FightClub.Specifications;
@@ -83,35 +84,14 @@ public class FightService : IFightService
         };
     }
 
-    private Boxer? SimulateFight(Boxer a, Boxer b)
-    {
-        var powerA = CalculatePower(a) * RandomFactor();
-        var powerB = CalculatePower(b) * RandomFactor();
-
-        if (Math.Abs(powerA - powerB) < 5)
-            return null;
-
-        return powerA > powerB ? a : b;
-    }
-
-    private double CalculatePower(Boxer boxer)
-    { 
-        return 100 - boxer.Age; 
-    }
-
-    private double RandomFactor()
-    { 
-        return 0.8 + _random.NextDouble() * 0.4; 
-    }
-
-    public async Task<FightResponseDto?> GetByIdAsync(Guid id)
+    public async Task<FightResponseDto> GetByIdAsync(Guid id)
     {
         var spec = new FightWithDetailsSpecification(id);
 
-        var fight = await _fightRepo.GetByIdAsync(spec);
+        var fight = await _fightRepo.GetAllAsync(spec);
 
         return fight is null 
-            ? null 
+            ? throw new NotFoundException($"Fight with ID ({id}) not found")
             : _mapper.Map<FightResponseDto>(fight);
     }
 
@@ -124,5 +104,18 @@ public class FightService : IFightService
 
         _fightRepo.Delete(fight);
         await _fightRepo.SaveChangesAsync();;
+    }
+
+    public async Task<FightResponseDto> UpdateAsync(Guid id, FightUpdateDto dto)
+    {
+        var fight = await _fightRepo.GetByIdAsync(id)
+            ?? throw new NotFoundException($"Fight with ID ({id}) not found");
+
+        _mapper.Map(dto, fight);
+
+        _fightRepo.Update(fight);
+        await _fightRepo.SaveChangesAsync();
+
+        return _mapper.Map<FightResponseDto>(fight);
     }
 }

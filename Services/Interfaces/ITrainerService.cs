@@ -6,8 +6,8 @@ namespace FightClub.Services.Interfaces;
 public interface ITrainerService
 {
     Task<TrainerResponseDto> CreateAsync(TrainerCreateDto dto);
-    Task<TrainerResponseDto?> GetByIdAsync(Guid id);
+    Task<TrainerResponseDto> GetByIdAsync(Guid id);
     Task<PagedResult<TrainerResponseDto>> GetAsync(TrainerQueryDto query);
-    Task<TrainerResponseDto?> UpdateAsync(Guid id, TrainerUpdateDto dto);
+    Task<TrainerResponseDto> UpdateAsync(Guid id, TrainerUpdateDto dto);
     Task DeleteAsync(Guid id);
 }

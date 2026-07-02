@@ -7,8 +7,8 @@ namespace FightClub.Services.Interfaces;
 public interface IFightService
 {
     Task<FightResponseDto> CreateAndExecuteAsync(FightCreateDto dto);
-    Task<FightResponseDto?> GetByIdAsync(Guid id);
+    Task<FightResponseDto> GetByIdAsync(Guid id);
     Task<PagedResult<FightResponseDto>> GetAsync(FightQueryDto query);
-    Task<FightResponseDto?> UpdateAsync(Guid id, FightUpdateDto dto);
+    Task<FightResponseDto> UpdateAsync(Guid id, FightUpdateDto dto);
     Task DeleteAsync(Guid id);
 }

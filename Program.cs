@@ -43,11 +43,11 @@ namespace FightClub
             app.UseHttpsRedirection();
             
             app.UseAuthorization();
-            
-            app.MapControllers();
-            
+
             app.UseRouting();
 
+            app.MapControllers();
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

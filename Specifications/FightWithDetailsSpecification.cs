@@ -8,8 +8,8 @@ public class FightWithDetailsSpecification : BaseSpecification<Fight>
     {
         AddCriteria(f => f.Id == id);
 
-        AddInclude(f => f.BoxerA);
-        AddInclude(f => f.BoxerB);
-        AddInclude(f => f.Rounds);
+        AddInclude(f => f.BoxerA, 
+            f => f.BoxerB, 
+            f => f.Rounds);
     }
 }

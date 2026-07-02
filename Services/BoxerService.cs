@@ -53,10 +53,7 @@ public class BoxerService : IBoxerService
 
     public async Task<BoxerResponseDto> UpdateAsync(Guid id, BoxerUpdateDto dto)
     {
-        var boxer = await _repo.GetByIdAsync(id);
-
-        if (boxer is null) 
-            throw new NotFoundException($"Boxer with ID ({id}) not found");
+        var boxer = await _repo.GetByIdAsync(id) ?? throw new NotFoundException($"Boxer with ID ({id}) not found");
 
         _mapper.Map(dto, boxer);
 

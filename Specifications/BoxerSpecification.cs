@@ -2,6 +2,7 @@
 using FightClub.Entities;
 using FightClub.DTOs.Boxers;
 using FightClub.DTOs.Common;
+
 namespace FightClub.Specifications;
 
 public class BoxerSpecification : BaseSpecification<Boxer>
@@ -14,38 +15,40 @@ public class BoxerSpecification : BaseSpecification<Boxer>
             ["age"] = x => x.Age,
             ["weightcategory"] = x => x.WeightCategory
         };
-    
+
     public BoxerSpecification(BoxerQueryDto query)
     {
-        AddCriteria(boxer =>
-            (string.IsNullOrEmpty(query.WeightCategory)
-                || boxer.WeightCategory == query.WeightCategory)
-            &&
-            (!query.MinAge.HasValue
-                || boxer.Age >= query.MinAge.Value)
-            &&
-            (!query.MaxAge.HasValue
-                || boxer.Age <= query.MaxAge.Value)
-        );
+        if (!string.IsNullOrEmpty(query.WeightCategory))
+        {
+            AddCriteria(boxer => boxer.WeightCategory == query.WeightCategory
+                && (!query.MinAge.HasValue || boxer.Age >= query.MinAge.Value)
+                && (!query.MaxAge.HasValue || boxer.Age <= query.MaxAge.Value));
+        }
+        else
+        {
+            AddCriteria(boxer => (!query.MinAge.HasValue || boxer.Age >= query.MinAge.Value)
+                && (!query.MaxAge.HasValue || boxer.Age <= query.MaxAge.Value));
+        }
 
         ApplySorting(query.SortBy, query.SortOrder);
 
-        ApplyPaging(
-            (query.Page - 1) * query.PageSize,
-            query.PageSize);
+        int page = query.Page <= 0 ? 1 : query.Page;
+        int pageSize = query.PageSize <= 0 ? 10 : query.PageSize;
+        ApplyPaging((page - 1) * pageSize, pageSize);
+
+        AddInclude(x => x.Trainer!);
     }
-    
+
     private void ApplySorting(string? sortBy, SortOrder sortOrder)
     {
-        if (!SortSelectors.TryGetValue(sortBy ?? "lastname", out var selector))
+        if (string.IsNullOrEmpty(sortBy) || !SortSelectors.TryGetValue(sortBy, out var selector))
         {
             selector = x => x.LastName;
         }
 
-        if (sortOrder == DTOs.Common.SortOrder.Desc)
+        if (sortOrder == SortOrder.Desc)
             ApplyOrderByDescending(selector);
         else
             ApplyOrderBy(selector);
     }
-
 }

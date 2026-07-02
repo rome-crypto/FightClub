@@ -1,4 +1,6 @@
-﻿namespace FightClub.Entities;
+﻿using FightClub.Entities.Fight;
+
+namespace FightClub.Entities;
 
 public class Boxer
 {
@@ -30,8 +32,8 @@ public class Boxer
             : Math.Round((double)Wins / (Wins + Losses) * 100, 2);
 
 
-    public List<Fight> FightsAsA { get; set; } = new();
-    public List<Fight> FightsAsB { get; set; } = new();
+    public List<Fight.Fight> FightsAsA { get; set; } = new();
+    public List<Fight.Fight> FightsAsB { get; set; } = new();
 
 
     public Boxer() {}

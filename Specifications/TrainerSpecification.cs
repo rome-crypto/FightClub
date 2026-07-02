@@ -6,24 +6,38 @@ namespace FightClub.Specifications;
 
 public class TrainerSpecification : BaseSpecification<Trainer>
 {
+    /// <summary>
+    /// Спецификация для фильтрации, сортировки и пагинации списка тренеров.
+    /// Исключает Include тяжелых коллекций для предотвращения деградации производительности.
+    /// </summary>
     public TrainerSpecification(TrainerQueryDto query)
     {
-        AddInclude(x => x.Boxers);
+        if (!string.IsNullOrEmpty(query.Name))
+        {
+            var searchName = query.Name.Trim();
+            AddCriteria(t =>
+                t.FirstName.Contains(searchName) ||
+                t.LastName.Contains(searchName));
+        }
 
-        AddCriteria(t =>
-            (string.IsNullOrEmpty(query.Name)
-                || (t.FirstName + " " + t.LastName).Contains(query.Name))
-            &&
-            (!query.MinAge.HasValue || t.Age >= query.MinAge)
-            &&
-            (!query.MaxAge.HasValue || t.Age <= query.MaxAge)
-        );
+        if (query.MinAge.HasValue)
+        {
+            AddCriteria(t => t.Age >= query.MinAge.Value);
+        }
 
-        ApplySorting(
-            query.SortBy == "age"
-                ? t => t.Age
-                : t => t.LastName,
-            query.SortOrder == SortOrder.Desc);
+        if (query.MaxAge.HasValue)
+        {
+            AddCriteria(t => t.Age <= query.MaxAge.Value);
+        }
+
+        if (!string.IsNullOrEmpty(query.SortBy) && query.SortBy.ToLower() == "age")
+        {
+            ApplySorting(t => t.Age, query.SortOrder == SortOrder.Desc);
+        }
+        else
+        {
+            ApplySorting(t => t.LastName, query.SortOrder == SortOrder.Desc);
+        }
 
         ApplyPaging((query.Page - 1) * query.PageSize, query.PageSize);
     }

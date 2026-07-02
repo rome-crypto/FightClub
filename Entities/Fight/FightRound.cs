@@ -5,7 +5,7 @@ public class FightRound
     public Guid Id { get; set; }
 
     public Guid FightId { get; set; }
-    public Fight Fight { get; set; } = new Fight();
+    public Fight Fight { get; set; } = null!;
 
     public int Number { get; set; }
 
