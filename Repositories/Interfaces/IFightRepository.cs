@@ -1,4 +1,4 @@
-﻿using FightClub.Entities;
+﻿using FightClub.Entities.Fight;
 using FightClub.Specifications;
 
 namespace FightClub.Repositories.Interfaces;

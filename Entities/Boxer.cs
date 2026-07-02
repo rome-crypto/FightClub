@@ -1,5 +1,4 @@
-﻿using FightClub.Entities;
-namespace FightClub.Entities;
+﻿namespace FightClub.Entities;
 
 public class Boxer
 {

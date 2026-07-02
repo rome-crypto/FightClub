@@ -1,4 +1,5 @@
 ﻿using FightClub.Entities;
+using FightClub.Entities.Fight;
 using Microsoft.EntityFrameworkCore;
 
 namespace FightClub.Data;
@@ -18,27 +19,6 @@ public class FightClubDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Boxer>()
-            .HasOne(x => x.Trainer)
-            .WithMany(x => x.Boxers)
-            .HasForeignKey(x => x.TrainerId);
-
-        modelBuilder.Entity<Fight>()
-            .HasOne(x => x.BoxerA)
-            .WithMany(x => x.FightsAsA)
-            .HasForeignKey(x => x.BoxerAId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Fight>()
-            .HasOne(x => x.BoxerB)
-            .WithMany(x => x.FightsAsB)
-            .HasForeignKey(x => x.BoxerBId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Fight>()
-            .HasOne(x => x.Winner)
-            .WithMany()
-            .HasForeignKey(x => x.WinnerId)
-            .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(FightClubDbContext).Assembly);
     }
 }

@@ -3,7 +3,9 @@ using AutoMapper.QueryableExtensions;
 using FightClub.DTOs.Common;
 using FightClub.DTOs.Fights;
 using FightClub.DTOs.Trainers;
+using FightClub.Engine;
 using FightClub.Entities;
+using FightClub.Entities.Fight;
 using FightClub.Exceptions;
 using FightClub.Repositories.Interfaces;
 using FightClub.Services.Interfaces;
@@ -16,20 +18,23 @@ public class FightService : IFightService
 {
     private readonly IRepository<Fight> _fightRepo;
     private readonly IRepository<Boxer> _boxerRepo;
+    private readonly IFightEngine _engine;
     private readonly IMapper _mapper;
     private readonly Random _random = new();
 
     public FightService(
         IRepository<Fight> fightRepo,
         IRepository<Boxer> boxerRepo,
+        IFightEngine engine,
         IMapper mapper)
     {
         _fightRepo = fightRepo;
         _boxerRepo = boxerRepo;
+        _engine = engine;
         _mapper = mapper;
     }
 
-    public async Task<FightResponseDto> CreateAsync(FightCreateDto dto)
+    public async Task<FightResponseDto> CreateAndExecuteAsync(FightCreateDto dto)
     {
         if (dto.BoxerAId == dto.BoxerBId)
             throw new BusinessException("Boxer cannot fight himself");
@@ -40,19 +45,16 @@ public class FightService : IFightService
         if (boxerA is null || boxerB is null)
             throw new BusinessException("Boxers not found");
 
-        var winner = SimulateFight(boxerA, boxerB);
-
         var fight = new Fight
         {
+            Id = Guid.NewGuid(),
             BoxerAId = boxerA.Id,
             BoxerBId = boxerB.Id,
-            WinnerId = winner?.Id,
-            Rounds = dto.Rounds,
-            FightDate = DateTime.UtcNow,
-            ResultMethod = winner == null 
-                ? "Draw" 
-                : "Decision"
+            PlannedRounds = dto.Rounds,
+            Status = FightStatus.Scheduled
         };
+
+        fight = _engine.Execute(fight);
 
         await _fightRepo.AddAsync(fight);
         await _fightRepo.SaveChangesAsync();
@@ -104,7 +106,10 @@ public class FightService : IFightService
 
     public async Task<FightResponseDto?> GetByIdAsync(Guid id)
     {
-        var fight = await _fightRepo.GetByIdAsync(id);
+        var spec = new FightWithDetailsSpecification(id);
+
+        var fight = await _fightRepo.GetByIdAsync(spec);
+
         return fight is null 
             ? null 
             : _mapper.Map<FightResponseDto>(fight);
@@ -119,21 +124,5 @@ public class FightService : IFightService
 
         _fightRepo.Delete(fight);
         await _fightRepo.SaveChangesAsync();;
-    }
-
-    public async Task<FightResponseDto?> UpdateAsync(Guid id, FightUpdateDto dto)
-    {
-        var fight = await _fightRepo.GetByIdAsync(id);
-        if (fight is null) 
-            return null;
-
-        fight.Rounds = dto.Rounds;
-        fight.FightDate = dto.FightDate;
-        fight.ResultMethod = dto.ResultMethod;
-
-        _fightRepo.Update(fight);
-        await _fightRepo.SaveChangesAsync();
-
-        return _mapper.Map<FightResponseDto>(fight);
     }
 }

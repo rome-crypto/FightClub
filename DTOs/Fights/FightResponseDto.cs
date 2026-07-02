@@ -1,12 +1,19 @@
-﻿namespace FightClub.DTOs.Fights;
+﻿using FightClub.DTOs.Boxers;
+
+namespace FightClub.DTOs.Fights;
 
 public class FightResponseDto
 {
     public Guid Id { get; set; }
-    public string BoxerAName { get; set; } = string.Empty;
-    public string BoxerBName { get; set; } = string.Empty;
-    public string? WinnerName { get; set; }
-    public DateTime FightDate { get; set; }
-    public int Rounds { get; set; }
-    public string? ResultMethod { get; set; }
+
+    public BoxerResponseDto BoxerA { get; set; } = new();
+    public BoxerResponseDto BoxerB { get; set; } = new();
+
+    public Guid? WinnerId { get; set; }
+
+    public string Status { get; set; } = string.Empty;
+
+    public int PlannedRounds { get; set; }
+
+    public List<FightRoundDto> Rounds { get; set; } = [];
 }

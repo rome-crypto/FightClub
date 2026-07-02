@@ -1,5 +1,5 @@
-﻿using FightClub.Entities;
-using FightClub.DTOs.Fights;
+﻿using FightClub.DTOs.Fights;
+using FightClub.Entities.Fight;
 namespace FightClub.Specifications;
 
 public class FightSpecification : BaseSpecification<Fight>
