@@ -1,9 +1,7 @@
 ﻿namespace FightClub.Entities.Fight;
 
-public class Fight
+public class Fight : BaseEntity
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-
     public Guid BoxerAId { get; set; }
     public Boxer BoxerA { get; set; } = null!;
 

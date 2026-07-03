@@ -69,7 +69,7 @@ public class BoxersController : ControllerBase
 
         var result = await _boxerService.UpdateAsync(id, data);
 
-        return Ok(result);
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
@@ -95,7 +95,7 @@ public class BoxersController : ControllerBase
                 query.WeightCategory, query.MinAge, query.MaxAge);
         }
 
-        var result = await _boxerService.GetAllAsync(query);
+        var result = await _boxerService.GetPagedAsync(query);
         
         return Ok(result);
     }

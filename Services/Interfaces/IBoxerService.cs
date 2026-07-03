@@ -9,5 +9,5 @@ public interface IBoxerService
     Task<BoxerResponseDto> CreateAsync(BoxerCreateDto dto);
     Task DeleteAsync(Guid id);
     Task<BoxerResponseDto> UpdateAsync(Guid id, BoxerUpdateDto dto);
-    Task<PagedResult<BoxerResponseDto>> GetAllAsync(BoxerQueryDto query);
+    Task<PagedResult<BoxerResponseDto>> GetPagedAsync(BaseQueryDto query);
 }

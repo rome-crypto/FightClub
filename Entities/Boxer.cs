@@ -2,10 +2,8 @@
 
 namespace FightClub.Entities;
 
-public class Boxer
+public class Boxer : BaseEntity
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
-
     public string FirstName { get;  set; } = string.Empty;
     public string LastName { get;  set; } = string.Empty;
 

@@ -21,9 +21,19 @@ public class ExceptionMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception occurred.");
+            context.Response.ContentType = "application/json";
 
-            await HandleExceptionAsync(context, ex);
+            context.Response.StatusCode = ex switch
+            {
+                NotFoundException => 404,
+                BusinessException => 400,
+                _ => 500
+            };
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                error = ex.Message
+            });
         }
     }
 

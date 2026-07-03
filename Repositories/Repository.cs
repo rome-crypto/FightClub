@@ -26,41 +26,6 @@ public class Repository<T> : IRepository<T> where T : class
         _dbSet.Remove(entity);
     }
 
-    public async Task<List<T>> GetAllAsync()
-    {
-        return await _dbSet.ToListAsync();
-    }
-
-    public async Task<List<T>> GetAllAsync(ISpecification<T> specification)
-    {
-        var query = SpecificationEvaluator.GetQuery(_dbSet.AsQueryable(), specification);
-
-        return await query.ToListAsync();
-    }
-
-    public async Task<PagedResult<T>> GetPagedAsync(ISpecification<T> specification)
-    {
-        var baseQuery = _dbSet.AsQueryable();
-
-        var filteredQuery = baseQuery;
-
-        if (specification.Criteria != null)
-            filteredQuery = filteredQuery.Where(specification.Criteria);
-
-        var totalCount = await filteredQuery.CountAsync();
-        
-        var itemsQuery = SpecificationEvaluator.GetQuery(baseQuery, specification);
-        var items = await itemsQuery.ToListAsync();
-
-        return new PagedResult<T>
-        {
-            Items = items,
-            Page = specification.Skip / specification.Take + 1,
-            PageSize = specification.Take,
-            TotalCount = totalCount
-        };
-    }
-
     public async Task<T?> GetByIdAsync(Guid id)
     {
         return await _dbSet.FindAsync(id);
@@ -74,15 +39,6 @@ public class Repository<T> : IRepository<T> where T : class
     public void Update(T entity)
     {
         _dbSet.Update(entity);
-    }
-
-    public async Task<T?> FirstOrDefaultAsync(ISpecification<T> specification)
-    {
-        var query = SpecificationEvaluator.GetQuery(
-            _dbSet.AsQueryable(),
-            specification);
-
-        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<int> CountAsync(ISpecification<T> specification)
@@ -103,7 +59,7 @@ public class Repository<T> : IRepository<T> where T : class
         return await query.AnyAsync();
     }
 
-    public IQueryable<T> Query(BaseSpecification<T> spec)
+    public IQueryable<T> Query(ISpecification<T> spec)
     {
         return SpecificationEvaluator.GetQuery(_dbSet.AsQueryable(), spec);
     }

@@ -13,5 +13,7 @@ public class BoxerProfile : Profile
         CreateMap<BoxerCreateDto, Boxer>();
 
         CreateMap<BoxerUpdateDto, Boxer>();
+
+        //CreateMap<Boxer, BoxerDetailsDto>();
     }
 }

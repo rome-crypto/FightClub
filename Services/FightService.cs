@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FightClub.DTOs.Boxers;
 using FightClub.DTOs.Common;
 using FightClub.DTOs.Fights;
-using FightClub.DTOs.Trainers;
 using FightClub.Engine;
 using FightClub.Entities;
 using FightClub.Entities.Fight;
 using FightClub.Exceptions;
-using FightClub.Mappers;
 using FightClub.Repositories.Interfaces;
 using FightClub.Services.Interfaces;
 using FightClub.Specifications;
@@ -21,7 +20,6 @@ public class FightService : IFightService
     private readonly IRepository<Boxer> _boxerRepo;
     private readonly IFightEngine _engine;
     private readonly IMapper _mapper;
-    private readonly Random _random = new();
 
     public FightService(
         IRepository<Fight> fightRepo,
@@ -40,19 +38,23 @@ public class FightService : IFightService
         if (dto.BoxerAId == dto.BoxerBId)
             throw new BusinessException("Boxer cannot fight himself");
 
-        var boxerA = await _boxerRepo.GetByIdAsync(dto.BoxerAId);
-        var boxerB = await _boxerRepo.GetByIdAsync(dto.BoxerBId);
+        var boxers = await _boxerRepo
+            .Query(new EntityByIdsSpecification<Boxer>(dto.BoxerAId, dto.BoxerBId))
+            .ToListAsync();
 
-        if (boxerA is null || boxerB is null)
-            throw new BusinessException("Boxers not found");
+        if (boxers.Count != 2)
+            throw new NotFoundException("Boxers not found");
+
+        var boxerA = boxers.First(x => x.Id == dto.BoxerAId);
+        var boxerB = boxers.First(x => x.Id == dto.BoxerBId);
 
         var fight = new Fight
         {
-            Id = Guid.NewGuid(),
             BoxerAId = boxerA.Id,
             BoxerBId = boxerB.Id,
             PlannedRounds = dto.Rounds,
-            Status = FightStatus.Scheduled
+            Status = FightStatus.Scheduled,
+            CreatedAt = DateTime.UtcNow
         };
 
         fight = _engine.Execute(fight);
@@ -63,15 +65,14 @@ public class FightService : IFightService
         return _mapper.Map<FightResponseDto>(fight);
     }
 
-    public async Task<PagedResult<FightResponseDto>> GetAsync(FightQueryDto query)
+    public async Task<PagedResult<FightResponseDto>> GetPagedAsync(FightQueryDto query)
     {
         var spec = new FightSpecification(query);
 
-        var baseQuery = _fightRepo.Query(spec);
+        var total = await _fightRepo.CountAsync(spec);
 
-        var total = await baseQuery.CountAsync();
-
-        var items = await baseQuery
+        var items = await _fightRepo
+            .Query(spec)
             .ProjectTo<FightResponseDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
 
@@ -84,23 +85,31 @@ public class FightService : IFightService
         };
     }
 
-    public async Task<FightResponseDto> GetByIdAsync(Guid id)
+    public async Task<FightResponseDto> GetByBoxerIdAsync(Guid id)
     {
         var spec = new FightWithDetailsSpecification(id);
 
-        var fight = await _fightRepo.GetAllAsync(spec);
+        var fight = await _fightRepo
+            .Query(spec)
+            .ProjectTo<FightResponseDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync()
+            ?? throw new NotFoundException($"Fight with ID ({id}) not found");
 
-        return fight is null 
-            ? throw new NotFoundException($"Fight with ID ({id}) not found")
-            : _mapper.Map<FightResponseDto>(fight);
+        return fight;
+    }
+
+    public async Task<FightResponseDto> GetByIdAsync(Guid id)
+    {
+        var boxer = await _fightRepo.GetByIdAsync(id)
+            ?? throw new NotFoundException($"Boxer with ID ({id}) not found"); ;
+
+        return _mapper.Map<FightResponseDto>(boxer);
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var fight = await _fightRepo.GetByIdAsync(id);
-        
-        if (fight is null) 
-            return;
+        var fight = await _fightRepo.GetByIdAsync(id) 
+            ?? throw new NotFoundException($"Fight with ID ({id}) not found");
 
         _fightRepo.Delete(fight);
         await _fightRepo.SaveChangesAsync();;
@@ -113,7 +122,6 @@ public class FightService : IFightService
 
         _mapper.Map(dto, fight);
 
-        _fightRepo.Update(fight);
         await _fightRepo.SaveChangesAsync();
 
         return _mapper.Map<FightResponseDto>(fight);

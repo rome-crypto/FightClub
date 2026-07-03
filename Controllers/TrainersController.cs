@@ -32,7 +32,7 @@ public class TrainersController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] TrainerQueryDto query)
     { 
-        return Ok(await _service.GetAsync(query)); 
+        return Ok(await _service.GetPagedAsync(query)); 
     }
 
     [HttpPut("{id}")]

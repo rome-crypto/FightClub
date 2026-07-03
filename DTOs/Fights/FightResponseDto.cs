@@ -1,4 +1,5 @@
 ﻿using FightClub.DTOs.Boxers;
+using FightClub.DTOs.Fights.FightDetails;
 
 namespace FightClub.DTOs.Fights;
 
@@ -15,5 +16,5 @@ public class FightResponseDto
 
     public int PlannedRounds { get; set; }
 
-    public List<FightRoundDto> Rounds { get; set; } = [];
+    public List<RoundsDto> Rounds { get; set; } = [];
 }

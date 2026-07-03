@@ -7,7 +7,7 @@ public interface ITrainerService
 {
     Task<TrainerResponseDto> CreateAsync(TrainerCreateDto dto);
     Task<TrainerResponseDto> GetByIdAsync(Guid id);
-    Task<PagedResult<TrainerResponseDto>> GetAsync(TrainerQueryDto query);
+    Task<PagedResult<TrainerResponseDto>> GetPagedAsync(BaseQueryDto query);
     Task<TrainerResponseDto> UpdateAsync(Guid id, TrainerUpdateDto dto);
     Task DeleteAsync(Guid id);
 }

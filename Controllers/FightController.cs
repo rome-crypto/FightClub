@@ -1,7 +1,6 @@
 ﻿using FightClub.DTOs.Fights;
 using FightClub.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FightClub.Controllers;
 
@@ -19,27 +18,17 @@ public class FightController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<FightResponseDto>>> Get([FromQuery] FightQueryDto query)
+    public async Task<IActionResult> Get([FromQuery] FightQueryDto query)
     {
-        if (_logger.IsEnabled(LogLevel.Information))
-        {
-            _logger.LogInformation("GET /api/fights called with from={From}, to={To}, boxerId={BoxerId}, winnerId={WinnerId}",
-                query.From, query.To, query.BoxerId, query.WinnerId);
-        }
-
-        var result = await _service.GetAsync(query);
+        var result = await _service.GetPagedAsync(query);
         return Ok(result);
     }
 
     [HttpGet("boxer/{boxerId:guid}")]
-    public async Task<ActionResult<List<FightResponseDto>>> GetByBoxer(Guid boxerId)
+    public async Task<IActionResult> GetByBoxer(Guid boxerId)
     {
-        if (_logger.IsEnabled(LogLevel.Information))
-        {
-            _logger.LogInformation("GET /api/fights/boxers/{Id} called", boxerId);
-        }
+        var result = await _service.GetByBoxerIdAsync(boxerId);
 
-        var result = await _service.GetByIdAsync(boxerId);
         return Ok(result);
     }
 }

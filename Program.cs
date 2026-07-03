@@ -1,12 +1,14 @@
 using FightClub.Data;
+using FightClub.Engine;
+using FightClub.Mappings;
+using FightClub.Middleware;
 using FightClub.Repositories;
 using FightClub.Repositories.Interfaces;
 using FightClub.Services;
+using FightClub.Services.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using FightClub.Middleware;
-using FightClub.Services.Interfaces;
 
 namespace FightClub
 {
@@ -33,8 +35,17 @@ namespace FightClub
                 options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddScoped<IBoxerService, BoxerService>();
+            builder.Services.AddScoped<ITrainerService, TrainerService>();
+            builder.Services.AddScoped<IFightService, FightService>();
+
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddScoped<IBoxerRepository, BoxerRepository>();
+
+            builder.Services.AddScoped<IFightEngine, FightEngine>();
+
+            builder.Services.AddAutoMapper(typeof(BoxerProfile).Assembly);
+            builder.Services.AddAutoMapper(typeof(TrainerProfile).Assembly);
+            builder.Services.AddAutoMapper(typeof(FightProfile).Assembly);
 
             var app = builder.Build();
 
