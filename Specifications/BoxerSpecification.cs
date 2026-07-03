@@ -1,13 +1,13 @@
-﻿using System.Linq.Expressions;
-using FightClub.Entities;
-using FightClub.DTOs.Boxers;
+﻿using FightClub.DTOs.Boxers;
 using FightClub.DTOs.Common;
+using FightClub.Entities;
+using System.Linq.Expressions;
 
 namespace FightClub.Specifications;
 
 public class BoxerSpecification : BaseSpecification<Boxer>
 {
-    private static readonly Dictionary<string, Expression<Func<Boxer, object>>> SortSelectors =
+    private static readonly Dictionary<string, Expression<Func<Boxer, object>>> SortMap =
         new(StringComparer.OrdinalIgnoreCase)
         {
             ["firstname"] = x => x.FirstName,
@@ -18,37 +18,28 @@ public class BoxerSpecification : BaseSpecification<Boxer>
 
     public BoxerSpecification(BoxerQueryDto query)
     {
-        if (!string.IsNullOrEmpty(query.WeightCategory))
-        {
-            AddCriteria(boxer => boxer.WeightCategory == query.WeightCategory
-                && (!query.MinAge.HasValue || boxer.Age >= query.MinAge.Value)
-                && (!query.MaxAge.HasValue || boxer.Age <= query.MaxAge.Value));
-        }
-        else
-        {
-            AddCriteria(boxer => (!query.MinAge.HasValue || boxer.Age >= query.MinAge.Value)
-                && (!query.MaxAge.HasValue || boxer.Age <= query.MaxAge.Value));
-        }
+        AddCriteria(x =>
+            (string.IsNullOrWhiteSpace(query.Search) ||
+             x.FirstName.Contains(query.Search) ||
+             x.LastName.Contains(query.Search)) &&
 
-        ApplySorting(query.SortBy, query.SortOrder);
+            (string.IsNullOrWhiteSpace(query.WeightCategory) ||
+             x.WeightCategory == query.WeightCategory) &&
 
-        int page = query.Page <= 0 ? 1 : query.Page;
-        int pageSize = query.PageSize <= 0 ? 10 : query.PageSize;
-        ApplyPaging((page - 1) * pageSize, pageSize);
+            (!query.MinAge.HasValue || x.Age >= query.MinAge.Value) &&
+            (!query.MaxAge.HasValue || x.Age <= query.MaxAge.Value)
+        );
 
-        AddInclude(x => x.Trainer!);
-    }
+        var sortBy = query.SortBy;
 
-    private void ApplySorting(string? sortBy, SortOrder sortOrder)
-    {
-        if (string.IsNullOrEmpty(sortBy) || !SortSelectors.TryGetValue(sortBy, out var selector))
-        {
+        if (!SortMap.TryGetValue(sortBy ?? "lastname", out var selector))
             selector = x => x.LastName;
-        }
 
-        if (sortOrder == SortOrder.Desc)
+        if (query.SortOrder == SortOrder.Desc)
             ApplyOrderByDescending(selector);
         else
             ApplyOrderBy(selector);
+
+        ApplyPaging(query.Page, query.PageSize);
     }
 }

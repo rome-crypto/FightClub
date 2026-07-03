@@ -1,7 +1,6 @@
 ﻿using FightClub.Entities;
 using AutoMapper;
 using FightClub.DTOs.Boxers;
-using FightClub.Entities.Fight;
 namespace FightClub.Mappings;
 
 

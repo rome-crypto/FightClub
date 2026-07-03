@@ -4,12 +4,8 @@ namespace FightClub.Specifications;
 
 public class FightWithDetailsSpecification : BaseSpecification<Fight>
 {
-    public FightWithDetailsSpecification(Guid id)
+    public FightWithDetailsSpecification(Guid fightId)
     {
-        AddCriteria(f => f.Id == id);
-
-        AddInclude(f => f.BoxerA, 
-            f => f.BoxerB, 
-            f => f.Rounds);
+        AddCriteria(x => x.Id == fightId);        
     }
 }

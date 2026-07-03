@@ -12,6 +12,8 @@ public class Fight
 
     public FightStatus Status { get; set; } = FightStatus.Scheduled;
 
+    public DateTime CreatedAt { get; set; }
+
     public Guid? WinnerId { get; set; }
 
     public int PlannedRounds { get; set; }

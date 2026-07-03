@@ -1,4 +1,4 @@
-﻿namespace FightClub.DTOs.Fights;
+﻿namespace FightClub.DTOs.Fights.FightDetails;
 
 public class RoundEventDto
 {

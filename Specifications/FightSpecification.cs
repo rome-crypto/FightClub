@@ -1,24 +1,39 @@
-﻿using FightClub.DTOs.Fights;
+﻿using FightClub.DTOs.Common;
+using FightClub.DTOs.Fights;
 using FightClub.Entities.Fight;
+using System.Linq.Expressions;
 
 namespace FightClub.Specifications;
 
 public class FightSpecification : BaseSpecification<Fight>
 {
+    private readonly Dictionary<string, Expression<Func<Fight, object>>> SortMap =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["date"] = f => f.CreatedAt,
+            ["status"] = f => f.Status,
+        };
+
     public FightSpecification(FightQueryDto query)
     {
-        AddCriteria(f =>
-            !query.BoxerId.HasValue || f.BoxerAId == query.BoxerId || f.BoxerBId == query.BoxerId
+        AddCriteria(x =>
+            (!query.Status.HasValue || x.Status == query.Status) &&
+            (!query.BoxerId.HasValue || x.BoxerAId == query.BoxerId || x.BoxerBId == query.BoxerId) &&
+            (!query.WinnerId.HasValue || x.WinnerId == query.WinnerId) &&
+            (!query.From.HasValue || x.CreatedAt >= query.From) &&
+            (!query.To.HasValue || x.CreatedAt <= query.To)
         );
 
-        ApplyOrderByDescending(f => f.Id);
+        var sortBy = query.SortBy ?? "date";
 
-        int page = query.Page <= 0 ? 1 : query.Page;
-        int pageSize = query.PageSize <= 0 ? 10 : query.PageSize;
-        int skip = (page - 1) * pageSize;
+        if (!SortMap.TryGetValue(sortBy, out var selector))
+            selector = x => x.CreatedAt;
 
-        ApplyPaging(skip, pageSize);
+        if (query.SortOrder == SortOrder.Desc)
+            ApplyOrderByDescending(selector);
+        else
+            ApplyOrderBy(selector);
 
-        AddInclude(x => x.BoxerA, x => x.BoxerB);
+        ApplyPaging((query.Page - 1) * query.PageSize, query.PageSize);
     }
 }

@@ -1,11 +1,13 @@
-﻿namespace FightClub.DTOs.Fights;
+﻿using FightClub.DTOs.Common;
+using FightClub.Entities.Fight;
 
-public class FightQueryDto
+namespace FightClub.DTOs.Fights;
+
+public class FightQueryDto : BaseQueryDto
 {
+    public FightStatus? Status { get; set; }
     public Guid? BoxerId { get; set; }
     public Guid? WinnerId { get; set; }
     public DateTime? From { get; set; }
     public DateTime? To { get; set; }
-    public int Page { get; set; } = 1;
-    public int PageSize { get; set; } = 10;
 }
