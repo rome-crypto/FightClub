@@ -1,4 +1,5 @@
 ﻿using FightClub.DTOs.Trainers;
+using FightClub.Entities;
 using FightClub.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,19 +15,17 @@ public class TrainersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TrainerCreateDto dto)
-    { 
-        return Ok(await _service.CreateAsync(dto)); 
+    public async Task<IActionResult> Post(TrainerCreateDto dto)
+    {
+        var result = await _service.CreateAsync(dto);
+
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result); 
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var result = await _service.GetByIdAsync(id);
-
-        return result is null 
-            ? NotFound() 
-            : Ok(result);
+        return Ok(await _service.GetByIdAsync(id);
     }
 
     [HttpGet]
@@ -35,14 +34,12 @@ public class TrainersController : ControllerBase
         return Ok(await _service.GetPagedAsync(query)); 
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, TrainerUpdateDto dto)
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> Patch(Guid id, TrainerUpdateDto dto)
     {
-        var result = await _service.UpdateAsync(id, dto);
+        _ = await _service.UpdateAsync(id, dto);
 
-        return result is null 
-            ? NotFound() 
-            : Ok(result);
+        return NoContent();
     }
 
     [HttpDelete("{id}")]

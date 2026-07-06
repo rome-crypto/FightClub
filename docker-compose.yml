@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+
+  api:
+    container_name: fightclub.api
+
+    build:
+      context: .
+      dockerfile: src/FightClub/Dockerfile
+
+    env_file:
+      - .env
+
+    ports:
+      - "5000:8080"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - fightclub-net
+
+
+  db:
+    container_name: fightclub.db
+    image: postgres:16
+    restart: always
+
+    env_file:
+      - .env
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - fightclub_pgdata:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    networks:
+      - fightclub-net
+
+
+  pgadmin:
+    container_name: fightclub.pgadmin
+    image: dpage/pgadmin4
+
+    env_file:
+      - .env
+
+    ports:
+      - "5050:80"
+
+    depends_on:
+      db:
+        condition: service_started
+
+    networks:
+      - fightclub-net
+
+
+volumes:
+  fightclub_pgdata:
+
+networks:
+  fightclub-net:
+    driver: bridge

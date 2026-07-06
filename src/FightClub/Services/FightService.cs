@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using FightClub.DTOs.Boxers;
 using FightClub.DTOs.Common;
 using FightClub.DTOs.Fights;
 using FightClub.Engine;

@@ -5,7 +5,7 @@ public class RoundEvent
     public Guid Id { get; set; }
 
     public Guid FightRoundId { get; set; }
-    public FightRound FightRound { get; set; }
+    public FightRound FightRound { get; set; } = null!;
 
     public EventType Type { get; set; }
 

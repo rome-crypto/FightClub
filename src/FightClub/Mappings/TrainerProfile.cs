@@ -10,9 +10,6 @@ public class TrainerProfile : Profile
     {
         CreateMap<Trainer, TrainerResponseDto>()
             .ForMember(
-                dest => dest.FullName,
-                opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
-            .ForMember(
                 dest => dest.BoxersCount,
                 opt => opt.MapFrom(src => src.Boxers.Count));
 
@@ -20,9 +17,6 @@ public class TrainerProfile : Profile
 
         CreateMap<TrainerUpdateDto, Trainer>();
 
-        CreateMap<Trainer, TrainerWithBoxersDto>()
-            .ForMember(
-                dest => dest.Name,
-                opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+        CreateMap<Trainer, TrainerWithBoxersDto>();
     }
 }
