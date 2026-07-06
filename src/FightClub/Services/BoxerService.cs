@@ -15,7 +15,7 @@ namespace FightClub.Services;
 public class BoxerService 
     : BaseService<Boxer, BoxerResponseDto, BoxerCreateDto, BoxerUpdateDto>, IBoxerService
 {
-    public BoxerService(IBoxerRepository repo, IMapper mapper)
+    public BoxerService(IRepository<Boxer> repo, IMapper mapper)
         : base(repo, mapper)
     {
     }

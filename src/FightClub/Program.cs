@@ -39,7 +39,6 @@ namespace FightClub
             builder.Services.AddScoped<IFightService, FightService>();
 
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            builder.Services.AddScoped<IBoxerRepository, BoxerRepository>();
 
             builder.Services.AddScoped<IFightEngine, FightEngine>();
 

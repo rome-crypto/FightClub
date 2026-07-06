@@ -1,11 +1,10 @@
 ﻿using FightClub.Entities.Fight;
-using System.Runtime.Serialization.Formatters;
 
 namespace FightClub.Engine;
 
 public class FightEngine : IFightEngine
 {
-    public readonly Random _random = new Random();
+    public readonly Random _random = Random.Shared;
 
     public Fight Execute(Fight fight)
     {
@@ -16,7 +15,7 @@ public class FightEngine : IFightEngine
             var round = ProcessRound(fight, i);
             fight.Rounds.Add(round);
 
-            if (CheckEarlyStop(fight, round))
+            if (CheckEarlyStop(round))
             {
                 fight.Status = FightStatus.Finished;
                 fight.WinnerId = DetermineWinner(fight);
@@ -96,7 +95,7 @@ public class FightEngine : IFightEngine
         };
     }
 
-    private int CalculateImpact(RoundEvent roundEvent)
+    private static int CalculateImpact(RoundEvent roundEvent)
     {
         return roundEvent.Type switch
         {
@@ -107,12 +106,12 @@ public class FightEngine : IFightEngine
         };
     }
 
-    private bool CheckEarlyStop(Fight fight, FightRound round)
+    private static bool CheckEarlyStop(FightRound round)
     {
         return Math.Abs(round.ScoreA - round.ScoreB) > 20;
     }
 
-    private Guid? DetermineWinner(Fight fight)
+    private static Guid? DetermineWinner(Fight fight)
     {
         int totalScoreA = 0;
         int totalScoreB = 0;

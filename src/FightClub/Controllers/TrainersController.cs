@@ -25,7 +25,7 @@ public class TrainersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        return Ok(await _service.GetByIdAsync(id);
+        return Ok(await _service.GetByIdAsync(id));
     }
 
     [HttpGet]
