@@ -1,4 +1,4 @@
-﻿namespace FightClub.Entities.Fight;
+﻿namespace FightClub.Domain.Enums;
 public enum FightStatus
 {
     Scheduled,

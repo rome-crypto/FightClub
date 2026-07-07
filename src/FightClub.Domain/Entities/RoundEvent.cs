@@ -1,4 +1,6 @@
-﻿namespace FightClub.Entities.Fight;
+﻿using FightClub.Domain.Enums;
+
+namespace FightClub.Domain.Entities;
 
 public class RoundEvent
 {
@@ -7,11 +9,11 @@ public class RoundEvent
     public Guid FightRoundId { get; set; }
     public FightRound FightRound { get; set; } = null!;
 
-    public EventType Type { get; set; }
+    public EventType Type { get; private set; }
 
     public Guid? SourceBoxerId { get; set; }
 
-    public int Impact { get; set; }
+    public int Impact { get; private set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

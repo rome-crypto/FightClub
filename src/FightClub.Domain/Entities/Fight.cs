@@ -1,18 +1,25 @@
-﻿using FightClub.Domain.Exceptions;
-using FightClub.Entities.Fight;
+﻿using FightClub.Domain.Enums;
+using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.Entities;
 
 public class Fight
 {
+    private readonly List<FightRound> _rounds = new();
+
     public Guid Id { get; private set; }
+
     public Guid BoxerAId { get; private set; }
     public Guid BoxerBId { get; private set; }
+
+    public Guid? WinnerId { get; private set; }
+
     public FightStatus Status { get; private set; }
+    public FightEndType? EndType {  get; private set; }
     public int PlannedRounds { get; private set; }
     public int ActualRounds { get; private set; }
-    public Guid? WinnerId { get; private set; }
-    public List<FightRound> Rounds { get; private set; } = new();
+    
+    public IReadOnlyCollection<FightRound> Rounds => _rounds;
 
     private Fight() { }
 
@@ -37,21 +44,20 @@ public class Fight
         Status = FightStatus.InProgress;
     }
 
-    public void AddRound(FightRound round)
+    public void StartRound()
     {
         if (Status != FightStatus.InProgress)
-            throw new DomainException("Fight not in progress");
+            throw new DomainException("Fight not active");
 
-        Rounds.Add(round);
-        ActualRounds = Rounds.Count;
+        if (_rounds.Count >= PlannedRounds)
+            throw new DomainException("Maximum rounds reached");
 
-        if (ActualRounds >= PlannedRounds || IsDecisive(round))
-        {
-            Finish(DetermineWinner());
-        }
+        _rounds.Add(
+            new FightRound(_rounds.Count + 1)
+        );
     }
 
-    public void Finish(Guid? winnerId)
+    internal void Finish(Guid? winnerId)
     {
         if (Status == FightStatus.Finished)
             return;

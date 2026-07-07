@@ -6,29 +6,31 @@ namespace FightClub.Domain.Entities;
 public class Trainer
 {
     public Guid Id { get; private set; }
-    [Required]
+
+    // Профиль
     public string FirstName { get; private set; } = string.Empty;
-    [Required]
     public string LastName { get; private set; } = string.Empty;
-    [Required]
-    public int Age { get; private set; }
+    public string FullName => $"{FirstName} {LastName}";
+    public DateTime DateOfBirth { get; private set; }
+    public int Age => CalculateAge(DateOfBirth);
+
 
     private Trainer() { }
 
-    public Trainer(string firstName, string lastName, int age)
+    public Trainer(string firstName, string lastName, DateTime birthDate)
     {
         SetName(firstName, lastName);
-        SetAge(age);
+        SetBirthDate(birthDate);
         Id = Guid.NewGuid();
     }
 
-    public void Update(string? firstName, string? lastName, int? age)
+    public void UpdateInfo(string? firstName, string? lastName, DateTime? birthDate)
     {
         if (firstName is not null || lastName is not null)
             SetName(firstName ?? FirstName, lastName ?? LastName);
 
-        if (age.HasValue)
-            SetAge(age.Value);
+        if (birthDate.HasValue)
+            SetBirthDate(birthDate.Value);
     }
 
     private void SetName(string firstName, string lastName)
@@ -44,10 +46,19 @@ public class Trainer
         LastName = lastName.Trim();
     }
 
-    private void SetAge(int age)
+    private void SetBirthDate(DateTime birthDate)
     {
-        if (age < 18 || age > 80)
-            throw new DomainException("Age must be between 18 and 80");
-        Age = age;
+        var age = CalculateAge(birthDate);
+        if (age < 18 || age > 100)
+            throw new DomainException("Age must be between 18 and 100");
+        DateOfBirth = birthDate;
+    }
+
+    private static int CalculateAge(DateTime birthDate)
+    {
+        var today = DateTime.Today;
+        var age = today.Year - birthDate.Year;
+        if (birthDate.Date > today.AddYears(-age)) age--;
+        return age;
     }
 }
