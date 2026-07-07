@@ -1,7 +1,7 @@
 ﻿using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 
-namespace FightClub.Domain.Services;
+namespace FightClub.Domain.Polices;
 
 public class EloRatingPolicy : IRatingPolicy
 {

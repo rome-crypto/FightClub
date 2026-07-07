@@ -49,13 +49,13 @@ public class Boxer
     public void AssignTrainer(Guid trainerId) => TrainerId = trainerId;
     public void RemoveTrainer() => TrainerId = null;
 
-    public void UpdateStatistics(FightResult result)
+    public void UpdateStatistics(FightOutcome result)
     {
         switch (result)
         {
-            case FightResult.Win: Wins++; break;
-            case FightResult.Loss: Losses++; break;
-            case FightResult.Draw: Draws++; break;
+            case FightOutcome.Win: Wins++; break;
+            case FightOutcome.Loss: Losses++; break;
+            case FightOutcome.Draw: Draws++; break;
         }
     }
 

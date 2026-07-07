@@ -1,6 +1,6 @@
 ﻿namespace FightClub.Domain.Enums;
 
-public enum EventType
+public enum RoundEventType
 {
     Punch,
     Block,

@@ -1,6 +1,6 @@
 ﻿using FightClub.Domain.Enums;
 
-namespace FightClub.Domain.Services;
+namespace FightClub.Domain.Polices;
 
 internal interface IRatingPolicy
 {

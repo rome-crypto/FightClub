@@ -1,23 +1,37 @@
-﻿using FightClub.Domain.Enums;
+﻿using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.Entities;
 
 public class FightRound
 {
-    public Guid Id { get; private set; }
-
-    public Fight Fight { get; private set; }
+    private readonly List<RoundEvent> _events = new();
 
     public int Number { get; private set; }
 
     public int ScoreA { get; private set; }
     public int ScoreB { get; private set; }
+    
+    public bool IsFinished { get; private set; }
+    public IReadOnlyCollection<RoundEvent> Events
+        => _events.AsReadOnly();
 
-    public IReadOnlyList<RoundEvent> Events { get; set; }
-
-    public FightRound(int number, int scoreA, int scoreB)
+    internal FightRound(int number)
     {
-        if ()
+        Number = number;
+    }
+    internal void AddEvent(RoundEvent roundEvent)
+    {
+        _events.Add(roundEvent);
     }
 
+    internal void SetScore(int scoreA, int scoreB)
+    {
+        if (IsFinished)
+            throw new DomainException("Round already finished");
+
+        ScoreA = scoreA;
+        ScoreB = scoreB;
+
+        IsFinished = true;
+    }
 }

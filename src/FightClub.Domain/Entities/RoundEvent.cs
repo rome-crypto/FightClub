@@ -1,19 +1,25 @@
 ﻿using FightClub.Domain.Enums;
+using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.Entities;
 
 public class RoundEvent
 {
-    public Guid Id { get; set; }
+    public Guid Id { get;}
+    public RoundEventType Type { get;}
+    public Guid? BoxerId { get;}
+    public DateTime OccurredAt { get;}
 
-    public Guid FightRoundId { get; set; }
-    public FightRound FightRound { get; set; } = null!;
+    public RoundEvent(
+        RoundEventType type,
+        Guid boxerId)
+    {
+        if (boxerId == Guid.Empty)
+            throw new DomainException("BoxerId cannot be empty.");
 
-    public EventType Type { get; private set; }
-
-    public Guid? SourceBoxerId { get; set; }
-
-    public int Impact { get; private set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        Id = Guid.NewGuid();
+        Type = type;
+        BoxerId = boxerId;
+        OccurredAt = DateTime.UtcNow;
+    }
 }

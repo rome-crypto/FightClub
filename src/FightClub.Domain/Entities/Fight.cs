@@ -1,5 +1,6 @@
 ﻿using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
+using FightClub.Domain.Policies;
 
 namespace FightClub.Domain.Entities;
 
@@ -13,13 +14,18 @@ public class Fight
     public Guid BoxerBId { get; private set; }
 
     public Guid? WinnerId { get; private set; }
-
     public FightStatus Status { get; private set; }
-    public FightEndType? EndType {  get; private set; }
+    public FightEndType? EndType { get; private set; }
+
     public int PlannedRounds { get; private set; }
-    public int ActualRounds { get; private set; }
-    
-    public IReadOnlyCollection<FightRound> Rounds => _rounds;
+
+    public int ActualRounds => _rounds.Count;
+    public int TotalScoreA =>
+        _rounds.Sum(r => r.ScoreA);
+    public int TotalScoreB =>
+        _rounds.Sum(r => r.ScoreB);
+    public IReadOnlyCollection<FightRound> Rounds 
+        => _rounds.AsReadOnly();
 
     private Fight() { }
 
@@ -41,42 +47,86 @@ public class Fight
     {
         if (Status != FightStatus.Scheduled)
             throw new DomainException("Fight already started");
+
         Status = FightStatus.InProgress;
     }
 
     public void StartRound()
     {
+        if (_rounds.LastOrDefault() is { IsFinished: false })
+            throw new DomainException("Finish current round first.");
+
         if (Status != FightStatus.InProgress)
             throw new DomainException("Fight not active");
 
-        if (_rounds.Count >= PlannedRounds)
+        if (ActualRounds >= PlannedRounds)
             throw new DomainException("Maximum rounds reached");
 
         _rounds.Add(
-            new FightRound(_rounds.Count + 1)
+            new FightRound(ActualRounds + 1)
         );
     }
 
-    internal void Finish(Guid? winnerId)
+    internal void Finish(
+        Guid? winnerId,
+        FightEndType endType)
     {
+        if (winnerId.HasValue &&
+            winnerId != BoxerAId &&
+            winnerId != BoxerBId)
+        {
+            throw new DomainException("Winner must participate in fight.");
+        }
+
         if (Status == FightStatus.Finished)
-            return;
+            throw new DomainException("Fight already finished");
 
-        Status = FightStatus.Finished;
         WinnerId = winnerId;
+        EndType = endType;
+        Status = FightStatus.Finished;
     }
 
-    private bool IsDecisive(FightRound round)
+    public void RegisterEvent(RoundEvent roundEvent)
     {
-        return Math.Abs(round.ScoreA - round.ScoreB) > 20;
+        if (Status != FightStatus.InProgress)
+            throw new DomainException("Fight not active");
+
+        if (ActualRounds == 0)
+            throw new DomainException("No active round");
+
+        if (roundEvent.BoxerId != BoxerAId &&
+            roundEvent.BoxerId != BoxerBId)
+        {
+            throw new DomainException("Boxer is not a participant of this fight.");
+        }
+
+        _rounds.Last().AddEvent(roundEvent);
     }
 
-    private Guid? DetermineWinner()
+    public void FinishRound(
+        int scoreA,
+        int scoreB,
+        IFightEndingPolicy policy)
     {
-        int totalA = Rounds.Sum(r => r.ScoreA);
-        int totalB = Rounds.Sum(r => r.ScoreB);
+        if (Status != FightStatus.InProgress)
+            throw new DomainException("Fight not active");
 
-        if (totalA == totalB) return null;
-        return totalA > totalB ? BoxerAId : BoxerBId;
+        if (ActualRounds == 0)
+            throw new DomainException("No active round");
+
+
+        _rounds.Last()
+            .SetScore(scoreA, scoreB);
+
+
+        if (policy.TryFinish(
+            this,
+            out var winnerId,
+            out var endType))
+        {
+            Finish(
+                winnerId,
+                endType);
+        }
     }
 }
