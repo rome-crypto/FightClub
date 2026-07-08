@@ -46,15 +46,13 @@ public sealed class FightSimulationService
     }
 
 
-
     public async Task<FightResponseDto> ExecuteAsync(
         Guid fightId)
     {
 
+
         var fight = await _fightRepository
-            .Query(
-                new FightByIdWithDetailsSpecification(
-                    fightId))
+            .Query(new FightByIdWithDetailsSpecification(fightId))
             .FirstOrDefaultAsync()
             ??
             throw new NotFoundException(

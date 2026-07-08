@@ -2,7 +2,7 @@
 using FightClub.Application.DTOs.Trainers;
 using FluentValidation;
 
-namespace FightClub.Application.Validators.Trainer;
+namespace FightClub.Application.Validators.Trainers;
 
 public sealed class TrainerQueryValidator
     : AbstractValidator<TrainerQueryDto>
