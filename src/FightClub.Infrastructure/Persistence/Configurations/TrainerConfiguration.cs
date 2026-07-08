@@ -2,28 +2,24 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FightClub.Configurations;
+namespace FightClub.Infrastructure.Persistence.Configurations;
 
-public class TrainerConfiguration : IEntityTypeConfiguration<Trainer>
+public sealed class TrainerConfiguration
+    : IEntityTypeConfiguration<Trainer>
 {
     public void Configure(EntityTypeBuilder<Trainer> builder)
     {
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.FirstName)
-            .IsRequired()
-            .HasMaxLength(100);
-        builder.Property(x => x.LastName)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder.Property(x => x.Age)
+            .HasMaxLength(100)
             .IsRequired();
 
-        // Trainer → Boxers
-        builder.HasMany(x => x.Boxers)
-            .WithOne(b => b.Trainer)
-            .HasForeignKey(b => b.TrainerId)
-            .OnDelete(DeleteBehavior.SetNull);
+        builder.Property(x => x.LastName)
+            .HasMaxLength(100)
+            .IsRequired();
+
+        builder.Property(x => x.DateOfBirth)
+            .IsRequired();
     }
 }

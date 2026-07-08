@@ -1,5 +1,5 @@
 ﻿using FightClub.Domain.Common;
-using FightClub.Domain.Enums;
+using FightClub.Domain.Services;
 using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.Entities;

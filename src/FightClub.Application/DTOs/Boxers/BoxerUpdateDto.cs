@@ -1,4 +1,4 @@
-﻿using FightClub.Domain.Enums;
+﻿using FightClub.Domain.Services;
 
 namespace FightClub.Application.DTOs.Boxers;
 
@@ -6,6 +6,10 @@ public class BoxerUpdateDto
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
-    public int? Age { get; set; }
-    public WeightCategoryType? WeightCategory { get; set; }
+
+    public DateTime? BirthDate { get; set; }
+
+    public int? Weight { get; set; }
+
+    public Guid? TrainerId { get; set; }
 }

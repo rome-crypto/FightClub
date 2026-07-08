@@ -1,5 +1,5 @@
 ﻿using FightClub.Domain.Common;
-using FightClub.Domain.Enums;
+using FightClub.Domain.Services;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
 using FightClub.Domain.ValueObjects;
@@ -8,7 +8,7 @@ namespace FightClub.Domain.Entities;
 
 public class Fight : AggregateRoot
 {
-    private readonly List<FightRound> _rounds = new();
+    private readonly List<FightRound> _rounds = [];
 
     public Guid BoxerAId { get; private set; }
     public Guid BoxerBId { get; private set; }

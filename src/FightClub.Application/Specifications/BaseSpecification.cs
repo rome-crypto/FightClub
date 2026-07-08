@@ -14,7 +14,7 @@ public abstract class BaseSpecification<T> : ISpecification<T>
     public bool IsPagingEnabled { get; private set; }
 
     public IReadOnlyList<Expression<Func<T, object>>> Includes => _includes;
-    private readonly List<Expression<Func<T, object>>> _includes = new();
+    private readonly List<Expression<Func<T, object>>> _includes = [];
 
     protected void AddCriteria(Expression<Func<T, bool>> criteria)
     {

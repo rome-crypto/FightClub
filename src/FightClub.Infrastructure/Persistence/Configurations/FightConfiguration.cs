@@ -4,25 +4,66 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FightClub.Infrastructure.Persistence.Configurations;
 
-public class FightConfiguration : IEntityTypeConfiguration<Fight>
+public sealed class FightConfiguration
+    : IEntityTypeConfiguration<Fight>
 {
     public void Configure(EntityTypeBuilder<Fight> builder)
     {
-        builder.HasKey(f => f.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.HasOne(f => f.BoxerA)
-            .WithMany()
-            .HasForeignKey(f => f.BoxerAId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.Property(x => x.BoxerAId)
+            .IsRequired();
 
-        builder.HasOne(f => f.BoxerB)
-            .WithMany()
-            .HasForeignKey(f => f.BoxerBId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.Property(x => x.BoxerBId)
+            .IsRequired();
 
-        builder.HasMany(f => f.Rounds)
-            .WithOne(r => r.Fight)
-            .HasForeignKey(r => r.FightId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(x => x.Status)
+            .HasConversion<int>();
+
+        builder.Property(x => x.EndType)
+            .HasConversion<int>();
+
+        builder.Property(x => x.PlannedRounds);
+
+        builder.Property(x => x.WinnerId);
+
+        builder.Navigation(x => x.Rounds)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Metadata
+            .FindNavigation(nameof(Fight.Rounds))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.OwnsMany(f => f.Rounds, round =>
+        {
+            round.WithOwner();
+
+            round.HasKey(x => x.Id);
+
+            round.Property(x => x.Number);
+
+            round.Property(x => x.ScoreA);
+
+            round.Property(x => x.ScoreB);
+
+            round.Property(x => x.IsFinished);
+
+            round.Navigation(x => x.Events)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            round.OwnsMany(r => r.Events, e =>
+            {
+                e.WithOwner();
+
+                e.HasKey(x => x.Id);
+
+                e.Property(x => x.Type)
+                    .HasConversion<int>();
+
+                e.Property(x => x.BoxerId);
+
+                e.Property(x => x.OccurredAt);
+            });
+        });
     }
 }

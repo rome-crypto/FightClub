@@ -6,7 +6,7 @@ namespace FightClub.Domain.Entities;
 
 public class FightRound : Entity
 {
-    private readonly List<RoundEvent> _events = new();
+    private readonly List<RoundEvent> _events = [];
 
     public int Number { get; private set; }
 

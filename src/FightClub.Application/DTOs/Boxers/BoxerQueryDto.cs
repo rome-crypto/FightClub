@@ -1,5 +1,5 @@
 ﻿using FightClub.Application.DTOs.Common;
-using FightClub.Domain.Enums;
+using FightClub.Domain.Services;
 using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Application.DTOs.Boxers;

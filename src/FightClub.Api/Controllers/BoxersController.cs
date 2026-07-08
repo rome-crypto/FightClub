@@ -37,11 +37,11 @@ public class BoxersController : ControllerBase
         if (_logger.IsEnabled(LogLevel.Information))
         {
             _logger.LogInformation(
-                "POST /api/boxers called with data: {FirstName} {LastName}, Age: {Age}, WeightCategory: {WeightCategory}",
+                "POST /api/boxers called with data: {FirstName} {LastName}, BirthDate: {BirthDate}, Weight: {Weight}",
                 data.FirstName,
                 data.LastName,
-                data.Age,
-                data.WeightCategory);
+                data.BirthDate,
+                data.Weight);
         }
 
         var boxer = await _boxerService.CreateAsync(data);
@@ -61,12 +61,12 @@ public class BoxersController : ControllerBase
         if (_logger.IsEnabled(LogLevel.Information))
         {
             _logger.LogInformation(
-                "PATCH /api/boxers/{Id} called with data: {FirstName} {LastName}, Age: {Age}, WeightCategory: {WeightCategory}",
+                "PATCH /api/boxers/{Id} called with data: {FirstName} {LastName}, BirthDate: {BirthDate}, Weight: {Weight}",
                 id,
                 data.FirstName,
                 data.LastName,
-                data.Age,
-                data.WeightCategory);
+                data.BirthDate,
+                data.Weight);
         }
 
         _ = await _boxerService.UpdateAsync(id, data);

@@ -1,6 +1,6 @@
 ﻿using FightClub.Domain.Exceptions;
 using FightClub.Domain.ValueObjects;
-using FightClub.Domain.Enums;
+using FightClub.Domain.Services;
 using FightClub.Domain.Common;
 
 namespace FightClub.Domain.Entities;
@@ -8,8 +8,8 @@ namespace FightClub.Domain.Entities;
 public class Boxer : AggregateRoot
 {
     // Профиль
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
+    public string FirstName { get; private set; } = string.Empty;
+    public string LastName { get; private set; } = string.Empty;
     public string FullName => $"{FirstName} {LastName}";
     public DateTime DateOfBirth { get; private set; }
     public int Age => CalculateAge(DateOfBirth);
@@ -18,8 +18,8 @@ public class Boxer : AggregateRoot
     public Guid? TrainerId { get; private set; }
 
     // Статистика
-    public BoxerStatistics Statistics { get; private set; } = null;
-    public BoxerRanking Ranking { get; private set; } = null;
+    public BoxerStatistics Statistics { get; private set; } = new BoxerStatistics();
+    public BoxerRanking Ranking { get; private set; } = new BoxerRanking();
 
     // EF Core нужен пустой конструктор
     private Boxer() : base()
@@ -33,8 +33,6 @@ public class Boxer : AggregateRoot
         SetBirthDate(birthDate);
         SetWeight(weight);
         TrainerId = trainerId;
-        Statistics = new BoxerStatistics();
-        Ranking = new BoxerRanking();
     }
 
     // Бизнес-методы

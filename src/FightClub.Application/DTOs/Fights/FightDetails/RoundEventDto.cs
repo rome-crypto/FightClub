@@ -1,8 +1,10 @@
-﻿namespace FightClub.Application.DTOs.Fights.FightDetails;
+﻿using FightClub.Domain.Services;
+
+namespace FightClub.Application.DTOs.Fights.FightDetails;
 
 public class RoundEventDto
 {
-    public string Type { get; set; } = string.Empty;
-
-    public int Impact { get; set; }
+    public RoundEventType Type { get; set; }
+    public Guid? BoxerId { get; set; }
+    public DateTime OccurredAt { get; set; }
 }

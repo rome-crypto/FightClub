@@ -25,6 +25,6 @@ public abstract class ValueObject
                 (current, obj) =>
                     HashCode.Combine(
                         current,
-                        obj.GetHashCode()));
+                        obj?.GetHashCode()));
     }
 }

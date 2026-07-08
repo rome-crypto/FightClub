@@ -1,5 +1,4 @@
 ﻿using FightClub.Domain.Entities;
-using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
 
@@ -34,7 +33,7 @@ public sealed class FightResultService
 
 
 
-        var ratings =
+        var (BoxerARating, BoxerBRating) =
             _ratingPolicy.Calculate(
                 boxerA,
                 boxerB,
@@ -47,13 +46,13 @@ public sealed class FightResultService
             boxerA.ApplyFightResult(
                 FightResult.Draw,
                 fight.EndType.Value,
-                ratings.BoxerARating);
+                BoxerARating);
 
 
             boxerB.ApplyFightResult(
                 FightResult.Draw,
                 fight.EndType.Value,
-                ratings.BoxerBRating);
+                BoxerBRating);
 
 
             return;
@@ -66,26 +65,26 @@ public sealed class FightResultService
             boxerA.ApplyFightResult(
                 FightResult.Win,
                 fight.EndType.Value,
-                ratings.BoxerARating);
+                BoxerARating);
 
 
             boxerB.ApplyFightResult(
                 FightResult.Loss,
                 fight.EndType.Value,
-                ratings.BoxerBRating);
+                BoxerBRating);
         }
         else
         {
             boxerA.ApplyFightResult(
                 FightResult.Loss,
                 fight.EndType.Value,
-                ratings.BoxerARating);
+                BoxerARating);
 
 
             boxerB.ApplyFightResult(
                 FightResult.Win,
                 fight.EndType.Value,
-                ratings.BoxerBRating);
+                BoxerBRating);
         }
     }
 }

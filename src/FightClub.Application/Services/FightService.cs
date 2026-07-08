@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using FightClub.Application.DTOs.Boxers;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Fights;
 using FightClub.Application.Exceptions;
 using FightClub.Application.Interfaces;
 using FightClub.Application.Specifications;
 using FightClub.Domain.Entities;
-using FightClub.DTOs.Fights;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace FightClub.Application.Services;
 

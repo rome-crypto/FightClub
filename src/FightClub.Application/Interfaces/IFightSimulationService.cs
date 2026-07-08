@@ -1,5 +1,4 @@
-﻿using FightClub.Domain.Entities;
-using FightClub.DTOs.Fights;
+﻿using FightClub.Application.DTOs.Fights;
 
 namespace FightClub.Application.Interfaces;
 

@@ -10,10 +10,11 @@ public class TrainerProfile : Profile
     {
         CreateMap<Trainer, TrainerResponseDto>();
 
-        CreateMap<TrainerCreateDto, Trainer>();
-
-        CreateMap<TrainerUpdateDto, Trainer>();
-
-        CreateMap<Trainer, TrainerWithBoxersDto>();
+        CreateMap<TrainerCreateDto, Trainer>()
+            .ConstructUsing(dto =>
+                new Trainer(
+                    dto.FirstName,
+                    dto.LastName,
+                    dto.BirthDate));
     }
 }

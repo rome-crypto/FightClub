@@ -2,30 +2,33 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public class BoxerConfiguration : IEntityTypeConfiguration<Boxer>
-{
+namespace FightClub.Infrastructure.Persistence.Configurations;
 
+public sealed class BoxerConfiguration 
+    : IEntityTypeConfiguration<Boxer>
+{
     public void Configure(EntityTypeBuilder<Boxer> builder)
     {
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.FirstName)
-            .IsRequired()
-            .HasMaxLength(50);
-
-        builder.Property(x => x.LastName)
-            .IsRequired()
-            .HasMaxLength(50);
-
-        builder.Property(x => x.Age)
+            .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(x => x.WeightCategory)
-            .HasMaxLength(30);
+        builder.Property(x => x.LastName)
+            .HasMaxLength(100)
+            .IsRequired();
 
-        builder.HasOne(x => x.Trainer)
-            .WithMany(t => t.Boxers)
-            .HasForeignKey(x => x.TrainerId)
-            .OnDelete(DeleteBehavior.SetNull);
+        builder.Property(x => x.DateOfBirth)
+            .IsRequired();
+
+        builder.Property(x => x.Weight)
+            .IsRequired();
+
+        builder.Property(x => x.TrainerId);
+
+        builder.OwnsOne(x => x.Statistics);
+
+        builder.OwnsOne(x => x.Ranking);
     }
 }

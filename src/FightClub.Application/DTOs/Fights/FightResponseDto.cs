@@ -1,20 +1,29 @@
-﻿using FightClub.Application.DTOs.Boxers;
-using FightClub.Application.DTOs.Fights.FightDetails;
+﻿using FightClub.Application.DTOs.Fights.FightDetails;
+using FightClub.Domain.Services;
 
-namespace FightClub.DTOs.Fights;
+namespace FightClub.Application.DTOs.Fights;
 
 public class FightResponseDto
 {
     public Guid Id { get; set; }
 
-    public BoxerResponseDto BoxerA { get; set; } = new();
-    public BoxerResponseDto BoxerB { get; set; } = new();
+    public Guid BoxerAId { get; set; }
+
+    public Guid BoxerBId { get; set; }
 
     public Guid? WinnerId { get; set; }
 
-    public string Status { get; set; } = string.Empty;
+    public FightStatus Status { get; set; }
+
+    public FightEndType? EndType { get; set; }
 
     public int PlannedRounds { get; set; }
 
-    public List<RoundsDto> Rounds { get; set; } = [];
+    public int ActualRounds { get; set; }
+
+    public int TotalScoreA { get; set; }
+
+    public int TotalScoreB { get; set; }
+
+    public IReadOnlyCollection<RoundsDto> Rounds { get; set; } = [];
 }

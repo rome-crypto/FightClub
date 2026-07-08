@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using FightClub.Application.DTOs.Fights;
 using FightClub.Application.Exceptions;
 using FightClub.Application.Interfaces;
 using FightClub.Application.Specifications;
 using FightClub.Domain.Entities;
 using FightClub.Domain.Policies;
-using FightClub.DTOs.Fights;
+using FightClub.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -21,7 +22,7 @@ public sealed class FightSimulationService
     private readonly IRoundSimulator _roundSimulator;
     private readonly IFightEndingPolicy _endingPolicy;
 
-    private readonly IFightResultApplicationService
+    private readonly IFightResultService
         _resultService;
 
     private readonly IMapper _mapper;
@@ -33,7 +34,7 @@ public sealed class FightSimulationService
         IRepository<Boxer> boxerRepository,
         IRoundSimulator roundSimulator,
         IFightEndingPolicy endingPolicy,
-        IFightResultApplicationService resultService,
+        IFightResultService resultService,
         IMapper mapper)
     {
         _fightRepository = fightRepository;
@@ -83,7 +84,7 @@ public sealed class FightSimulationService
 
 
 
-        while (fight.Status != Domain.Enums.FightStatus.Finished)
+        while (fight.Status != FightStatus.Finished)
         {
             fight.StartRound();
 
