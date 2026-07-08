@@ -1,5 +1,5 @@
-﻿using FightClub.DTOs.Boxers;
-using FightClub.DTOs.Fights.FightDetails;
+﻿using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.DTOs.Fights.FightDetails;
 
 namespace FightClub.DTOs.Fights;
 

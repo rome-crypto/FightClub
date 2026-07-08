@@ -1,10 +1,11 @@
-﻿using FightClub.Domain.Enums;
+﻿using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 using System.Data;
 
 namespace FightClub.Domain.ValueObjects;
 
-public class BoxerRanking
+public sealed class BoxerRanking : ValueObject
 {
     public int EloRating { get; private set; }
     public int RankingPoints {  get; private set; }
@@ -31,5 +32,11 @@ public class BoxerRanking
             throw new DomainException("Points cannot be less than 0");
 
         RankingPoints = Math.Max(0, RankingPoints - points);
+    }
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return EloRating;
+        yield return RankingPoints;
     }
 }

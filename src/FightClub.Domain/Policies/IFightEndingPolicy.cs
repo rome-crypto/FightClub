@@ -1,12 +1,13 @@
 ﻿using FightClub.Domain.Entities;
-using FightClub.Domain.Enums;
+using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Domain.Policies;
 
 public interface IFightEndingPolicy
 {
-    bool TryFinish(
-        Fight fight,
-        out Guid? winnerId,
-        out FightEndType endType);
+    FightOutcome Evaluate(
+        IReadOnlyCollection<FightRound> rounds,
+        Guid boxerAId,
+        Guid boxerBId,
+        int plannedRounds);
 }

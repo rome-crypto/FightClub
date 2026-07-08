@@ -1,7 +1,8 @@
-﻿using FightClub.DTOs.Trainers;
-using FightClub.Entities;
-using FightClub.Services.Interfaces;
+﻿using FightClub.Application.DTOs.Trainers;
+using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
+namespace FightClub.Api.Controllers;
 
 [ApiController]
 [Route("api/trainers")]
@@ -19,7 +20,7 @@ public class TrainersController : ControllerBase
     {
         var result = await _service.CreateAsync(dto);
 
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result); 
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     [HttpGet("{id}")]
@@ -30,8 +31,8 @@ public class TrainersController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] TrainerQueryDto query)
-    { 
-        return Ok(await _service.GetPagedAsync(query)); 
+    {
+        return Ok(await _service.GetPagedAsync(query));
     }
 
     [HttpPatch("{id}")]

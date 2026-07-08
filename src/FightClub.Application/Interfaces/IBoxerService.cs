@@ -1,7 +1,7 @@
-﻿using FightClub.DTOs.Boxers;
-using FightClub.DTOs.Common;
+﻿using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.DTOs.Common;
 
-namespace FightClub.Services.Interfaces;
+namespace FightClub.Application.Interfaces;
 
 public interface IBoxerService
 {

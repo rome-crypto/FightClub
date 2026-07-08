@@ -1,9 +1,9 @@
-﻿using FightClub.DTOs.Common;
-using FightClub.DTOs.Fights;
-using FightClub.Entities.Fight;
+﻿using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Fights;
+using FightClub.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace FightClub.Specifications;
+namespace FightClub.Application.Specifications;
 
 public class FightSpecification : BaseSpecification<Fight>
 {

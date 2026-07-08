@@ -1,7 +1,7 @@
-﻿using FightClub.DTOs.Common;
-using FightClub.DTOs.Trainers;
+﻿using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Trainers;
 
-namespace FightClub.Services.Interfaces;
+namespace FightClub.Application.Interfaces;
 
 public interface ITrainerService
 {

@@ -3,10 +3,8 @@ using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.Entities;
 
-public class Trainer : Entity
+public sealed class Trainer : Entity
 {
-    public Guid Id { get; private set; }
-
     // Профиль
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
@@ -21,16 +19,16 @@ public class Trainer : Entity
     {
         SetName(firstName, lastName);
         SetBirthDate(birthDate);
-        Id = Guid.NewGuid();
     }
 
-    public void UpdateInfo(string? firstName, string? lastName, DateTime? birthDate)
+    public void ChangeBirthDate(DateTime birthDate)
     {
-        if (firstName is not null || lastName is not null)
-            SetName(firstName ?? FirstName, lastName ?? LastName);
+        SetBirthDate(birthDate);
+    }
 
-        if (birthDate.HasValue)
-            SetBirthDate(birthDate.Value);
+    public void Rename(string firstName, string lastName)
+    {
+        SetName(firstName, lastName);
     }
 
     private void SetName(string firstName, string lastName)

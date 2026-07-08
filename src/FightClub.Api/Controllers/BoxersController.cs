@@ -1,9 +1,8 @@
-﻿using FightClub.DTOs.Boxers;
-using FightClub.DTOs.Common;
-using FightClub.Services.Interfaces;
+﻿using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FightClub.Controllers;
+namespace FightClub.Api.Controllers;
 
 [ApiController]
 [Route("api/boxers")]

@@ -1,5 +1,6 @@
-﻿using FightClub.Specifications;
-namespace FightClub.Repositories.Interfaces;
+﻿using FightClub.Application.Specifications;
+
+namespace FightClub.Application.Interfaces;
 
 public interface IRepository<T> where T : class
 {

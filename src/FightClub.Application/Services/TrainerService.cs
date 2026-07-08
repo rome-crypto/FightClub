@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using FightClub.DTOs.Common;
-using FightClub.DTOs.Fights;
-using FightClub.DTOs.Trainers;
-using FightClub.Entities;
-using FightClub.Exceptions;
-using FightClub.Repositories.Interfaces;
-using FightClub.Services.Interfaces;
-using FightClub.Specifications;
+using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Trainers;
+using FightClub.Application.Interfaces;
+using FightClub.Application.Specifications;
+using FightClub.Domain.Entities;
 
-namespace FightClub.Services;
+namespace FightClub.Application.Services;
 
 public class TrainerService 
     : BaseService<Trainer, TrainerResponseDto, TrainerCreateDto, TrainerUpdateDto>, ITrainerService

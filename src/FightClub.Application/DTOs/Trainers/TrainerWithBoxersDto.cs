@@ -1,6 +1,6 @@
-﻿using FightClub.DTOs.Boxers;
+﻿using FightClub.Application.DTOs.Boxers;
 
-namespace FightClub.DTOs.Trainers;
+namespace FightClub.Application.DTOs.Trainers;
 
 public class TrainerWithBoxersDto
 {

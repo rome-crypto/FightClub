@@ -1,8 +1,8 @@
-﻿using FightClub.Entities.Fight;
+﻿using FightClub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FightClub.Configurations;
+namespace FightClub.Infrastructure.Persistence.Configurations;
 
 public class FightRoundConfiguration : IEntityTypeConfiguration<FightRound>
 {

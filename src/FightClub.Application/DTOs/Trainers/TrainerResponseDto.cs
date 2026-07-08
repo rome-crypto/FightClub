@@ -1,4 +1,4 @@
-﻿namespace FightClub.DTOs.Trainers;
+﻿namespace FightClub.Application.DTOs.Trainers;
 
 public class TrainerResponseDto
 {

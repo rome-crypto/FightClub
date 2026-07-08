@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FightClub.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using FightClub.Entities;
 
 public class BoxerConfiguration : IEntityTypeConfiguration<Boxer>
 {
+
     public void Configure(EntityTypeBuilder<Boxer> builder)
     {
         builder.HasKey(x => x.Id);

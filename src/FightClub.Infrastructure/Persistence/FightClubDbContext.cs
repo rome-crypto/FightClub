@@ -1,8 +1,7 @@
-﻿using FightClub.Entities;
-using FightClub.Entities.Fight;
+﻿using FightClub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace FightClub.Data;
+namespace FightClub.Infrastructure.Persistence;
 
 public class FightClubDbContext : DbContext
 {

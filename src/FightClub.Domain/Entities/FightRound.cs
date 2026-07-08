@@ -1,5 +1,6 @@
 ﻿using FightClub.Domain.Common;
 using FightClub.Domain.Exceptions;
+using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Domain.Entities;
 
@@ -25,13 +26,13 @@ public class FightRound : Entity
         _events.Add(roundEvent);
     }
 
-    internal void SetScore(int scoreA, int scoreB)
+    internal void SetScore(RoundScore score)
     {
         if (IsFinished)
             throw new DomainException("Round already finished");
 
-        ScoreA = scoreA;
-        ScoreB = scoreB;
+        ScoreA = score.ScoreA;
+        ScoreB = score.ScoreB;
 
         IsFinished = true;
     }

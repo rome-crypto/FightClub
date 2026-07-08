@@ -1,7 +1,8 @@
-﻿using FightClub.Domain.Enums;
+﻿using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
-using FightClub.Domain.Common;
+using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Domain.Entities;
 
@@ -19,12 +20,10 @@ public class Fight : AggregateRoot
     public int PlannedRounds { get; private set; }
 
     public int ActualRounds => _rounds.Count;
-    public int TotalScoreA =>
-        _rounds.Sum(r => r.ScoreA);
-    public int TotalScoreB =>
-        _rounds.Sum(r => r.ScoreB);
     public IReadOnlyCollection<FightRound> Rounds 
         => _rounds.AsReadOnly();
+
+    public DateTime CreatedAt { get; private set; }
 
     private Fight() { }
 
@@ -39,6 +38,7 @@ public class Fight : AggregateRoot
         BoxerBId = boxerBId;
         PlannedRounds = plannedRounds;
         Status = FightStatus.Scheduled;
+        CreatedAt = DateTime.UtcNow;
     }
 
     public void Start()
@@ -101,30 +101,42 @@ public class Fight : AggregateRoot
         _rounds.Last().AddEvent(roundEvent);
     }
 
-    public void FinishRound(
-        int scoreA,
-        int scoreB,
-        IFightEndingPolicy policy)
+    public void EndCurrentRound(
+        RoundScore score,
+        IFightEndingPolicy endingPolicy)
     {
         if (Status != FightStatus.InProgress)
             throw new DomainException("Fight not active");
 
-        if (ActualRounds == 0)
+        if (_rounds.Count == 0)
             throw new DomainException("No active round");
 
+        var round = _rounds.Last();
 
-        _rounds.Last()
-            .SetScore(scoreA, scoreB);
+        round.SetScore(score);
 
+        var outcome = endingPolicy.Evaluate(
+            _rounds,
+            BoxerAId,
+            BoxerBId,
+            PlannedRounds);
 
-        if (policy.TryFinish(
-            this,
-            out var winnerId,
-            out var endType))
+        if (outcome.IsFinished)
         {
             Finish(
-                winnerId,
-                endType);
+                outcome.WinnerId,
+                outcome.EndType!.Value);
         }
+    }
+
+    public void Complete(FightOutcome outcome)
+    {
+        if (!outcome.IsFinished)
+            throw new DomainException(
+                "Fight outcome is not finished");
+
+        WinnerId = outcome.WinnerId;
+        EndType = outcome.EndType;
+        Status = FightStatus.Finished;
     }
 }

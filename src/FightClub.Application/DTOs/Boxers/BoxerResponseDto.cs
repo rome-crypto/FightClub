@@ -1,4 +1,7 @@
-﻿namespace FightClub.DTOs.Boxers;
+﻿using FightClub.Domain.Enums;
+using FightClub.Domain.ValueObjects;
+
+namespace FightClub.Application.DTOs.Boxers;
 
 public class BoxerResponseDto
 {
@@ -6,7 +9,7 @@ public class BoxerResponseDto
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public int Age { get; set; }
-    public string WeightCategory { get; set; } = string.Empty;
+    public WeightCategoryType? WeightCategory { get; set; }
     public int Wins { get; set; }
     public int Losses { get; set; }
     public int Draws { get; set; }

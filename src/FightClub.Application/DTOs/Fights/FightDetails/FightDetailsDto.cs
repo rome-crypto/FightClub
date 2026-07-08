@@ -1,6 +1,6 @@
-﻿using FightClub.Entities.Fight;
+﻿using FightClub.Domain.Enums;
 
-namespace FightClub.DTOs.Fights.FightDetails;
+namespace FightClub.Application.DTOs.Fights.FightDetails;
 
 public class FightDetailsDto
 {

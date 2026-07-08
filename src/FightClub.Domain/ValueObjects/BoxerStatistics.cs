@@ -1,6 +1,8 @@
-﻿namespace FightClub.Domain.ValueObjects;
+﻿using FightClub.Domain.Common;
 
-public sealed class BoxerStatistics
+namespace FightClub.Domain.ValueObjects;
+
+public sealed class BoxerStatistics : ValueObject
 {
     public int Wins { get; private set; }
     public int Losses { get; private set; }
@@ -62,5 +64,22 @@ public sealed class BoxerStatistics
         Draws++;
         WinStreak = 0;
         LastFightDate = DateTime.UtcNow;
+    }
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return Wins;
+        yield return Losses;
+        yield return Draws;
+        yield return Knockouts;
+        yield return TechnicalKnockouts;
+        yield return KnockoutLosses;
+        yield return TechnicalKnockoutLosses;
+        yield return WinStreak;
+        yield return BestWinStreak;
+        yield return LastFightDate;
+        yield return TotalFights;
+        yield return WinRate;
+        yield return KnockoutRate;
     }
 }

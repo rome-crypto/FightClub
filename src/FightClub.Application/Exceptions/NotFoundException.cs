@@ -1,6 +1,6 @@
 ﻿global using System.Net;
 
-namespace FightClub.Exceptions;
+namespace FightClub.Application.Exceptions;
 
 public class NotFoundException : AppException
 {

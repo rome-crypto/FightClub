@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
-using FightClub.DTOs.Common;
 
-namespace FightClub.Specifications;
+namespace FightClub.Application.Specifications;
 
 public abstract class BaseSpecification<T> : ISpecification<T>
 {

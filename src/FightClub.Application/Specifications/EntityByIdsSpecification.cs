@@ -1,8 +1,8 @@
-﻿using FightClub.Entities;
+﻿using FightClub.Domain.Common;
 
-namespace FightClub.Specifications;
+namespace FightClub.Application.Specifications;
 
-public class EntityByIdsSpecification<T> : BaseSpecification<T> where T : IEntity
+public class EntityByIdsSpecification<T> : BaseSpecification<T> where T : Entity
 {
     public EntityByIdsSpecification(params Guid[] ids)
     {

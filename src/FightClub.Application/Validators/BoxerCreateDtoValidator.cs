@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using FightClub.DTOs.Boxers;
-namespace FightClub.Validators;
+using FightClub.Application.DTOs.Boxers;
+namespace FightClub.Application.Validators;
 
 public class BoxerCreateDtoValidator : AbstractValidator<BoxerCreateDto>
 {

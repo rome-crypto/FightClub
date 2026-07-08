@@ -1,4 +1,4 @@
-﻿namespace FightClub.DTOs.Common;
+﻿namespace FightClub.Application.DTOs.Common;
 
 public abstract class BaseQueryDto
 {

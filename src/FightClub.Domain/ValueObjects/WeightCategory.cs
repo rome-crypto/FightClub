@@ -1,12 +1,20 @@
 ﻿using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.ValueObjects;
 
-public sealed class WeightCategory :ValueObject
+public sealed class WeightCategory : ValueObject
 {
     public string Name { get; }
     public double MinWeight { get; }
     public double MaxWeight { get; }
+    public WeightCategoryType Type => Name switch
+    {
+        "Heavyweight" => WeightCategoryType.Heavyweight,
+        "Middleweight" => WeightCategoryType.Middleweight,
+        "Lightweight" => WeightCategoryType.Lightweight,
+        _ => throw new InvalidOperationException($"Unknown weight category: {Name}")
+    };
 
     private WeightCategory(string name, double min, double max)
     {
@@ -30,4 +38,12 @@ public sealed class WeightCategory :ValueObject
     }
 
     public override string ToString() => Name;
+
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Name;
+        yield return MinWeight;
+        yield return MaxWeight;
+        yield return Type;
+    }
 }

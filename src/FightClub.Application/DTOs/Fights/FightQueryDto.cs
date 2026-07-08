@@ -1,7 +1,7 @@
-﻿using FightClub.DTOs.Common;
-using FightClub.Entities.Fight;
+﻿using FightClub.Domain.Enums;
+using FightClub.Application.DTOs.Common;
 
-namespace FightClub.DTOs.Fights;
+namespace FightClub.Application.DTOs.Fights;
 
 public class FightQueryDto : BaseQueryDto
 {

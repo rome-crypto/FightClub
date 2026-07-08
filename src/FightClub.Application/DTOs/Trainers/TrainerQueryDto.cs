@@ -1,6 +1,6 @@
-﻿using FightClub.DTOs.Common;
+﻿using FightClub.Application.DTOs.Common;
 
-namespace FightClub.DTOs.Trainers;
+namespace FightClub.Application.DTOs.Trainers;
 
 public class TrainerQueryDto : BaseQueryDto
 {

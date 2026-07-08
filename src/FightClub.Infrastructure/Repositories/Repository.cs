@@ -1,9 +1,8 @@
-﻿using FightClub.Repositories.Interfaces;
-using FightClub.Data;
-using Microsoft.EntityFrameworkCore;
-using FightClub.Specifications;
-using FightClub.DTOs.Common;
-namespace FightClub.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using FightClub.Application.Interfaces;
+using FightClub.Application.Specifications;
+using FightClub.Infrastructure.Persistence;
+namespace FightClub.Infrastructure.Repositories;
 
 public class Repository<T> : IRepository<T> where T : class
 {

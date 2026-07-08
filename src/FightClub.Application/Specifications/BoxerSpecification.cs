@@ -1,9 +1,9 @@
-﻿using FightClub.DTOs.Boxers;
-using FightClub.DTOs.Common;
-using FightClub.Entities;
+﻿using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.DTOs.Common;
+using FightClub.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace FightClub.Specifications;
+namespace FightClub.Application.Specifications;
 
 public class BoxerSpecification : BaseSpecification<Boxer>
 {
@@ -13,7 +13,9 @@ public class BoxerSpecification : BaseSpecification<Boxer>
             ["firstname"] = x => x.FirstName,
             ["lastname"] = x => x.LastName,
             ["age"] = x => x.Age,
-            ["weightcategory"] = x => x.WeightCategory
+            ["weight"] = x => x.Weight,
+            ["elo"] = x => x.Ranking.EloRating,
+            ["wins"] = x => x.Statistics.Wins
         };
 
     public BoxerSpecification(BoxerQueryDto query)
@@ -23,8 +25,8 @@ public class BoxerSpecification : BaseSpecification<Boxer>
              x.FirstName.Contains(query.Search) ||
              x.LastName.Contains(query.Search)) &&
 
-            (string.IsNullOrWhiteSpace(query.WeightCategory) ||
-             x.WeightCategory == query.WeightCategory) &&
+            (query.WeightCategory != null  ||
+             x.WeightCategory.Type == query.WeightCategory) &&
 
             (!query.MinAge.HasValue || x.Age >= query.MinAge.Value) &&
             (!query.MaxAge.HasValue || x.Age <= query.MaxAge.Value)

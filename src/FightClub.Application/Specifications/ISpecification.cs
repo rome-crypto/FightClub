@@ -1,7 +1,6 @@
-﻿using FightClub.DTOs.Common;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace FightClub.Specifications;
+namespace FightClub.Application.Specifications;
 
 public interface ISpecification<T>
 {

@@ -1,17 +1,14 @@
 ﻿using AutoMapper;
-using FightClub.DTOs.Trainers;
-using FightClub.Entities;
+using FightClub.Application.DTOs.Trainers;
+using FightClub.Domain.Entities;
 
-namespace FightClub.Mappings;
+namespace FightClub.Application.Mappings;
 
 public class TrainerProfile : Profile
 {
     public TrainerProfile()
     {
-        CreateMap<Trainer, TrainerResponseDto>()
-            .ForMember(
-                dest => dest.BoxersCount,
-                opt => opt.MapFrom(src => src.Boxers.Count));
+        CreateMap<Trainer, TrainerResponseDto>();
 
         CreateMap<TrainerCreateDto, Trainer>();
 

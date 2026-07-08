@@ -1,9 +1,9 @@
-﻿using FightClub.DTOs.Common;
-using FightClub.DTOs.Trainers;
-using FightClub.Entities;
+﻿using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Trainers;
+using FightClub.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace FightClub.Specifications;
+namespace FightClub.Application.Specifications;
 
 public class TrainerSpecification : BaseSpecification<Trainer>
 {

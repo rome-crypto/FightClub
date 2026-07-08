@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace FightClub.Specifications;
+namespace FightClub.Application.Specifications;
 
 public static class SpecificationEvaluator
 {

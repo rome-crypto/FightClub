@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using FightClub.DTOs.Boxers;
-using FightClub.DTOs.Common;
-using FightClub.DTOs.Trainers;
-using FightClub.Entities;
-using FightClub.Exceptions;
-using FightClub.Repositories.Interfaces;
-using FightClub.Services.Interfaces;
-using FightClub.Specifications;
-using Microsoft.EntityFrameworkCore;
+using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.DTOs.Common;
+using FightClub.Application.Interfaces;
+using FightClub.Application.Specifications;
+using FightClub.Domain.Entities;
 
-namespace FightClub.Services;
+namespace FightClub.Application.Services;
 
 public class BoxerService 
     : BaseService<Boxer, BoxerResponseDto, BoxerCreateDto, BoxerUpdateDto>, IBoxerService

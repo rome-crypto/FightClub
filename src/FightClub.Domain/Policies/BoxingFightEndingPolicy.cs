@@ -1,40 +1,34 @@
 ﻿using FightClub.Domain.Entities;
 using FightClub.Domain.Enums;
+using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Domain.Policies;
 
-public class BoxingFightEndingPolicy : IFightEndingPolicy
+public sealed class BoxingFightEndingPolicy : IFightEndingPolicy
 {
-    public bool TryFinish(
-        Fight fight,
-        out Guid? winnerId,
-        out FightEndType endType)
+    public FightOutcome Evaluate(
+        IReadOnlyCollection<FightRound> rounds, 
+        Guid boxerAId, 
+        Guid boxerBId, 
+        int plannedRounds)
     {
-        winnerId = null;
-        endType = default;
+        if (rounds.Count < plannedRounds)
+            return FightOutcome.Continue();
 
+        int totalScoreA = rounds.Sum(r => r.ScoreA);
+        int totalScoreB = rounds.Sum(r => r.ScoreB);
 
-        if (fight.ActualRounds < fight.PlannedRounds)
+        if (totalScoreA == totalScoreB)
         {
-            return false;
+            return FightOutcome.Finish(
+                null,
+                FightEndType.Draw);
         }
 
-
-        if (fight.TotalScoreA == fight.TotalScoreB)
-        {
-            endType = FightEndType.Draw;
-            return true;
-        }
-
-
-        winnerId =
-            fight.TotalScoreA > fight.TotalScoreB
-                ? fight.BoxerAId
-                : fight.BoxerBId;
-
-
-        endType = FightEndType.Decision;
-
-        return true;
+        return FightOutcome.Finish(
+            totalScoreA > totalScoreB
+                ? boxerAId
+                : boxerBId,
+            FightEndType.Decision);
     }
 }

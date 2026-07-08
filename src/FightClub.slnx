@@ -1,4 +1,6 @@
 <Solution>
-  <Project Path="../FightClub.Domain/FightClub.Domain.csproj" />
-  <Project Path="FightClub.csproj" />
+  <Project Path="FightClub.Api/FightClub.Api.csproj" />
+  <Project Path="FightClub.Application/FightClub.Application.csproj" />
+  <Project Path="FightClub.Domain/FightClub.Domain.csproj" />
+  <Project Path="FightClub.Infrastructure/FightClub.Infrastructure.csproj" />
 </Solution>

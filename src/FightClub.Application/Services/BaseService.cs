@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FightClub.Application.DTOs.Common;
+using FightClub.Application.Exceptions;
+using FightClub.Application.Interfaces;
+using FightClub.Application.Specifications;
 using FightClub.Domain.Common;
-using FightClub.DTOs.Common;
-using FightClub.Exceptions;
-using FightClub.Repositories.Interfaces;
-using FightClub.Specifications;
 using Microsoft.EntityFrameworkCore;
 
-namespace FightClub.Services;
+namespace FightClub.Application.Services;
 
 public abstract class BaseService<TEntity, TDto, TCreateDto, TUpdateDto>
     where TEntity : Entity

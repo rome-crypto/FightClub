@@ -1,20 +1,22 @@
-﻿using FightClub.DTOs.Fights;
-using FightClub.Services;
-using FightClub.Services.Interfaces;
+﻿using FightClub.Application.DTOs.Fights;
+using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FightClub.Controllers;
+namespace FightClub.Api.Controllers;
 
 [ApiController]
 [Route("api/fights")]
 public class FightController : ControllerBase
 {
     private readonly IFightService _service;
+    private readonly IFightSimulationService _simulation;
 
     public FightController(
-        IFightService service)
+        IFightService service,
+        IFightSimulationService simulation)
     {
         _service = service;
+        _simulation = simulation;
     }
 
     [HttpGet]
@@ -23,21 +25,21 @@ public class FightController : ControllerBase
         var result = await _service.GetPagedAsync(query);
         return Ok(result);
     }
-
-    [HttpGet("boxer/{boxerId:guid}")]
-    public async Task<IActionResult> GetByBoxer(Guid boxerId)
-    {
-        var result = await _service.GetByBoxerIdAsync(boxerId);
-
-        return Ok(result);
-    }
     
     [HttpPost("")]
     public async Task<IActionResult> Post([FromBody] FightCreateDto data)
     {
-        var fight = await _service.CreateAndExecuteAsync(data);
+        var fight = await _service.CreateAsync(data);
 
         return CreatedAtAction(nameof(GetById), new { id = fight.Id }, fight);
+    }
+
+    [HttpPost("{id}/execute")]
+    public async Task<IActionResult> Execute(Guid id)
+    {
+        var result = await _simulation.ExecuteAsync(id);
+
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

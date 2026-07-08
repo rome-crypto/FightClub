@@ -7,7 +7,7 @@ namespace FightClub.Domain.Entities;
 public class RoundEvent : Entity
 {
     public RoundEventType Type { get;}
-    public Guid? BoxerId { get;}
+    public Guid BoxerId { get;}
     public DateTime OccurredAt { get;}
 
     public RoundEvent(
