@@ -1,14 +1,13 @@
 ﻿using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
+using FightClub.Domain.Common;
 
 namespace FightClub.Domain.Entities;
 
-public class Fight
+public class Fight : AggregateRoot
 {
     private readonly List<FightRound> _rounds = new();
-
-    public Guid Id { get; private set; }
 
     public Guid BoxerAId { get; private set; }
     public Guid BoxerBId { get; private set; }
@@ -36,7 +35,6 @@ public class Fight
         if (plannedRounds < 1 || plannedRounds > 12)
             throw new DomainException("Rounds must be between 1 and 12");
 
-        Id = Guid.NewGuid();
         BoxerAId = boxerAId;
         BoxerBId = boxerBId;
         PlannedRounds = plannedRounds;

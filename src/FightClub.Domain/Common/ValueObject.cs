@@ -2,7 +2,8 @@
 
 public abstract class ValueObject
 {
-    protected abstract IEnumerable<object?> GetEqualityComponents();
+    protected abstract IEnumerable<object> GetEqualityComponents();
+
 
     public override bool Equals(object? obj)
     {
@@ -15,18 +16,15 @@ public abstract class ValueObject
             .SequenceEqual(other.GetEqualityComponents());
     }
 
+
     public override int GetHashCode()
     {
         return GetEqualityComponents()
             .Aggregate(
-                1,
-                (current, obj) => HashCode.Combine(current, obj));
+                0,
+                (current, obj) =>
+                    HashCode.Combine(
+                        current,
+                        obj.GetHashCode()));
     }
-
-    public static bool operator ==(ValueObject? left, ValueObject? right)
-        => Equals(left, right);
-
-    public static bool operator !=(ValueObject? left, ValueObject? right)
-        => !Equals(left, right);
-}
 }

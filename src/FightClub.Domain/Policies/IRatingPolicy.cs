@@ -1,12 +1,15 @@
-﻿using FightClub.Domain.Enums;
+﻿using FightClub.Domain.Entities;
+using FightClub.Domain.Enums;
 
-namespace FightClub.Domain.Polices;
+namespace FightClub.Domain.Policies;
 
-internal interface IRatingPolicy
+public interface IRatingPolicy
 {
-    int CalculateNewRating(
-        int currentRating,
-        int opponentRating,
-        FightResult result,
-        int kFactor = 32);
+    (int WinnerRating, int LoserRating) Calculate(
+        Boxer winner,
+        Boxer loser);
+
+    (int BoxerARating, int BoxerBRating) CalculateDraw(
+        Boxer boxerA,
+        Boxer boxerB);
 }

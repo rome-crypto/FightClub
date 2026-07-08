@@ -1,4 +1,4 @@
-﻿namespace FightClub.Exceptions;
+﻿namespace FightClub.Application.Exceptions;
 
 public class AppException : Exception
 {

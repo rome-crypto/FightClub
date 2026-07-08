@@ -1,29 +1,56 @@
-﻿using FightClub.Domain.Enums;
-using FightClub.Domain.Exceptions;
+﻿using FightClub.Domain.Entities;
 
-namespace FightClub.Domain.Polices;
+namespace FightClub.Domain.Policies;
 
-public class EloRatingPolicy : IRatingPolicy
+public sealed class EloRatingPolicy : IRatingPolicy
 {
-    public int CalculateNewRating(
-        int currentRating, 
-        int opponentRating, 
-        FightResult result, 
-        int kFactor = 32)
+    private const int K = 32;
+
+    public (int WinnerRating, int LoserRating) Calculate(
+        Boxer winner,
+        Boxer loser)
     {
-        double actualScore = result switch
-        {
-            FightResult.Win => 1.0,
-            FightResult.Loss => 0.0,
-            FightResult.Draw => 0.5,
-            _ => throw new DomainException("Invalid fight result")
-        };
+        double expectedWinner =
+            1.0 /
+            (1.0 + Math.Pow(10,
+                (loser.Ranking.EloRating - winner.Ranking.EloRating) / 400.0));
 
-        double expectedScore = 1.0 / (1.0 + Math.Pow(10, (opponentRating - currentRating) / 400.0));
+        double expectedLoser = 1 - expectedWinner;
 
-        int newRating = (int)Math.Round(
-            currentRating + kFactor * (actualScore - expectedScore));
+        int winnerRating =
+            winner.Ranking.EloRating +
+            (int)(K * (1 - expectedWinner));
 
-        return Math.Max(0, newRating);
+        int loserRating =
+            loser.Ranking.EloRating +
+            (int)(K * (0 - expectedLoser));
+
+        return (
+            Math.Max(0, winnerRating),
+            Math.Max(0, loserRating));
+    }
+
+    public (int BoxerARating, int BoxerBRating) CalculateDraw(
+        Boxer boxerA,
+        Boxer boxerB)
+    {
+        double expectedA =
+            1.0 /
+            (1.0 + Math.Pow(10,
+                (boxerB.Ranking.EloRating - boxerA.Ranking.EloRating) / 400.0));
+
+        double expectedB = 1 - expectedA;
+
+        int ratingA =
+            boxerA.Ranking.EloRating +
+            (int)(K * (0.5 - expectedA));
+
+        int ratingB =
+            boxerB.Ranking.EloRating +
+            (int)(K * (0.5 - expectedB));
+
+        return (
+            Math.Max(0, ratingA),
+            Math.Max(0, ratingB));
     }
 }

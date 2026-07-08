@@ -1,13 +1,12 @@
 ﻿using FightClub.Domain.Exceptions;
 using FightClub.Domain.ValueObjects;
 using FightClub.Domain.Enums;
+using FightClub.Domain.Common;
 
 namespace FightClub.Domain.Entities;
 
-public class Boxer
+public class Boxer : AggregateRoot
 {
-    public Guid Id { get; private set; }
-
     // Профиль
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
@@ -19,33 +18,42 @@ public class Boxer
     public Guid? TrainerId { get; private set; }
 
     // Статистика
-    public BoxerStats Stats { get; private set; }
+    public BoxerStatistics Statistics { get; private set; } = null;
+    public BoxerRanking Ranking { get; private set; } = null;
 
     // EF Core нужен пустой конструктор
-    private Boxer() { }
+    private Boxer() : base()
+    {
+    }
 
     // Основной конструктор для создания
     public Boxer(string firstName, string lastName, DateTime birthDate, int weight, Guid? trainerId = null)
     {
         SetName(firstName, lastName);
         SetBirthDate(birthDate);
-        Weight = weight;
+        SetWeight(weight);
         TrainerId = trainerId;
-        Id = Guid.NewGuid();
-        Stats = new BoxerStats(0,0,0);
+        Statistics = new BoxerStatistics();
+        Ranking = new BoxerRanking();
     }
 
     // Бизнес-методы
-    public void UpdateInfo(string? firstName, string? lastName, DateTime? birthDate)
+    public void ChangeBirthDate(DateTime birthDate)
     {
-        if (firstName is not null || lastName is not null)
-            SetName(firstName ?? FirstName, lastName ?? LastName);
-
-        if (birthDate.HasValue)
-            SetBirthDate(birthDate.Value);
+        SetBirthDate(birthDate);
     }
 
-    public static int CalculateAge(DateTime birthDate)
+    public void Rename(string firstName, string lastName)
+    {
+        SetName(firstName, lastName);
+    }
+
+    public void ChangeWeight(int weight)
+    {
+        SetWeight(weight);
+    }
+
+    private static int CalculateAge(DateTime birthDate)
     {
         var today = DateTime.Today;
         var age = today.Year - birthDate.Year;
@@ -56,14 +64,53 @@ public class Boxer
         return age;
     }
 
+    internal void ApplyFightResult(
+        FightResult result,
+        FightEndType endType,
+        int newElo)
+    {
+        switch (result)
+        {
+            case FightResult.Win:
+                Statistics.RegisterWin(
+                    knockout: endType == FightEndType.Knockout,
+                    technicalKnockout: endType == FightEndType.TechnicalKnockout);
+                break;
+
+            case FightResult.Loss:
+                Statistics.RegisterLoss(
+                    knockout: endType == FightEndType.Knockout,
+                    technicalKnockout: endType == FightEndType.TechnicalKnockout);
+                break;
+
+            case FightResult.Draw:
+                Statistics.RegisterDraw();
+                break;
+            
+            default:
+                throw new DomainException("Unknown fight result");
+        }
+
+        Ranking.UpdateElo(newElo);
+    }
+
     public void AssignTrainer(Guid trainerId) 
     {
         if (trainerId == Guid.Empty)
             throw new DomainException("Trainer ID is invalid");
+        
+        if (TrainerId == trainerId)
+            return;
 
         TrainerId = trainerId;
-    } 
-    public void RemoveTrainer() => TrainerId = null;
+    }
+    public void RemoveTrainer()
+    {
+        if (TrainerId is null)
+            return;
+
+        TrainerId = null;
+    }
 
     private void SetName(string firstName, string lastName)
     {
@@ -79,7 +126,15 @@ public class Boxer
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
     }
+    private void SetWeight(int weight)
+    {
+        if (weight < 30 || weight > 200)
+            throw new DomainException("Invalid weight.");
 
+        _ = WeightCategory.FromWeight(weight);
+
+        Weight = weight;
+    }
     private void SetBirthDate(DateTime birthDate)
     {
         var age = CalculateAge(birthDate);

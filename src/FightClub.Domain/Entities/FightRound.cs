@@ -1,8 +1,9 @@
-﻿using FightClub.Domain.Exceptions;
+﻿using FightClub.Domain.Common;
+using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.Entities;
 
-public class FightRound
+public class FightRound : Entity
 {
     private readonly List<RoundEvent> _events = new();
 

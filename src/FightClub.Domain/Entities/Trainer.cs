@@ -1,9 +1,9 @@
-﻿using FightClub.Domain.Exceptions;
-using System.ComponentModel.DataAnnotations;
+﻿using FightClub.Domain.Common;
+using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.Entities;
 
-public class Trainer
+public class Trainer : Entity
 {
     public Guid Id { get; private set; }
 

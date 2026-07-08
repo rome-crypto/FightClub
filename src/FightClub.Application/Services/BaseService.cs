@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FightClub.Domain.Common;
 using FightClub.DTOs.Common;
-using FightClub.Entities;
 using FightClub.Exceptions;
 using FightClub.Repositories.Interfaces;
 using FightClub.Specifications;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FightClub.Services;
 
 public abstract class BaseService<TEntity, TDto, TCreateDto, TUpdateDto>
-    where TEntity : BaseEntity
+    where TEntity : Entity
 {
     protected readonly IRepository<TEntity> _repo;
     protected readonly IMapper _mapper;

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FightClub.Domain.Common;
 
 namespace FightClub.Domain.ValueObjects;
 
-public sealed record WeightCategory
+public sealed class WeightCategory :ValueObject
 {
     public string Name { get; }
     public double MinWeight { get; }

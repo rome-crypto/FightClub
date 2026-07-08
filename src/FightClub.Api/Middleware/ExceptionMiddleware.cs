@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
-using FightClub.Exceptions;
+using FightClub.Application.Exceptions;
+
 namespace FightClub.Middleware;
 
 public class ExceptionMiddleware
