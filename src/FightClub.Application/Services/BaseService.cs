@@ -39,7 +39,7 @@ public abstract class BaseService<TEntity, TDto, TCreateDto, TUpdateDto>
         return _mapper.Map<TDto>(entity);
     }
 
-    public virtual async Task<TDto> UpdateAsync(Guid id, TUpdateDto dto)
+    public virtual async Task UpdateAsync(Guid id, TUpdateDto dto)
     {
         var entity = await _repo.GetByIdAsync(id)
             ?? throw new NotFoundException($"{typeof(TEntity).Name} not found");
@@ -47,8 +47,6 @@ public abstract class BaseService<TEntity, TDto, TCreateDto, TUpdateDto>
         _mapper.Map(dto, entity);
 
         await _repo.SaveChangesAsync();
-
-        return _mapper.Map<TDto>(entity);
     }
 
     public virtual async Task DeleteAsync(Guid id)

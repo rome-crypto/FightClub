@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FightClub.Infrastructure.Persistence.Configurations;
 
-public sealed class BoxerConfiguration 
+public sealed class BoxerConfiguration
     : IEntityTypeConfiguration<Boxer>
 {
     public void Configure(EntityTypeBuilder<Boxer> builder)

@@ -2,10 +2,6 @@
 
 	
 	<PropertyGroup />
-	<ItemGroup>
-		<ProjectReference Include="..\FightClub.Application\FightClub.Application.csproj" />
-		<ProjectReference Include="..\FightClub.Domain\FightClub.Domain.csproj" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
@@ -13,5 +9,10 @@
 		</PackageReference>
 
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\FightClub.Application\FightClub.Application.csproj" />
+	  <ProjectReference Include="..\FightClub.Domain\FightClub.Domain.csproj" />
 	</ItemGroup>
 </Project>

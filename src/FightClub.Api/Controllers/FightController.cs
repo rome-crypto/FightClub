@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FightClub.Api.Controllers;
 
+
+/// <summary>
+/// CRUD-контроллер для fight + запуск боя
+/// </summary>
 [ApiController]
 [Route("api/fights")]
 public class FightController : ControllerBase
@@ -11,6 +15,12 @@ public class FightController : ControllerBase
     private readonly IFightService _service;
     private readonly IFightSimulationService _simulation;
 
+
+    /// <summary>
+    /// Внедрение зависимостей
+    /// </summary>
+    /// <param name="service">Реализация сервиса для CRUD боя</param>
+    /// <param name="simulation">Реализация сервиса для бизнес-процесса боя/param>
     public FightController(
         IFightService service,
         IFightSimulationService simulation)
@@ -19,14 +29,27 @@ public class FightController : ControllerBase
         _simulation = simulation;
     }
 
+
+    /// <summary>
+    /// Получение данных по запросу с пагинацией
+    /// </summary>
+    /// <param name="query">Запрос</param>
+    /// <returns>HTTP 200 и страницы результата</returns>
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] FightQueryDto query)
     {
         var result = await _service.GetPagedAsync(query);
+
         return Ok(result);
     }
     
-    [HttpPost("")]
+
+    /// <summary>
+    /// Создание нового объекта 
+    /// </summary>
+    /// <param name="data">Данные для создания</param>
+    /// <returns>HTTP 201 и созданный объект</returns>
+    [HttpPost]
     public async Task<IActionResult> Post([FromBody] FightCreateDto data)
     {
         var fight = await _service.CreateAsync(data);
@@ -34,24 +57,57 @@ public class FightController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = fight.Id }, fight);
     }
 
+
+    /// <summary>
+    /// Запуск боя
+    /// </summary>
+    /// <param name="id">ID боя</param>
+    /// <returns>HTTP 204</returns>
     [HttpPost("{id}/execute")]
     public async Task<IActionResult> Execute(Guid id)
     {
-        var result = await _simulation.ExecuteAsync(id);
+        await _simulation.ExecuteAsync(id);
 
-        return Ok(result);
+        return NoContent();
     }
 
+
+    /// <summary>
+    /// Получение боя по ID
+    /// </summary>
+    /// <remarks>Гарантируется уникальность ID</remarks>
+    /// <param name="id">ID боя</param>
+    /// <returns>HTTP 200</returns>
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         return Ok(await _service.GetByIdAsync(id));
     }
 
+
+    /// <summary>
+    /// Отмена боя
+    /// </summary>
+    /// <param name="id">ID боя</param>
+    /// <returns>HTTP 204</returns>
+    [HttpPost("{id}/cancel")]
+    public async Task<IActionResult> CancelFight(Guid id)
+    {
+        await _simulation.CancelAsync(id);
+
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Удаление боя
+    /// </summary>
+    /// <param name="id">ID боя</param>
+    /// <returns>HTTP 204</returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id) 
     {
         await _service.DeleteAsync(id);
+
         return NoContent();
     }
 }

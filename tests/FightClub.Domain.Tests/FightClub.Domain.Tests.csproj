@@ -10,17 +10,12 @@
 		</PackageReference>
 	</ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\FightClub.Domain\FightClub.Domain.csproj" />
+	</ItemGroup>
 
   <ItemGroup>
-    <Folder Include="FightResultServiceTests\" />
-    <Folder Include="EloRatingPolicyTests\" />
-    <Folder Include="BoxerStatisticsTests\" />
-    <Folder Include="FightEndingPolicyTests\" />
-    <Folder Include="FightTests\" />
-    <Folder Include="BoxerTests\" />
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
 </Project>

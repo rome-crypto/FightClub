@@ -32,23 +32,28 @@ public class Boxer : AggregateRoot
         SetName(firstName, lastName);
         SetBirthDate(birthDate);
         SetWeight(weight);
-        TrainerId = trainerId;
+        AssignTrainer(trainerId);
     }
 
     // Бизнес-методы
-    public void ChangeBirthDate(DateTime birthDate)
+    public void ChangeBirthDate(DateTime? birthDate)
     {
-        SetBirthDate(birthDate);
+        if (birthDate.HasValue)
+            SetBirthDate(birthDate.Value);
     }
 
-    public void Rename(string firstName, string lastName)
+    public void Rename(string? firstName, string? lastName)
     {
+        if (firstName == null || lastName == null ) 
+            return;
+
         SetName(firstName, lastName);
     }
 
-    public void ChangeWeight(int weight)
+    public void ChangeWeight(int? weight)
     {
-        SetWeight(weight);
+        if (weight.HasValue) 
+            SetWeight(weight.Value);
     }
 
     private static int CalculateAge(DateTime birthDate)
@@ -92,7 +97,7 @@ public class Boxer : AggregateRoot
         Ranking.UpdateElo(newElo);
     }
 
-    public void AssignTrainer(Guid trainerId) 
+    public void AssignTrainer(Guid? trainerId) 
     {
         if (trainerId == Guid.Empty)
             throw new DomainException("Trainer ID is invalid");
@@ -102,6 +107,7 @@ public class Boxer : AggregateRoot
 
         TrainerId = trainerId;
     }
+
     public void RemoveTrainer()
     {
         if (TrainerId is null)
@@ -124,6 +130,7 @@ public class Boxer : AggregateRoot
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
     }
+
     private void SetWeight(int weight)
     {
         if (weight < 30 || weight > 200)
@@ -133,6 +140,7 @@ public class Boxer : AggregateRoot
 
         Weight = weight;
     }
+
     private void SetBirthDate(DateTime birthDate)
     {
         var age = CalculateAge(birthDate);

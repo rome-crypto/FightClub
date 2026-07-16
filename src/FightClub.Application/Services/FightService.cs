@@ -6,6 +6,7 @@ using FightClub.Application.Exceptions;
 using FightClub.Application.Interfaces;
 using FightClub.Application.Specifications;
 using FightClub.Domain.Entities;
+using FightClub.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FightClub.Application.Services;
@@ -27,15 +28,16 @@ public sealed class FightService : IFightService
         _mapper = mapper;
     }
 
-
+    //command
     public async Task<FightResponseDto> CreateAsync(
         FightCreateDto dto)
     {
-        var boxers = await _boxerRepository
-            .Query(
-                new EntityByIdsSpecification<Boxer>(
+        var spec = new EntityByIdsSpecification<Boxer>(
                     dto.BoxerAId,
-                    dto.BoxerBId))
+                    dto.BoxerBId);
+
+        var boxers = await _boxerRepository
+            .Query(spec)
             .ToListAsync();
 
 
@@ -54,33 +56,28 @@ public sealed class FightService : IFightService
 
         await _fightRepository.SaveChangesAsync();
 
-
         return _mapper.Map<FightResponseDto>(fight);
     }
 
-
-
+    //query
     public async Task<FightResponseDto> GetByIdAsync(Guid id)
     {
         var fight = await _fightRepository
             .GetByIdAsync(id)
-            ??
-            throw new NotFoundException(
-                $"Fight {id} not found");
-
+            ?? throw new NotFoundException($"Fight not found");
 
         return _mapper.Map<FightResponseDto>(fight);
     }
 
-
-
+    //comand
     public async Task DeleteAsync(Guid id)
     {
         var fight = await _fightRepository
             .GetByIdAsync(id)
-            ??
-            throw new NotFoundException(
-                $"Fight {id} not found");
+            ?? throw new NotFoundException($"Fight not found");
+
+        if (fight.Status == FightStatus.InProgress) 
+            throw new Exception("Fight already run"); //куда это лучше?
 
 
         _fightRepository.Delete(fight);
@@ -88,26 +85,19 @@ public sealed class FightService : IFightService
         await _fightRepository.SaveChangesAsync();
     }
 
-
-
+    //query
     public async Task<PagedResult<FightResponseDto>> GetPagedAsync(
         FightQueryDto query)
     {
         var spec = new FightSpecification(query);
 
+        var total = await _fightRepository
+            .CountAsync(spec);
 
-        var total =
-            await _fightRepository.CountAsync(spec);
-
-
-        var items =
-            await _fightRepository
-                .Query(spec)
-                .ProjectTo<FightResponseDto>(
-                    _mapper.ConfigurationProvider)
-                .ToListAsync();
-
-
+        var items = await _fightRepository
+            .Query(spec)
+            .ProjectTo<FightResponseDto>(_mapper.ConfigurationProvider)
+            .ToListAsync();
 
         return new PagedResult<FightResponseDto>
         {

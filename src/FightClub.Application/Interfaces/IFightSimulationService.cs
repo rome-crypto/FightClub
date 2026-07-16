@@ -4,5 +4,6 @@ namespace FightClub.Application.Interfaces;
 
 public interface IFightSimulationService
 {
-    Task<FightResponseDto> ExecuteAsync(Guid fightId);
+    Task CancelAsync(Guid fightId);
+    Task ExecuteAsync(Guid fightId);
 }

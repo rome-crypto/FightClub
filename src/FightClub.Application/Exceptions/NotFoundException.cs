@@ -2,10 +2,10 @@
 
 namespace FightClub.Application.Exceptions;
 
-public class NotFoundException : AppException
+/// <summary>
+/// Исключение поиска
+/// </summary>
+/// <param name="message">Сообщение</param>
+public class NotFoundException(string message) : AppException(message, (int)HttpStatusCode.NotFound)
 {
-    public NotFoundException(string message) 
-        : base(message, (int)HttpStatusCode.NotFound)
-    {
-    }
 }

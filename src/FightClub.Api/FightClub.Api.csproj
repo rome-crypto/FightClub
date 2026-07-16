@@ -2,13 +2,15 @@
 
 	
 	<PropertyGroup />
+
 	<ItemGroup>
-		<ProjectReference Include="..\FightClub.Application\FightClub.Application.csproj" />
-		<ProjectReference Include="..\FightClub.Infrastructure\FightClub.Infrastructure.csproj" />
+		<PackageReference Include="FluentValidation.AspNetCore" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Swashbuckle.AspNetCore"/>
+	  <ProjectReference Include="..\FightClub.Application\FightClub.Application.csproj" />
+	  <ProjectReference Include="..\FightClub.Infrastructure\FightClub.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

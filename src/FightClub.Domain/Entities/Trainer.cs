@@ -21,13 +21,16 @@ public sealed class Trainer : Entity
         SetBirthDate(birthDate);
     }
 
-    public void ChangeBirthDate(DateTime birthDate)
+    public void ChangeBirthDate(DateTime? birthDate)
     {
-        SetBirthDate(birthDate);
+        if(birthDate.HasValue)
+            SetBirthDate(birthDate.Value);
     }
 
-    public void Rename(string firstName, string lastName)
+    public void Rename(string? firstName, string? lastName)
     {
+        if (firstName == null || lastName == null)
+            return;    
         SetName(firstName, lastName);
     }
 

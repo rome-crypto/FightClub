@@ -1,8 +1,12 @@
-﻿using System.Text.Json;
-using FightClub.Application.Exceptions;
+﻿using FightClub.Application.Exceptions;
+using FightClub.Domain.Entities;
+using System.Text.Json;
 
 namespace FightClub.Api.Middleware;
 
+/// <summary>
+/// Middleware для исключений
+/// </summary>
 public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;

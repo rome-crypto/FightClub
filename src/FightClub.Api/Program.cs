@@ -1,10 +1,5 @@
 using FightClub.Api.Middleware;
-using FightClub.Application.Interfaces;
-using FightClub.Application.Mappings;
-using FightClub.Application.Services;
 using FightClub.Infrastructure.Persistence;
-using FightClub.Infrastructure.Repositories;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using FightClub.Application;
 using FightClub.Infrastructure;

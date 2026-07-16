@@ -26,7 +26,7 @@ public class BoxerSpecification : BaseSpecification<Boxer>
              x.LastName.Contains(query.Search)) &&
 
             (query.WeightCategory != null  ||
-             x.WeightCategory.Type == query.WeightCategory) &&
+             x.WeightCategory.Name == query.WeightCategory) &&
 
             (!query.MinAge.HasValue || x.Age >= query.MinAge.Value) &&
             (!query.MaxAge.HasValue || x.Age <= query.MaxAge.Value)

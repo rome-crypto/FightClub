@@ -2,6 +2,7 @@
 
 public enum FightStatus
 {
+    Created,
     Scheduled,
     InProgress,
     Finished,

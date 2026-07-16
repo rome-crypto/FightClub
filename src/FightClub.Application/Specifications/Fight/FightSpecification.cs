@@ -14,6 +14,7 @@ public class FightSpecification : BaseSpecification<Fight>
             ["status"] = f => f.Status,
         };
 
+    
     public FightSpecification(FightQueryDto query)
     {
         AddCriteria(x =>
