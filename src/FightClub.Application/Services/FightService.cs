@@ -48,7 +48,7 @@ public sealed class FightService : IFightService
 
         var fight = new Fight(
             dto.BoxerAId,
-            dto.BoxerBId,
+            dto.BoxerBId, null,
             dto.Rounds);
 
 
