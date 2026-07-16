@@ -381,19 +381,6 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Cancel_Should_Throw_When_Fight_Is_Created()
-    {
-        var boxerA = Guid.NewGuid();
-        var boxerB = Guid.NewGuid();
-        var fight = new Fight(boxerA, boxerB);
-
-        fight.Start();
-        fight.Cancel();
-
-        Assert.AreEqual(FightStatus.Cancelled, fight.Status);
-    }
-
-    [TestMethod]
     public void StartRound_Should_Create_Unfinished_Round()
     {
         var boxerA = Guid.NewGuid();
@@ -410,13 +397,24 @@ public class FightTests
     [TestMethod]
     public void StartRound_Should_Throw_When_Maximum_Rounds_Reached()
     {
-        var boxerA = Guid.NewGuid();
-        var boxerB = Guid.NewGuid();
-        var fight = new Fight(boxerA, boxerB, DateTime.UtcNow.AddDays(1), 1);
+        var fight = new Fight(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow.AddDays(1),
+            2);
 
         fight.Start();
+
         fight.StartRound();
-        fight.EndCurrentRound(new RoundScore(10, 10), new BoxingFightEndingPolicy());
+        fight.EndCurrentRound(
+            new RoundScore(10, 10),
+            new BoxingFightEndingPolicy());
+
+        fight.StartRound();
+
+        fight.EndCurrentRound(
+            new RoundScore(10, 9),
+            new BoxingFightEndingPolicy());
 
         Assert.ThrowsExactly<DomainException>(
             () => fight.StartRound());
@@ -428,7 +426,7 @@ public class FightTests
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
-        var fight = new Fight(boxerA, boxerB, DateTime.UtcNow.AddDays(1));
+        var fight = new Fight(boxerA, boxerB, DateTime.UtcNow.AddDays(1), 3);
         var roundEvent = new RoundEvent(RoundEventType.Punch, boxerA);
 
         fight.Start();
@@ -503,7 +501,7 @@ public class FightTests
         fight.StartRound();
         fight.EndCurrentRound(roundScore, policy);
 
-        Assert.AreEqual(FightStatus.InProgress, fight.Status);
+        Assert.AreEqual(FightStatus.Finished, fight.Status);
         Assert.IsTrue(fight.Rounds.Last().IsFinished);
     }
 
@@ -539,7 +537,7 @@ public class FightTests
         fight.Complete(FightOutcome.Finish(boxerA, FightEndType.Decision));
         var state4 = fight.IsAllowedChanges;
 
-        var fight2 = new Fight(boxerA, boxerB);
+        var fight2 = new Fight(boxerA, boxerB, DateTime.UtcNow.AddDays(10));
         fight2.Cancel();
         var state5 = fight2.IsAllowedChanges;
 

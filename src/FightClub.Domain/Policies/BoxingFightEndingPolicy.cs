@@ -12,7 +12,7 @@ public sealed class BoxingFightEndingPolicy : IFightEndingPolicy
         Guid boxerBId, 
         int plannedRounds)
     {
-        if (rounds.Count < plannedRounds)
+        if (rounds.Count(r => r.IsFinished) < plannedRounds)
             return FightOutcome.Continue();
 
         int totalScoreA = rounds.Sum(r => r.ScoreA);
