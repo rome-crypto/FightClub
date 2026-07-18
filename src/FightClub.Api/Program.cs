@@ -31,6 +31,7 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         if (app.Environment.IsDevelopment())

@@ -16,6 +16,8 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(assembly);
 
+        services.AddScoped<IFightService, Services.FightService>();
+
         return services;
     }
 }

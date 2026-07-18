@@ -1,15 +1,19 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+
 WORKDIR /src
 
 COPY . .
 
-RUN dotnet restore
-RUN dotnet publish src/FightClub/FightClub.csproj -c Release -o /app/publish
+RUN dotnet restore src/FightClub.Api/FightClub.Api.csproj
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+RUN dotnet publish src/FightClub.Api/FightClub.Api.csproj -c Release -o /app/publish
+
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+
 WORKDIR /app
 
 COPY --from=build /app/publish .
 
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "FightClub.dll"]
+ENTRYPOINT ["dotnet", "FightClub.Api.dll"]
