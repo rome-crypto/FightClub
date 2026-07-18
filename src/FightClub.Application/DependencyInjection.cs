@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FightClub.Application.Interfaces;
+using FightClub.Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -16,7 +18,11 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(assembly);
 
-        services.AddScoped<IFightService, Services.FightService>();
+        services.AddScoped<IFightService, FightService>();
+        services.AddScoped<IFightSimulationService, FightSimulationService>();
+        services.AddScoped<IBoxerService, BoxerService>();
+        services.AddScoped<IRoundSimulator, RandomRoundSimulator>();
+        services.AddScoped<ITrainerService, TrainerService>();
 
         return services;
     }
