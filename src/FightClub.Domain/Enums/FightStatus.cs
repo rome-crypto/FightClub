@@ -1,4 +1,4 @@
-﻿namespace FightClub.Domain.Services;
+namespace FightClub.Domain.Enums;
 
 public enum FightStatus
 {

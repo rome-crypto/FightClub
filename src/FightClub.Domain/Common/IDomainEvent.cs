@@ -1,6 +1,6 @@
-﻿namespace FightClub.Domain.Common;
+namespace FightClub.Domain.Common;
 
 public interface IDomainEvent
 {
-    DateTime OccurredAt { get; }
+    public DateTime OccurredAt { get; }
 }

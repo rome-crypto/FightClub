@@ -1,22 +1,13 @@
-﻿using FightClub.Application.Exceptions;
-using FightClub.Domain.Entities;
-using System.Text.Json;
+using FightClub.Application.Exceptions;
 
 namespace FightClub.Api.Middleware;
 
 /// <summary>
 /// Middleware для исключений
 /// </summary>
-public class ExceptionMiddleware
+public class ExceptionMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionMiddleware> _logger;
-
-    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
+    private readonly RequestDelegate _next = next;
 
     public async Task InvokeAsync(HttpContext context)
     {

@@ -1,4 +1,3 @@
-﻿using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Trainers;
 using FluentValidation;
 

@@ -1,4 +1,5 @@
-﻿using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.DTOs.Common;
 using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,20 +9,15 @@ namespace FightClub.Api.Controllers;
 /// <summary>
 /// CRUD-контроллер для boxer
 /// </summary>
+/// <remarks>
+/// Внедрение зависимостей
+/// </remarks>
+/// <param name="service">Реализация сервиса для CRUD боксера</param>
 [ApiController]
 [Route("api/boxers")]
-public class BoxersController : ControllerBase
+public class BoxersController(IBoxerService service) : ControllerBase
 {
-    private readonly IBoxerService _boxerService;
-
-    /// <summary>
-    /// Внедрение зависимостей
-    /// </summary>
-    /// <param name="service">Реализация сервиса для CRUD боксера</param>
-    public BoxersController(IBoxerService service)
-    {
-        _boxerService = service;
-    }
+    private readonly IBoxerService _boxerService = service;
 
     /// <summary>
     /// Поиск по ID
@@ -32,7 +28,7 @@ public class BoxersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id) 
     {
-        var result = await _boxerService.GetByIdAsync(id);
+        BoxerResponseDto result = await _boxerService.GetByIdAsync(id);
         
         return Ok(result);
     } 
@@ -45,7 +41,7 @@ public class BoxersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] BoxerCreateDto data)
     {
-        var boxer = await _boxerService.CreateAsync(data);
+        BoxerResponseDto boxer = await _boxerService.CreateAsync(data);
 
         return CreatedAtAction(nameof(GetById), new {id = boxer.Id}, boxer);
     }
@@ -86,7 +82,7 @@ public class BoxersController : ControllerBase
     public async Task<IActionResult> Get(
         [FromQuery] BoxerQueryDto query)
     {
-        var result = await _boxerService.GetPagedAsync(query);
+        PagedResult<BoxerResponseDto> result = await _boxerService.GetPagedAsync(query);
         
         return Ok(result);
     }

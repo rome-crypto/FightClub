@@ -1,4 +1,4 @@
-﻿using FightClub.Domain.Common;
+using FightClub.Domain.Common;
 
 namespace FightClub.Domain.ValueObjects;
 
@@ -39,11 +39,19 @@ public sealed class BoxerStatistics : ValueObject
         WinStreak++;
 
         if (WinStreak > BestWinStreak)
+        {
             BestWinStreak = WinStreak;
+        }
+
         if (knockout)
+        {
             Knockouts++;
+        }
+
         if (technicalKnockout)
+        {
             TechnicalKnockouts++;
+        }
 
         LastFightDate = DateTime.UtcNow;
     }
@@ -53,9 +61,14 @@ public sealed class BoxerStatistics : ValueObject
         WinStreak = 0;
 
         if (knockout)
+        {
             KnockoutLosses++;
+        }
+
         if (technicalKnockout)
+        {
             TechnicalKnockoutLosses++;
+        }
 
         LastFightDate = DateTime.UtcNow;
     }

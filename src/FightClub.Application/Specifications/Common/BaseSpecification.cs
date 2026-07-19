@@ -1,6 +1,6 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
-namespace FightClub.Application.Specifications;
+namespace FightClub.Application.Specifications.Common;
 
 public abstract class BaseSpecification<T> : ISpecification<T>
 {

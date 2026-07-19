@@ -1,6 +1,6 @@
-﻿using FightClub.Domain.Common;
-using FightClub.Domain.Services;
+using FightClub.Domain.Common;
 using FightClub.Domain.Exceptions;
+using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.Entities;
 
@@ -15,7 +15,9 @@ public class RoundEvent : Entity
         Guid boxerId)
     {
         if (boxerId == Guid.Empty)
+        {
             throw new DomainException("BoxerId cannot be empty.");
+        }
 
         Id = Guid.NewGuid();
         Type = type;

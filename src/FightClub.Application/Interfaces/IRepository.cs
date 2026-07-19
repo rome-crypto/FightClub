@@ -1,18 +1,18 @@
-﻿using FightClub.Application.Specifications;
+using FightClub.Application.Specifications.Common;
 
 namespace FightClub.Application.Interfaces;
 
 public interface IRepository<T> where T : class
 {
-    Task<T?> GetByIdAsync(Guid id);
-    Task<int> CountAsync(ISpecification<T> specification);
-    Task<bool> AnyAsync(ISpecification<T> specification);    
+    public Task<T?> GetByIdAsync(Guid id);
+    public Task<int> CountAsync(ISpecification<T> specification);
+    public Task<bool> AnyAsync(ISpecification<T> specification);
 
-    Task AddAsync(T entity);
-    void Delete(T entity);
-    void Update(T entity);
+    public Task AddAsync(T entity);
+    public void Delete(T entity);
+    public void Update(T entity);
 
-    Task SaveChangesAsync();
+    public Task SaveChangesAsync();
 
-    IQueryable<T> Query(ISpecification<T> spec);
+    public IQueryable<T> Query(ISpecification<T> spec);
 }

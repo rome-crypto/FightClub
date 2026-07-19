@@ -1,5 +1,5 @@
 <Project>
-
+	
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
 
@@ -8,14 +8,27 @@
 
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 
-    <LangVersion>preview</LangVersion>
+    <LangVersion>latest</LangVersion>
 
     <AnalysisLevel>latest</AnalysisLevel>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+	<AnalysisMode>Recommended</AnalysisMode>
+	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);CS1591</NoWarn>
 
     <Deterministic>true</Deterministic>
+
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+
+    <RestoreUseStaticGraphEvaluation>true</RestoreUseStaticGraphEvaluation>
+	
+
+	<Version>1.0.0</Version>
+	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+	<FileVersion>1.0.0.0</FileVersion>
+
   </PropertyGroup>
 
 </Project>

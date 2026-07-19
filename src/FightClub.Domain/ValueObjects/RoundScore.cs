@@ -1,4 +1,4 @@
-﻿using FightClub.Domain.Common;
+using FightClub.Domain.Common;
 using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.ValueObjects;
@@ -11,8 +11,10 @@ public sealed class RoundScore : ValueObject
     public RoundScore(int scoreA, int scoreB)
     {
         if (scoreA < 0 || scoreB < 0)
+        {
             throw new DomainException(
                 "Score cannot be negative");
+        }
 
         ScoreA = scoreA;
         ScoreB = scoreB;

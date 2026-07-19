@@ -1,13 +1,12 @@
-﻿using FightClub.Domain.Entities;
+using FightClub.Domain.Entities;
 
 namespace FightClub.Domain.Policies;
 
 public interface IRatingPolicy
 {
-    (
-        int BoxerARating,
-        int BoxerBRating
-    ) Calculate(
+    public (int BoxerARating,
+        int BoxerBRating)
+    Calculate(
         Boxer boxerA,
         Boxer boxerB,
         Guid? winnerId);

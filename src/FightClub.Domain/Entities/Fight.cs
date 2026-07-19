@@ -1,8 +1,8 @@
-﻿using FightClub.Domain.Common;
-using FightClub.Domain.Services;
+using FightClub.Domain.Common;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
 using FightClub.Domain.ValueObjects;
+using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.Entities;
 
@@ -91,15 +91,31 @@ public class Fight : AggregateRoot
     public Fight(Guid boxerAId, Guid boxerBId, DateTime? fightDate = null, int plannedRounds = 12)
     {
         if (boxerAId == boxerBId)
+        {
             throw new DomainException("Boxer cannot fight himself");
+        }
         if (plannedRounds < 1 || plannedRounds > MaxPlannedRounds)
+        {
             throw new DomainException($"Rounds must be between 1 and {MaxPlannedRounds}");
+        }
 
         BoxerAId = boxerAId;
         BoxerBId = boxerBId;
         PlannedRounds = plannedRounds;
         CreatedAt = DateTime.UtcNow;
         Reschedule(fightDate);
+    }
+
+    /// <summary>
+    /// Проверка возможности удаления
+    /// </summary>
+    /// <exception cref="DomainException">Исключение доменной логики</exception>
+    public void EnsureCanBeDeleted()
+    {
+        if (Status == FightStatus.InProgress)
+        {
+            throw new DomainException("Cannot delete fight while it is in progress");
+        }
     }
 
     /// <summary>
@@ -138,7 +154,9 @@ public class Fight : AggregateRoot
     public void Start()
     {
         if (Status != FightStatus.Scheduled)
+        {
             throw new DomainException("Fight cannot started");
+        }
 
         Status = FightStatus.InProgress;
     }
@@ -149,13 +167,20 @@ public class Fight : AggregateRoot
     public void StartRound()
     {
         if (_rounds.LastOrDefault() is { IsFinished: false })
+        {
             throw new DomainException("Finish current round first");
+        }
 
         if (Status != FightStatus.InProgress)
-            throw new DomainException("Fight not active");
+        { 
+            throw new DomainException("Fight not active"); 
+        }
+
 
         if (ActualRounds >= PlannedRounds)
-            throw new DomainException("Maximum rounds reached");
+        { 
+            throw new DomainException("Maximum rounds reached"); 
+        }
 
         _rounds.Add(
             new FightRound(ActualRounds + 1)
@@ -169,10 +194,14 @@ public class Fight : AggregateRoot
     public void RegisterEvent(RoundEvent roundEvent)
     {
         if (Status != FightStatus.InProgress)
+        {
             throw new DomainException("Fight not active");
+        }
 
         if (ActualRounds == 0 || _rounds.Last().IsFinished)
+        {
             throw new DomainException("No active round");
+        }
 
         if (roundEvent.BoxerId != BoxerAId &&
             roundEvent.BoxerId != BoxerBId)
@@ -193,16 +222,20 @@ public class Fight : AggregateRoot
         IFightEndingPolicy endingPolicy)
     {
         if (Status != FightStatus.InProgress)
+        {
             throw new DomainException("Fight not active");
+        }
 
         if (_rounds.Count == 0)
+        {
             throw new DomainException("No active round");
+        }
 
-        var round = _rounds.Last();
+        FightRound round = _rounds.Last();
 
         round.SetScore(score);
 
-        var outcome = endingPolicy.Evaluate(
+        FightOutcome outcome = endingPolicy.Evaluate(
             _rounds,
             BoxerAId,
             BoxerBId,
@@ -221,11 +254,14 @@ public class Fight : AggregateRoot
     public void Complete(FightOutcome outcome)
     {
         if (Status != FightStatus.InProgress)
+        {
             throw new DomainException("Fight must be in progress");
+        }
 
         if (!outcome.IsFinished)
-            throw new DomainException(
-                "Fight outcome is not finished");
+        {
+            throw new DomainException("Fight outcome is not finished");
+        }
 
         WinnerId = outcome.WinnerId;
         EndType = outcome.EndType;
@@ -238,7 +274,9 @@ public class Fight : AggregateRoot
     public void Cancel()
     {
         if (Status != FightStatus.Scheduled)
+        {
             throw new DomainException("Fight cannot to cancel");
+        }
 
         Status = FightStatus.Cancelled;
     }

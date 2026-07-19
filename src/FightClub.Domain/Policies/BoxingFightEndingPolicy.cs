@@ -1,5 +1,5 @@
-﻿using FightClub.Domain.Entities;
-using FightClub.Domain.Services;
+using FightClub.Domain.Entities;
+using FightClub.Domain.Enums;
 using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Domain.Policies;
@@ -13,10 +13,12 @@ public sealed class BoxingFightEndingPolicy : IFightEndingPolicy
         int plannedRounds)
     {
         if (rounds.Count(r => r.IsFinished) < plannedRounds)
+        {
             return FightOutcome.Continue();
+        }
 
-        int totalScoreA = rounds.Sum(r => r.ScoreA);
-        int totalScoreB = rounds.Sum(r => r.ScoreB);
+        var totalScoreA = rounds.Sum(r => r.ScoreA);
+        var totalScoreB = rounds.Sum(r => r.ScoreB);
 
         if (totalScoreA == totalScoreB)
         {

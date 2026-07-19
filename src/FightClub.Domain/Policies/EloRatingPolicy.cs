@@ -1,4 +1,4 @@
-﻿using FightClub.Domain.Entities;
+using FightClub.Domain.Entities;
 
 namespace FightClub.Domain.Policies;
 
@@ -13,7 +13,7 @@ public sealed class EloRatingPolicy : IRatingPolicy
         Boxer boxerB,
         Guid? winnerId)
     {
-        double expectedA =
+        var expectedA =
             1.0 /
             (
                 1 +
@@ -25,7 +25,7 @@ public sealed class EloRatingPolicy : IRatingPolicy
             );
 
 
-        double expectedB = 1 - expectedA;
+        var expectedB = 1 - expectedA;
 
 
 
@@ -51,12 +51,12 @@ public sealed class EloRatingPolicy : IRatingPolicy
 
 
 
-        int newA =
+        var newA =
             boxerA.Ranking.EloRating +
             (int)(K * (scoreA - expectedA));
 
 
-        int newB =
+        var newB =
             boxerB.Ranking.EloRating +
             (int)(K * (scoreB - expectedB));
 

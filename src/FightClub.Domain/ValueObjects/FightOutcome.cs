@@ -1,5 +1,5 @@
-﻿using FightClub.Domain.Services;
 using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.ValueObjects;
 
@@ -22,12 +22,16 @@ public sealed class FightOutcome : ValueObject
     }
 
     public static FightOutcome Continue()
-        => new(false, null, null);
+    {
+        return new(false, null, null);
+    }
 
     public static FightOutcome Finish(
         Guid? winnerId,
         FightEndType endType)
-        => new(true, winnerId, endType);
+    {
+        return new(true, winnerId, endType);
+    }
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {

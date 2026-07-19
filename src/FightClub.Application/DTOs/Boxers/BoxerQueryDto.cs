@@ -1,6 +1,4 @@
-﻿using FightClub.Application.DTOs.Common;
-using FightClub.Domain.Services;
-using FightClub.Domain.ValueObjects;
+using FightClub.Application.DTOs.Common;
 
 namespace FightClub.Application.DTOs.Boxers;
 

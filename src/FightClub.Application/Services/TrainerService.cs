@@ -1,27 +1,21 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Trainers;
 using FightClub.Application.Interfaces;
 using FightClub.Application.Exceptions;
-using FightClub.Application.Specifications;
 using FightClub.Domain.Entities;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using FightClub.Application.Specifications.Trainers;
 
 namespace FightClub.Application.Services;
 
-public class TrainerService : ITrainerService
+public class TrainerService(
+    IRepository<Trainer> repo,
+    IMapper mapper) : ITrainerService
 {
-    private readonly IMapper _mapper;
-    private readonly IRepository<Trainer> _repository;
-
-    public TrainerService(
-        IRepository<Trainer> repo, 
-        IMapper mapper)
-    {
-        _mapper = mapper;
-        _repository = repo;
-    }
+    private readonly IMapper _mapper = mapper;
+    private readonly IRepository<Trainer> _repository = repo;
 
     //command
     public async Task<TrainerResponseDto> CreateAsync(TrainerCreateDto dto)
@@ -40,7 +34,7 @@ public class TrainerService : ITrainerService
     //command
     public async Task DeleteAsync(Guid id)
     {
-        var trainer = await _repository
+        Trainer trainer = await _repository
             .GetByIdAsync(id)
             ?? throw new NotFoundException("Trainer not found");
 
@@ -51,7 +45,7 @@ public class TrainerService : ITrainerService
     //query
     public async Task<TrainerResponseDto> GetByIdAsync(Guid id)
     {
-        var trainer = await _repository.GetByIdAsync(id)
+        Trainer trainer = await _repository.GetByIdAsync(id)
             ?? throw new NotFoundException("Trainer not found");
 
         return _mapper.Map<TrainerResponseDto>(trainer);
@@ -62,7 +56,7 @@ public class TrainerService : ITrainerService
     {
         var spec = new TrainerSpecification(query);
 
-        var items = await _repository
+        List<TrainerResponseDto> items = await _repository
             .Query(spec)
             .ProjectTo<TrainerResponseDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
@@ -82,7 +76,7 @@ public class TrainerService : ITrainerService
     //command
     public async Task UpdateAsync(Guid id, TrainerUpdateDto dto)
     {
-        var trainer = await _repository
+        Trainer trainer = await _repository
             .GetByIdAsync(id)
             ?? throw new NotFoundException("Boxer not found");
 

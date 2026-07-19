@@ -1,6 +1,7 @@
-﻿using FightClub.Domain.Entities;
+using FightClub.Application.Specifications.Common;
+using FightClub.Domain.Entities;
 
-namespace FightClub.Application.Specifications;
+namespace FightClub.Application.Specifications.Fights;
 
 public class FightByIdWithDetailsSpecification
     : BaseSpecification<Fight>

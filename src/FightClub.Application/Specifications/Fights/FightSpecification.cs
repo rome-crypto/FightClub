@@ -1,9 +1,10 @@
-﻿using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Fights;
+using FightClub.Application.Specifications.Common;
 using FightClub.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace FightClub.Application.Specifications;
+namespace FightClub.Application.Specifications.Fights;
 
 public class FightSpecification : BaseSpecification<Fight>
 {
@@ -27,13 +28,19 @@ public class FightSpecification : BaseSpecification<Fight>
 
         var sortBy = query.SortBy ?? "date";
 
-        if (!SortMap.TryGetValue(sortBy, out var selector))
+        if (!SortMap.TryGetValue(sortBy, out Expression<Func<Fight, object>>? selector))
+        {
             selector = x => x.CreatedAt;
+        }
 
         if (query.SortOrder == SortOrder.Desc)
+        {
             ApplyOrderByDescending(selector);
+        }
         else
+        {
             ApplyOrderBy(selector);
+        }
 
         ApplyPaging((query.Page - 1) * query.PageSize, query.PageSize);
     }

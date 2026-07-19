@@ -1,8 +1,7 @@
-﻿using FightClub.Domain.Entities;
+using FightClub.Domain.Entities;
+using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
-using FightClub.Domain.Services;
-using FightClub.Domain.Tests.Policies;
 using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Domain.Tests.Entities;
@@ -11,7 +10,7 @@ namespace FightClub.Domain.Tests.Entities;
 public class FightTests
 {
     [TestMethod]
-    public void Constructor_Should_Create_Created_Fight_When_Date_Is_Null()
+    public void ConstructorShouldCreateCreatedFightWhenDateIsNull()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -23,11 +22,11 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Constructor_Should_Create_Scheduled_Fight_When_Date_Provided()
+    public void ConstructorShouldCreateScheduledFightWhenDateProvided()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
-        var date = DateTime.UtcNow.AddDays(7);
+        DateTime date = DateTime.UtcNow.AddDays(7);
 
         var fight = new Fight(boxerA, boxerB, date);
 
@@ -36,7 +35,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Constructor_Should_Throw_When_Boxers_Are_Equal()
+    public void ConstructorShouldThrowWhenBoxersAreEqual()
     {
         var boxer = Guid.NewGuid();
 
@@ -45,7 +44,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Reschedule_Should_Throw_When_Date_In_Past()
+    public void RescheduleShouldThrowWhenDateInPast()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -58,14 +57,14 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Reschedule_Should_Update_Fight_Date()
+    public void RescheduleShouldUpdateFightDate()
     {
         var fight = new Fight(
             Guid.NewGuid(),
             Guid.NewGuid()
         );
 
-        var newDate = DateTime.UtcNow.AddDays(10);
+        DateTime newDate = DateTime.UtcNow.AddDays(10);
 
         fight.Reschedule(newDate);
 
@@ -74,7 +73,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Start_Should_Change_Status_To_InProgress()
+    public void StartShouldChangeStatusToInProgress()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -91,7 +90,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Start_Should_Throw_When_Fight_Is_Not_Scheduled()
+    public void StartShouldThrowWhenFightIsNotScheduled()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -104,7 +103,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Start_Should_Throw_When_Fight_Already_Started()
+    public void StartShouldThrowWhenFightAlreadyStarted()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -120,7 +119,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Cancel_Should_Change_Status_To_Cancelled()
+    public void CancelShouldChangeStatusToCancelled()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -137,7 +136,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Complete_Should_Set_Status_To_Finished_And_Winner()
+    public void CompleteShouldSetStatusToFinishedAndWinner()
     {
         var boxerAId = Guid.NewGuid();
         var boxerBId = Guid.NewGuid();
@@ -162,7 +161,7 @@ public class FightTests
     }
     
     [TestMethod]
-    public void Complete_Should_Throw_When_Outcome_Not_Finished()
+    public void CompleteShouldThrowWhenOutcomeNotFinished()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -178,7 +177,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Complete_Should_Throw_When_Fight_Not_Started()
+    public void CompleteShouldThrowWhenFightNotStarted()
     {
         var outcome = FightOutcome.Finish(
             Guid.NewGuid(),
@@ -194,7 +193,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void StartRound_Should_Create_First_Round()
+    public void StartRoundShouldCreateFirstRound()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -210,7 +209,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void StartRound_Should_Throw_When_Fight_Not_Started()
+    public void StartRoundShouldThrowWhenFightNotStarted()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -222,7 +221,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void StartRound_Should_Throw_When_Previous_Round_Not_Finished()
+    public void StartRoundShouldThrowWhenPreviousRoundNotFinished()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -238,7 +237,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void RegisterEvent_Should_Throw_When_No_Active_Round()
+    public void RegisterEventShouldThrowWhenNoActiveRound()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -257,7 +256,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void RegisterEvent_Should_Throw_When_Boxer_Not_Participant()
+    public void RegisterEventShouldThrowWhenBoxerNotParticipant()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -280,7 +279,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void RegisterEvent_Should_Add_Event()
+    public void RegisterEventShouldAddEvent()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -303,7 +302,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Constructor_Should_Throw_When_PlannedRounds_Less_Than_One()
+    public void ConstructorShouldThrowWhenPlannedRoundsLessThanOne()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -316,7 +315,7 @@ public class FightTests
 
 
     [TestMethod]
-    public void Constructor_Should_Throw_When_PlannedRounds_Greater_Than_MaxPlannedRounds()
+    public void ConstructorShouldThrowWhenPlannedRoundsGreaterThanMaxPlannedRounds()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -328,7 +327,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Reschedule_Should_Throw_When_Fight_Is_InProgress()
+    public void RescheduleShouldThrowWhenFightIsInProgress()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -341,7 +340,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Reschedule_Should_Throw_When_Fight_Is_Cancelled()
+    public void RescheduleShouldThrowWhenFightIsCancelled()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -354,7 +353,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Start_Should_Throw_When_Fight_Is_Cancelled()
+    public void StartShouldThrowWhenFightIsCancelled()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -367,7 +366,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Cancel_Should_Throw_When_Fight_Is_Finished()
+    public void CancelShouldThrowWhenFightIsFinished()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -381,7 +380,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void StartRound_Should_Create_Unfinished_Round()
+    public void StartRoundShouldCreateUnfinishedRound()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -395,7 +394,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void StartRound_Should_Throw_When_Maximum_Rounds_Reached()
+    public void StartRoundShouldThrowWhenMaximumRoundsReached()
     {
         var fight = new Fight(
             Guid.NewGuid(),
@@ -422,7 +421,7 @@ public class FightTests
 
 
     [TestMethod]
-    public void RegisterEvent_Should_Throw_When_Round_Is_Finished()
+    public void RegisterEventShouldThrowWhenRoundIsFinished()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -439,7 +438,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void EndCurrentRound_Should_Finish_Current_Round()
+    public void EndCurrentRoundShouldFinishCurrentRound()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -457,7 +456,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void EndCurrentRound_Should_Throw_When_No_Active_Round()
+    public void EndCurrentRoundShouldThrowWhenNoActiveRound()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -473,7 +472,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void EndCurrentRound_Should_Continue_Fight_When_Not_All_Rounds_Finished()
+    public void EndCurrentRoundShouldContinueFightWhenNotAllRoundsFinished()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -489,7 +488,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void EndCurrentRound_Should_Finish_Fight_When_Last_Round_Finished()
+    public void EndCurrentRoundShouldFinishFightWhenLastRoundFinished()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -506,7 +505,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void Complete_Should_Throw_When_Fight_Already_Finished()
+    public void CompleteShouldThrowWhenFightAlreadyFinished()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
@@ -520,7 +519,7 @@ public class FightTests
     }
 
     [TestMethod]
-    public void IsAllowedChanges_Check()
+    public void IsAllowedChangesCheck()
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();

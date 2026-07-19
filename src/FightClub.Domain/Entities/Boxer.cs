@@ -1,7 +1,7 @@
-﻿using FightClub.Domain.Exceptions;
+using FightClub.Domain.Exceptions;
 using FightClub.Domain.ValueObjects;
-using FightClub.Domain.Services;
 using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.Entities;
 
@@ -39,30 +39,38 @@ public class Boxer : AggregateRoot
     public void ChangeBirthDate(DateTime? birthDate)
     {
         if (birthDate.HasValue)
+        {
             SetBirthDate(birthDate.Value);
+        }
     }
 
     public void Rename(string? firstName, string? lastName)
     {
-        if (firstName == null || lastName == null ) 
+        if (firstName == null || lastName == null)
+        {
             return;
+        }
 
         SetName(firstName, lastName);
     }
 
     public void ChangeWeight(int? weight)
     {
-        if (weight.HasValue) 
+        if (weight.HasValue)
+        {
             SetWeight(weight.Value);
+        } 
     }
 
     private static int CalculateAge(DateTime birthDate)
     {
-        var today = DateTime.Today;
+        DateTime today = DateTime.Today;
         var age = today.Year - birthDate.Year;
         
-        if (birthDate.Date > today.AddYears(-age)) 
+        if (birthDate.Date > today.AddYears(-age))
+        {
             age--;
+        }
 
         return age;
     }
@@ -100,10 +108,14 @@ public class Boxer : AggregateRoot
     public void AssignTrainer(Guid? trainerId) 
     {
         if (trainerId == Guid.Empty)
+        {
             throw new DomainException("Trainer ID is invalid");
+        }
         
         if (TrainerId == trainerId)
+        {
             return;
+        }
 
         TrainerId = trainerId;
     }
@@ -111,7 +123,10 @@ public class Boxer : AggregateRoot
     public void RemoveTrainer()
     {
         if (TrainerId is null)
+        {
+
             return;
+        }
 
         TrainerId = null;
     }
@@ -119,13 +134,23 @@ public class Boxer : AggregateRoot
     private void SetName(string firstName, string lastName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
+        {
             throw new DomainException("First name is required");
+        }
+
         if (string.IsNullOrWhiteSpace(lastName))
+        {
             throw new DomainException("Last name is required");
+        }
+
         if (firstName.Length > 50)
+        {
             throw new DomainException("First name cannot exceed 50 characters");
+        }
         if (lastName.Length > 50)
+        {
             throw new DomainException("Last name cannot exceed 50 characters");
+        }
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
@@ -134,7 +159,9 @@ public class Boxer : AggregateRoot
     private void SetWeight(int weight)
     {
         if (weight < 30 || weight > 200)
+        {
             throw new DomainException("Invalid weight.");
+        }
 
         _ = WeightCategory.FromWeight(weight);
 
@@ -145,7 +172,9 @@ public class Boxer : AggregateRoot
     {
         var age = CalculateAge(birthDate);
         if (age < 18 || age > 80)
+        {
             throw new DomainException("Age must be between 18 and 80");
+        }
         DateOfBirth = birthDate;
     }
 }

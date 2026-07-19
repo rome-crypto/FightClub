@@ -1,14 +1,14 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
-namespace FightClub.Application.Specifications;
+namespace FightClub.Application.Specifications.Common;
 
 public interface ISpecification<T>
 {
-    Expression<Func<T, bool>>? Criteria { get; }
-    Expression<Func<T, object>>? OrderBy { get; }
-    Expression<Func<T, object>>? OrderByDescending { get; }
-    IReadOnlyList<Expression<Func<T, object>>> Includes { get; } 
-    int Take { get; }
-    int Skip { get; }
-    bool IsPagingEnabled { get; }
+    public Expression<Func<T, bool>>? Criteria { get; }
+    public Expression<Func<T, object>>? OrderBy { get; }
+    public Expression<Func<T, object>>? OrderByDescending { get; }
+    public IReadOnlyList<Expression<Func<T, object>>> Includes { get; } 
+    public int Take { get; }
+    public int Skip { get; }
+    public bool IsPagingEnabled { get; }
 }

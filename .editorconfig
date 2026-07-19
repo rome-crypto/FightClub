@@ -1,0 +1,203 @@
+root = true
+
+
+#######################################
+# C# files
+#######################################
+
+[*.cs]
+
+#######################################
+# Encoding / line endings
+#######################################
+
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+
+#######################################
+# Indentation
+#######################################
+
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+
+#######################################
+# Usings
+#######################################
+
+dotnet_sort_system_directives_first = true
+
+csharp_using_directive_placement = outside_namespace:suggestion
+
+dotnet_diagnostic.IDE0005.severity = suggestion
+
+
+#######################################
+# Namespace style
+#######################################
+
+csharp_style_namespace_declarations = file_scoped:suggestion
+
+
+#######################################
+# var usage
+#######################################
+
+# var для очевидных типов
+csharp_style_var_when_type_is_apparent = true:suggestion
+
+# var для встроенных типов
+csharp_style_var_for_built_in_types = true:suggestion
+
+# var когда тип не очевиден
+csharp_style_var_elsewhere = false:suggestion
+
+
+#######################################
+# Braces
+#######################################
+
+# Всегда использовать {}
+csharp_prefer_braces = true:warning
+
+
+#######################################
+# Expression body
+#######################################
+
+# Методы обычным синтаксисом
+csharp_style_expression_bodied_methods = false:suggestion
+
+# Свойства expression body
+csharp_style_expression_bodied_properties = true:suggestion
+
+# Конструкторы обычным синтаксисом
+csharp_style_expression_bodied_constructors = false:suggestion
+
+
+#######################################
+# Pattern matching
+#######################################
+
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+
+
+#######################################
+# Null
+#######################################
+
+csharp_style_null_propagation = true:suggestion
+
+csharp_style_coalesce_expression = true:suggestion
+
+
+#######################################
+# Naming
+#######################################
+
+# Интерфейсы должны начинаться с I
+
+dotnet_naming_rule.interfaces_should_be_prefixed_with_i.severity = warning
+
+dotnet_naming_rule.interfaces_should_be_prefixed_with_i.symbols = interface_symbols
+
+dotnet_naming_rule.interfaces_should_be_prefixed_with_i.style = interface_style
+
+
+dotnet_naming_symbols.interface_symbols.applicable_kinds = interface
+
+
+dotnet_naming_style.interface_style.required_prefix = I
+
+
+#######################################
+# Accessibility
+#######################################
+
+# Явно указывать модификаторы доступа
+
+dotnet_style_require_accessibility_modifiers = always:suggestion
+
+
+#######################################
+# Async
+#######################################
+
+# Не требовать ConfigureAwait(false)
+# Для ASP.NET Core это не нужно
+
+dotnet_diagnostic.CA2007.severity = none
+
+
+#######################################
+# Documentation
+#######################################
+
+# Не требовать XML комментарии
+
+dotnet_diagnostic.CS1591.severity = none
+
+
+#######################################
+# Design rules
+#######################################
+
+# Публичные поля запрещаем
+dotnet_diagnostic.CA1051.severity = warning
+
+
+# Не требовать sealed для классов
+dotnet_diagnostic.CA1852.severity = none
+
+
+#######################################
+# Exceptions
+#######################################
+
+# Не заставлять создавать свои exception constructors
+
+dotnet_diagnostic.CA1032.severity = none
+
+
+#######################################
+# Performance
+#######################################
+
+# Не использовать LINQ там, где можно цикл
+
+dotnet_diagnostic.CA1851.severity = suggestion
+
+
+#######################################
+# Serialization
+#######################################
+
+# Не ругаться на публичные поля DTO
+
+dotnet_diagnostic.CA1819.severity = none
+
+
+#######################################
+# Comments
+#######################################
+
+# TODO оставляем
+
+dotnet_diagnostic.S1144.severity = none
+
+
+#######################################
+# Tests
+#######################################
+
+[**/*Tests.cs]
+
+# В тестах меньше ограничений
+
+dotnet_diagnostic.CA1031.severity = none

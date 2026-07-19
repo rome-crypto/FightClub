@@ -1,19 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using FightClub.Application.Interfaces;
-using FightClub.Application.Specifications;
 using FightClub.Infrastructure.Persistence;
+using FightClub.Application.Specifications.Common;
 namespace FightClub.Infrastructure.Repositories;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<T>(FightClubDbContext context) 
+    : IRepository<T> where T : class
 {
-    protected readonly FightClubDbContext _context;
-    protected readonly DbSet<T> _dbSet;
-
-    public Repository(FightClubDbContext context)
-    {
-        _context = context;
-        _dbSet = context.Set<T>();
-    }
+    private readonly FightClubDbContext _context = context;
+    private readonly DbSet<T> _dbSet = context.Set<T>();
 
     public async Task AddAsync(T entity)
     {
@@ -42,7 +37,7 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task<int> CountAsync(ISpecification<T> specification)
     {
-        var query = SpecificationEvaluator.GetCountQuery(
+        IQueryable<T> query = SpecificationEvaluator.GetCountQuery(
             _dbSet.AsQueryable(), 
             specification);
 
@@ -51,7 +46,7 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task<bool> AnyAsync(ISpecification<T> specification)
     {
-        var query = SpecificationEvaluator.GetCountQuery(
+        IQueryable<T> query = SpecificationEvaluator.GetCountQuery(
             _dbSet.AsQueryable(),
             specification);
 

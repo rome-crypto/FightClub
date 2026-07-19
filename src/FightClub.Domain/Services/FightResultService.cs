@@ -1,4 +1,5 @@
-﻿using FightClub.Domain.Entities;
+using FightClub.Domain.Entities;
+using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
 
@@ -8,17 +9,11 @@ namespace FightClub.Domain.Services;
 /// <summary>
 /// Сервис для формирования результата боя
 /// </summary>
-public sealed class FightResultService
-    : IFightResultService
+public sealed class FightResultService(IRatingPolicy ratingPolicy)
+        : IFightResultService
 {
 
-    private readonly IRatingPolicy _ratingPolicy;
-
-    public FightResultService(
-        IRatingPolicy ratingPolicy)
-    {
-        _ratingPolicy = ratingPolicy;
-    }
+    private readonly IRatingPolicy _ratingPolicy = ratingPolicy;
 
     public void Apply(
         Fight fight,
@@ -27,10 +22,12 @@ public sealed class FightResultService
     {
 
         if (fight.EndType is null)
+        {
             throw new DomainException(
                 "Fight is not finished.");
+        }
 
-        var (BoxerARating, BoxerBRating) =
+        (var BoxerARating, var BoxerBRating) =
             _ratingPolicy.Calculate(
                 boxerA,
                 boxerB,

@@ -1,26 +1,20 @@
-﻿using AutoMapper;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FightClub.Application.DTOs.Boxers;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.Exceptions;
 using FightClub.Application.Interfaces;
-using FightClub.Application.Specifications;
-using FightClub.Domain.Common;
+using FightClub.Application.Specifications.Boxers;
 using FightClub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FightClub.Application.Services;
 
-public class BoxerService 
-    : IBoxerService
+public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
+        : IBoxerService
 {
-    private readonly IMapper _mapper;
-    private readonly IRepository<Boxer> _repository;
-    public BoxerService(IRepository<Boxer> repo, IMapper mapper)
-    {
-        _mapper = mapper;   
-        _repository = repo;
-    }
+    private readonly IMapper _mapper = mapper;
+    private readonly IRepository<Boxer> _repository = repo;
 
     //command
     public async Task<BoxerResponseDto> CreateAsync(BoxerCreateDto dto)
@@ -41,7 +35,7 @@ public class BoxerService
     //command
     public async Task DeleteAsync(Guid id)
     {
-        var boxer = await _repository.GetByIdAsync(id) 
+        Boxer boxer = await _repository.GetByIdAsync(id) 
             ?? throw new NotFoundException("Boxer not found");
 
         _repository.Delete(boxer);
@@ -51,7 +45,7 @@ public class BoxerService
     //query
     public async Task<BoxerResponseDto> GetByIdAsync(Guid id)
     {
-        var boxer = await _repository.GetByIdAsync(id)
+        Boxer boxer = await _repository.GetByIdAsync(id)
             ?? throw new NotFoundException("Boxer not found");
 
         return _mapper.Map<BoxerResponseDto>(boxer);
@@ -62,7 +56,7 @@ public class BoxerService
     {
         var spec = new BoxerSpecification(query);
 
-        var items = await _repository
+        List<BoxerResponseDto> items = await _repository
             .Query(spec)
             .ProjectTo<BoxerResponseDto>(_mapper.ConfigurationProvider)
             .ToListAsync();
@@ -81,7 +75,7 @@ public class BoxerService
     //command
     public async Task UpdateAsync(Guid id, BoxerUpdateDto dto)
     {
-        var boxer = await _repository.GetByIdAsync(id) 
+        Boxer boxer = await _repository.GetByIdAsync(id) 
             ?? throw new NotFoundException("Boxer not found");
 
         boxer.ChangeWeight(dto.Weight);

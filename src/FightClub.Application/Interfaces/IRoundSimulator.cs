@@ -1,10 +1,10 @@
-﻿using FightClub.Domain.ValueObjects;
+using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Application.Interfaces;
 
 public interface IRoundSimulator
 {
-    RoundScore Simulate(
+    public RoundScore Simulate(
         Guid boxerAId,
         Guid boxerBId);
 }

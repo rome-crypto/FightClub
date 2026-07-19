@@ -1,8 +1,10 @@
-﻿using FightClub.Application.Exceptions;
+using FightClub.Application.Exceptions;
 using FightClub.Application.Interfaces;
 using FightClub.Domain.Entities;
+using FightClub.Domain.Enums;
 using FightClub.Domain.Policies;
 using FightClub.Domain.Services;
+using FightClub.Domain.ValueObjects;
 
 
 namespace FightClub.Application.Services;
@@ -10,41 +12,30 @@ namespace FightClub.Application.Services;
 /// <summary>
 /// Сервис для обработки бизнес процесса боя
 /// </summary>
-public sealed class FightSimulationService
-    : IFightSimulationService
+/// <remarks>
+/// Внедрение зависимостей
+/// </remarks>
+/// <param name="fightRepository">Репозиторий боя</param>
+/// <param name="boxerRepository">Репозиторий боксеров</param>
+/// <param name="roundSimulator">Симулятор раунда</param>
+/// <param name="endingPolicy">Политика завершения</param>
+/// <param name="resultService">Сервис для результата боя</param>
+public sealed class FightSimulationService(
+    IRepository<Fight> fightRepository,
+    IRepository<Boxer> boxerRepository,
+    IRoundSimulator roundSimulator,
+    IFightEndingPolicy endingPolicy,
+    IFightResultService resultService)
+        : IFightSimulationService
 {
 
-    private readonly IRepository<Fight> _fightRepository;
-    private readonly IRepository<Boxer> _boxerRepository;
+    private readonly IRepository<Fight> _fightRepository = fightRepository;
+    private readonly IRepository<Boxer> _boxerRepository = boxerRepository;
 
-    private readonly IRoundSimulator _roundSimulator;
-    private readonly IFightEndingPolicy _endingPolicy;
+    private readonly IRoundSimulator _roundSimulator = roundSimulator;
+    private readonly IFightEndingPolicy _endingPolicy = endingPolicy;
 
-    private readonly IFightResultService
-        _resultService;
-
-
-    /// <summary>
-    /// Внедрение зависимостей
-    /// </summary>
-    /// <param name="fightRepository">Репозиторий боя</param>
-    /// <param name="boxerRepository">Репозиторий боксеров</param>
-    /// <param name="roundSimulator">Симулятор раунда</param>
-    /// <param name="endingPolicy">Политика завершения</param>
-    /// <param name="resultService">Сервис для результата боя</param>
-    public FightSimulationService(
-        IRepository<Fight> fightRepository,
-        IRepository<Boxer> boxerRepository,
-        IRoundSimulator roundSimulator,
-        IFightEndingPolicy endingPolicy,
-        IFightResultService resultService)
-    {
-        _fightRepository = fightRepository;
-        _boxerRepository = boxerRepository;
-        _roundSimulator = roundSimulator;
-        _endingPolicy = endingPolicy;
-        _resultService = resultService;
-    }
+    private readonly IFightResultService _resultService = resultService;
 
     /// <summary>
     /// Отмена боя
@@ -54,7 +45,7 @@ public sealed class FightSimulationService
     /// <exception cref="NotFoundException">Исключение поиска</exception>
     public async Task CancelAsync(Guid fightId)
     {
-        var fight = await _fightRepository
+        Fight fight = await _fightRepository
             .GetByIdAsync(fightId) 
             ?? throw new NotFoundException("Fight not found");
 
@@ -71,15 +62,15 @@ public sealed class FightSimulationService
     public async Task ExecuteAsync(
         Guid fightId)
     {
-        var fight = await _fightRepository
+        Fight fight = await _fightRepository
             .GetByIdAsync(fightId)
             ?? throw new NotFoundException("Fight not found");
 
-        var boxerA = await _boxerRepository
+        Boxer boxerA = await _boxerRepository
             .GetByIdAsync(fight.BoxerAId)
             ?? throw new NotFoundException("Boxer A not found");
 
-        var boxerB = await _boxerRepository
+        Boxer boxerB = await _boxerRepository
             .GetByIdAsync(fight.BoxerBId)
             ?? throw new NotFoundException("Boxer B not found");
 
@@ -89,7 +80,7 @@ public sealed class FightSimulationService
         {
             fight.StartRound();
 
-            var score =_roundSimulator
+            RoundScore score =_roundSimulator
                 .Simulate(
                 fight.BoxerAId,
                     fight.BoxerBId);

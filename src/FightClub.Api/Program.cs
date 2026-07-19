@@ -1,9 +1,11 @@
 using FightClub.Api.Middleware;
-using FightClub.Infrastructure.Persistence;
-using FluentValidation.AspNetCore;
 using FightClub.Application;
 using FightClub.Infrastructure;
+using FightClub.Infrastructure.Persistence;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace FightClub.Api;
 
@@ -11,40 +13,69 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+        // Controllers
         builder.Services.AddControllers();
 
+        // FluentValidation
         builder.Services
-            .AddFluentValidationAutoValidation()
-            .AddFluentValidationClientsideAdapters();
+            .AddFluentValidationAutoValidation();
 
+        // Swagger
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "FightClub API",
+                Version = "v1",
+                Description = "Boxing match management system"
+            });
 
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
+        });
+
+        // Dependency Injection
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
 
-        var app = builder.Build();
+        // Health Checks
+        builder.Services.AddHealthChecks()
+            .AddNpgSql(
+                builder.Configuration.GetConnectionString("Default")!,
+                name: "PostgreSQL",
+                tags: ["db","postgresql"])
+            .AddDbContextCheck<FightClubDbContext>(
+                name: "FightClub EF Core",
+                tags: ["db", "efcore"]);
 
+        WebApplication app = builder.Build();
+
+        // Exeption handling middleware
         app.UseMiddleware<ExceptionMiddleware>();
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-
+        // Swagger and database migration in development environment
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            using var scope = app.Services.CreateScope();
+            using IServiceScope scope = app.Services.CreateScope();
 
-            var db = scope.ServiceProvider.GetRequiredService<FightClubDbContext>();
+            FightClubDbContext db = scope.ServiceProvider.GetRequiredService<FightClubDbContext>();
 
             db.Database.Migrate();
         }
+
+        app.MapHealthChecks("/health");
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 

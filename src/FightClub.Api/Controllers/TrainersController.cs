@@ -1,4 +1,3 @@
-﻿using FightClub.Api.Middleware;
 using FightClub.Application.DTOs.Trainers;
 using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -8,20 +7,15 @@ namespace FightClub.Api.Controllers;
 /// <summary>
 /// CRUD контроллер для сущности тренера
 /// </summary>
+/// <remarks>
+/// Внедрение зависимостей
+/// </remarks>
+/// <param name="service">Реализация сервиса для CRUD тренера</param>
 [ApiController]
 [Route("api/trainers")]
-public class TrainersController : ControllerBase
+public class TrainersController(ITrainerService service) : ControllerBase
 {
-    private readonly ITrainerService _service;
-
-    /// <summary>
-    /// Внедрение зависимостей
-    /// </summary>
-    /// <param name="service">Реализация сервиса для CRUD тренера</param>
-    public TrainersController(ITrainerService service)
-    {
-        _service = service;
-    }
+    private readonly ITrainerService _service = service;
 
     /// <summary>
     /// Создание нового объекта
@@ -31,7 +25,7 @@ public class TrainersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(TrainerCreateDto dto)
     {
-        var result = await _service.CreateAsync(dto);
+        TrainerResponseDto result = await _service.CreateAsync(dto);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }

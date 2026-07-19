@@ -1,5 +1,5 @@
-﻿using FightClub.Domain.Common;
-using FightClub.Domain.Services;
+using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.ValueObjects;
 
@@ -37,7 +37,10 @@ public sealed class WeightCategory : ValueObject
         };
     }
 
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

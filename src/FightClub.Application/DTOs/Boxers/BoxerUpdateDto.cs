@@ -1,5 +1,3 @@
-﻿using FightClub.Domain.Services;
-
 namespace FightClub.Application.DTOs.Boxers;
 
 public class BoxerUpdateDto

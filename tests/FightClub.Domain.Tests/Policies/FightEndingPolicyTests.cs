@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace FightClub.Domain.Tests.Policies;
 
-internal class FightEndingPolicyTests
+[TestClass]
+public sealed class FightClubPolicyTests
 {
+    [TestMethod]
+    public void TestMethod1()
+    {
+    }
 }
+

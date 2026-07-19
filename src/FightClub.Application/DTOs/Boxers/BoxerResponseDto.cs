@@ -1,6 +1,3 @@
-﻿using FightClub.Domain.Services;
-using FightClub.Domain.ValueObjects;
-
 namespace FightClub.Application.DTOs.Boxers;
 
 public class BoxerResponseDto

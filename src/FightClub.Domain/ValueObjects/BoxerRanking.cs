@@ -1,7 +1,5 @@
-﻿using FightClub.Domain.Common;
-using FightClub.Domain.Services;
+using FightClub.Domain.Common;
 using FightClub.Domain.Exceptions;
-using System.Data;
 
 namespace FightClub.Domain.ValueObjects;
 
@@ -22,14 +20,18 @@ public sealed class BoxerRanking : ValueObject
     internal void AddRankingPoints(int points)
     {
         if (points < 0)
+        {
             throw new DomainException("Points cannot be less than 0");
+        }
 
         RankingPoints += points;
     }
     internal void RemoveRankingPoints(int points)
     {
         if (points < 0)
+        {
             throw new DomainException("Points cannot be less than 0");
+        }
 
         RankingPoints = Math.Max(0, RankingPoints - points);
     }

@@ -1,9 +1,10 @@
-﻿using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Trainers;
+using FightClub.Application.Specifications.Common;
 using FightClub.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace FightClub.Application.Specifications;
+namespace FightClub.Application.Specifications.Trainers;
 
 public class TrainerSpecification : BaseSpecification<Trainer>
 {
@@ -28,13 +29,19 @@ public class TrainerSpecification : BaseSpecification<Trainer>
 
         var sortBy = query.SortBy;
 
-        if (!SortMap.TryGetValue(sortBy ?? "name", out var selector))
+        if (!SortMap.TryGetValue(sortBy ?? "name", out Expression<Func<Trainer, object>>? selector))
+        {
             selector = x => x.LastName;
+        }
 
         if (query.SortOrder == SortOrder.Desc)
+        {
             ApplyOrderByDescending(selector);
+        }
         else
+        {
             ApplyOrderBy(selector);
+        }
 
         ApplyPaging((query.Page - 1) * query.PageSize, query.PageSize);
     }

@@ -1,4 +1,5 @@
-﻿using FightClub.Application.DTOs.Fights;
+using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Fights;
 using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,26 +9,19 @@ namespace FightClub.Api.Controllers;
 /// <summary>
 /// CRUD-контроллер для fight + запуск боя
 /// </summary>
+/// <remarks>
+/// Внедрение зависимостей
+/// </remarks>
+/// <param name="service">Реализация сервиса для CRUD боя</param>
+/// <param name="simulation">Реализация сервиса для бизнес-процесса боя</param>
 [ApiController]
 [Route("api/fights")]
-public class FightController : ControllerBase
+public class FightController(
+    IFightService service,
+    IFightSimulationService simulation) : ControllerBase
 {
-    private readonly IFightService _service;
-    private readonly IFightSimulationService _simulation;
-
-
-    /// <summary>
-    /// Внедрение зависимостей
-    /// </summary>
-    /// <param name="service">Реализация сервиса для CRUD боя</param>
-    /// <param name="simulation">Реализация сервиса для бизнес-процесса боя/param>
-    public FightController(
-        IFightService service,
-        IFightSimulationService simulation)
-    {
-        _service = service;
-        _simulation = simulation;
-    }
+    private readonly IFightService _service = service;
+    private readonly IFightSimulationService _simulation = simulation;
 
 
     /// <summary>
@@ -38,7 +32,7 @@ public class FightController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] FightQueryDto query)
     {
-        var result = await _service.GetPagedAsync(query);
+        PagedResult<FightResponseDto> result = await _service.GetPagedAsync(query);
 
         return Ok(result);
     }
@@ -52,7 +46,7 @@ public class FightController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] FightCreateDto data)
     {
-        var fight = await _service.CreateAsync(data);
+        FightResponseDto fight = await _service.CreateAsync(data);
 
         return CreatedAtAction(nameof(GetById), new { id = fight.Id }, fight);
     }

@@ -1,34 +1,28 @@
 <Project>
-
-	<PropertyGroup>
-		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-	</PropertyGroup>
-
-	<ItemGroup>
-
-		<!-- Testing -->
-		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
-		<PackageVersion Include="MSTest" Version="3.10.4" />
-		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
-
-		<!-- AutoMapper -->
-		<PackageVersion Include="AutoMapper" Version="15.1.0" />
-
-		<!-- Entity Framework -->
-		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
-		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7" />
-		<PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.7" />
-		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-
-		<!-- FluentValidation -->
-		<PackageVersion Include="FluentValidation" Version="11.11.0" />
-		<PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-		<PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />
-
-		<!-- Swagger -->
-		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
-		<PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.3" />
-
-	</ItemGroup>
-
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Testing -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="MSTest" Version="3.10.4" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <!-- AutoMapper -->
+    <PackageVersion Include="AutoMapper" Version="16.2.0" />
+    <!-- Entity Framework -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.7" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.7" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <!-- FluentValidation -->
+    <PackageVersion Include="FluentValidation" Version="11.11.0" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+	<PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />
+    <!-- Swagger -->
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.3" />
+	<!-- Health Checks -->
+	<PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.7" />
+	<PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
+  </ItemGroup>
 </Project>
