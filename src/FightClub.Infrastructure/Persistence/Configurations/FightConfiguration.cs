@@ -1,4 +1,4 @@
-﻿using FightClub.Domain.Entities;
+using FightClub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -41,15 +41,11 @@ public sealed class FightConfiguration
             round.HasKey(x => x.Id);
 
             round.Property(x => x.Number);
-
             round.Property(x => x.ScoreA);
-
             round.Property(x => x.ScoreB);
-
             round.Property(x => x.IsFinished);
 
-            round.Navigation(x => x.Events)
-                .UsePropertyAccessMode(PropertyAccessMode.Field);
+            
 
             round.OwnsMany(r => r.Events, e =>
             {

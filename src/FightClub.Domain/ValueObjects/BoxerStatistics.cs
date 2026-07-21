@@ -4,79 +4,109 @@ namespace FightClub.Domain.ValueObjects;
 
 public sealed class BoxerStatistics : ValueObject
 {
-    public int Wins { get; private set; }
-    public int Losses { get; private set; }
-    public int Draws { get; private set; }
+    public int Wins { get; }
+    public int Losses { get; }
+    public int Draws { get; }
 
-    public int Knockouts { get; private set; }
-    public int TechnicalKnockouts { get; private set; }
+    public int Knockouts { get; }
+    public int TechnicalKnockouts { get; }
 
-    public int KnockoutLosses { get; private set; }
-    public int TechnicalKnockoutLosses { get; private set; }
+    public int KnockoutLosses { get; }
+    public int TechnicalKnockoutLosses { get; }
 
-    public int WinStreak { get; private set; }
-    public int BestWinStreak { get; private set; }
+    public int WinStreak { get; }
+    public int BestWinStreak { get; }
 
-    public DateTime? LastFightDate { get; private set; }
+    public DateTime? LastFightDate { get; }
 
     public int TotalFights => Wins + Losses + Draws;
 
     public double WinRate =>
         TotalFights == 0
         ? 0
-        : Math.Round((double)Wins / (TotalFights) * 100, 2);
+        : Math.Round((double)Wins / TotalFights * 100, 2);
 
     public double KnockoutRate =>
         Wins == 0
         ? 0
-        : Math.Round((double)Knockouts / (Wins) * 100, 2);
+        : Math.Round((double)Knockouts / Wins * 100, 2);
 
-    internal BoxerStatistics() { }
-
-    internal void RegisterWin(bool knockout = false, bool technicalKnockout = false) 
+    internal BoxerStatistics()
     {
-        Wins++; 
-        WinStreak++;
-
-        if (WinStreak > BestWinStreak)
-        {
-            BestWinStreak = WinStreak;
-        }
-
-        if (knockout)
-        {
-            Knockouts++;
-        }
-
-        if (technicalKnockout)
-        {
-            TechnicalKnockouts++;
-        }
-
-        LastFightDate = DateTime.UtcNow;
     }
-    internal void RegisterLoss(bool knockout = false, bool technicalKnockout = false) 
+
+    private BoxerStatistics(
+        int wins,
+        int losses,
+        int draws,
+        int knockouts,
+        int technicalKnockouts,
+        int knockoutLosses,
+        int technicalKnockoutLosses,
+        int winStreak,
+        int bestWinStreak,
+        DateTime? lastFightDate)
     {
-        Losses++; 
-        WinStreak = 0;
-
-        if (knockout)
-        {
-            KnockoutLosses++;
-        }
-
-        if (technicalKnockout)
-        {
-            TechnicalKnockoutLosses++;
-        }
-
-        LastFightDate = DateTime.UtcNow;
+        Wins = wins;
+        Losses = losses;
+        Draws = draws;
+        Knockouts = knockouts;
+        TechnicalKnockouts = technicalKnockouts;
+        KnockoutLosses = knockoutLosses;
+        TechnicalKnockoutLosses = technicalKnockoutLosses;
+        WinStreak = winStreak;
+        BestWinStreak = bestWinStreak;
+        LastFightDate = lastFightDate;
     }
-    internal void RegisterDraw()
+
+    internal BoxerStatistics RegisterWin(bool knockout = false, bool technicalKnockout = false)
     {
-        Draws++;
-        WinStreak = 0;
-        LastFightDate = DateTime.UtcNow;
+        var newWinStreak = WinStreak + 1;
+
+        return new BoxerStatistics(
+            wins: Wins + 1,
+            losses: Losses,
+            draws: Draws,
+            knockouts: Knockouts + (knockout ? 1 : 0),
+            technicalKnockouts: TechnicalKnockouts + (technicalKnockout ? 1 : 0),
+            knockoutLosses: KnockoutLosses,
+            technicalKnockoutLosses: TechnicalKnockoutLosses,
+            winStreak: newWinStreak,
+            bestWinStreak: Math.Max(BestWinStreak, newWinStreak),
+            lastFightDate: DateTime.UtcNow
+        );
+    }
+
+    internal BoxerStatistics RegisterLoss(bool knockout = false, bool technicalKnockout = false)
+    {
+        return new BoxerStatistics(
+            wins: Wins,
+            losses: Losses + 1,
+            draws: Draws,
+            knockouts: Knockouts,
+            technicalKnockouts: TechnicalKnockouts,
+            knockoutLosses: KnockoutLosses + (knockout ? 1 : 0),
+            technicalKnockoutLosses: TechnicalKnockoutLosses + (technicalKnockout ? 1 : 0),
+            winStreak: 0,
+            bestWinStreak: BestWinStreak,
+            lastFightDate: DateTime.UtcNow
+        );
+    }
+
+    internal BoxerStatistics RegisterDraw()
+    {
+        return new BoxerStatistics(
+            wins: Wins,
+            losses: Losses,
+            draws: Draws + 1,
+            knockouts: Knockouts,
+            technicalKnockouts: TechnicalKnockouts,
+            knockoutLosses: KnockoutLosses,
+            technicalKnockoutLosses: TechnicalKnockoutLosses,
+            winStreak: 0,
+            bestWinStreak: BestWinStreak,
+            lastFightDate: DateTime.UtcNow
+        );
     }
 
     protected override IEnumerable<object?> GetEqualityComponents()
@@ -91,8 +121,5 @@ public sealed class BoxerStatistics : ValueObject
         yield return WinStreak;
         yield return BestWinStreak;
         yield return LastFightDate;
-        yield return TotalFights;
-        yield return WinRate;
-        yield return KnockoutRate;
     }
 }

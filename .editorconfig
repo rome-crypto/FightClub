@@ -130,7 +130,6 @@ dotnet_style_require_accessibility_modifiers = always:suggestion
 #######################################
 
 # Не требовать ConfigureAwait(false)
-# Для ASP.NET Core это не нужно
 
 dotnet_diagnostic.CA2007.severity = none
 
@@ -149,10 +148,12 @@ dotnet_diagnostic.CS1591.severity = none
 #######################################
 
 # Публичные поля запрещаем
+
 dotnet_diagnostic.CA1051.severity = warning
 
 
 # Не требовать sealed для классов
+
 dotnet_diagnostic.CA1852.severity = none
 
 

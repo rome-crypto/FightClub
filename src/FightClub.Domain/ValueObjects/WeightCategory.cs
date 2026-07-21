@@ -47,6 +47,5 @@ public sealed class WeightCategory : ValueObject
         yield return Name;
         yield return MinWeight;
         yield return MaxWeight;
-        yield return Type;
     }
 }

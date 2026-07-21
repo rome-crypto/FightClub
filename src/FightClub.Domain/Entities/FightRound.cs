@@ -14,8 +14,7 @@ public class FightRound : Entity
     public int ScoreB { get; private set; }
     
     public bool IsFinished { get; private set; }
-    public IReadOnlyCollection<RoundEvent> Events
-        => _events.AsReadOnly();
+    public IReadOnlyCollection<RoundEvent> Events => _events;
 
     internal FightRound(int number)
     {

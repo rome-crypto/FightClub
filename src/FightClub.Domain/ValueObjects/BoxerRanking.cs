@@ -5,35 +5,53 @@ namespace FightClub.Domain.ValueObjects;
 
 public sealed class BoxerRanking : ValueObject
 {
-    public int EloRating { get; private set; }
-    public int RankingPoints {  get; private set; }
+    public int EloRating { get; }
+    public int RankingPoints { get; }
 
     internal BoxerRanking()
     {
         EloRating = 1500;
+        RankingPoints = 0;
     }
 
-    internal void UpdateElo(int rating)
+    private BoxerRanking(int eloRating, int rankingPoints)
     {
-        EloRating = Math.Max(0, rating);
+        EloRating = eloRating;
+        RankingPoints = rankingPoints;
     }
-    internal void AddRankingPoints(int points)
+
+    internal BoxerRanking UpdateElo(int rating)
+    {
+        return new BoxerRanking(
+            eloRating: Math.Max(0, rating),
+            rankingPoints: RankingPoints
+        );
+    }
+
+    internal BoxerRanking AddRankingPoints(int points)
     {
         if (points < 0)
         {
             throw new DomainException("Points cannot be less than 0");
         }
 
-        RankingPoints += points;
+        return new BoxerRanking(
+            eloRating: EloRating,
+            rankingPoints: RankingPoints + points
+        );
     }
-    internal void RemoveRankingPoints(int points)
+
+    internal BoxerRanking RemoveRankingPoints(int points)
     {
         if (points < 0)
         {
             throw new DomainException("Points cannot be less than 0");
         }
 
-        RankingPoints = Math.Max(0, RankingPoints - points);
+        return new BoxerRanking(
+            eloRating: EloRating,
+            rankingPoints: Math.Max(0, RankingPoints - points)
+        );
     }
 
     protected override IEnumerable<object?> GetEqualityComponents()

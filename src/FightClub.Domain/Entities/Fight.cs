@@ -61,8 +61,7 @@ public class Fight : AggregateRoot
     /// <summary>
     /// Ссылка на лист раундов
     /// </summary>
-    public IReadOnlyCollection<FightRound> Rounds 
-        => _rounds.AsReadOnly();
+    public IReadOnlyCollection<FightRound> Rounds => _rounds;
 
     /// <summary>
     /// Дата создания
@@ -116,10 +115,15 @@ public class Fight : AggregateRoot
         {
             throw new DomainException("Cannot delete fight while it is in progress");
         }
+
+        if (Status == FightStatus.Finished)
+        {
+            throw new DomainException("Cannot delete finished fights");
+        }
     }
 
     /// <summary>
-    /// Поменять дату боя
+    /// Запланировать дату боя
     /// </summary>
     /// <param name="fightDate">Дата боя</param>
     /// <exception cref="DomainException"></exception>
@@ -127,13 +131,13 @@ public class Fight : AggregateRoot
     {
         if (Status != FightStatus.Created && Status != FightStatus.Scheduled)
         {
-            throw new DomainException("Fight cannot scheduled");
+            throw new DomainException("Fight cannot be rescheduled");
         }
 
         if (fightDate == null)
         {
+            FightDate = null;
             Status = FightStatus.Created;
-            FightDate = fightDate;
             return;
         }
 
@@ -141,11 +145,9 @@ public class Fight : AggregateRoot
         {
             throw new DomainException("Fight date must be in the future");
         }
-        else if (fightDate > DateTime.UtcNow)
-        {
-            FightDate = fightDate;
-            Status = FightStatus.Scheduled;
-        }
+
+        FightDate = fightDate;
+        Status = FightStatus.Scheduled;
     }
 
     /// <summary>

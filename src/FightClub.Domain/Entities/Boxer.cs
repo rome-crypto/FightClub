@@ -18,8 +18,8 @@ public class Boxer : AggregateRoot
     public Guid? TrainerId { get; private set; }
 
     // Статистика
-    public BoxerStatistics Statistics { get; private set; } = new BoxerStatistics();
-    public BoxerRanking Ranking { get; private set; } = new BoxerRanking();
+    public BoxerStatistics Statistics { get; private set; } = new();
+    public BoxerRanking Ranking { get; private set; } = new();
 
     // EF Core нужен пустой конструктор
     private Boxer() : base()
@@ -80,38 +80,31 @@ public class Boxer : AggregateRoot
         FightEndType endType,
         int newElo)
     {
-        switch (result)
+        Statistics = result switch
         {
-            case FightResult.Win:
-                Statistics.RegisterWin(
-                    knockout: endType == FightEndType.Knockout,
-                    technicalKnockout: endType == FightEndType.TechnicalKnockout);
-                break;
+            FightResult.Win => Statistics.RegisterWin(
+                knockout: endType == FightEndType.Knockout,
+                technicalKnockout: endType == FightEndType.TechnicalKnockout),
 
-            case FightResult.Loss:
-                Statistics.RegisterLoss(
-                    knockout: endType == FightEndType.Knockout,
-                    technicalKnockout: endType == FightEndType.TechnicalKnockout);
-                break;
+            FightResult.Loss => Statistics.RegisterLoss(
+                knockout: endType == FightEndType.Knockout,
+                technicalKnockout: endType == FightEndType.TechnicalKnockout),
 
-            case FightResult.Draw:
-                Statistics.RegisterDraw();
-                break;
-            
-            default:
-                throw new DomainException("Unknown fight result");
-        }
+            FightResult.Draw => Statistics.RegisterDraw(),
 
-        Ranking.UpdateElo(newElo);
+            _ => throw new DomainException("Unknown fight result")
+        };
+
+        Ranking = Ranking.UpdateElo(newElo);
     }
 
-    public void AssignTrainer(Guid? trainerId) 
+    public void AssignTrainer(Guid? trainerId)
     {
-        if (trainerId == Guid.Empty)
+        if (trainerId.HasValue && trainerId.Value == Guid.Empty)
         {
-            throw new DomainException("Trainer ID is invalid");
+            throw new DomainException("Trainer ID cannot be empty GUID");
         }
-        
+
         if (TrainerId == trainerId)
         {
             return;
