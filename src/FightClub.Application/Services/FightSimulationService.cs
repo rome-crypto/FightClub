@@ -46,7 +46,7 @@ public sealed class FightSimulationService(
     public async Task CancelAsync(Guid fightId)
     {
         Fight fight = await _fightRepository
-            .GetByIdAsync(fightId) 
+            .GetByIdAsync(fightId)
             ?? throw new NotFoundException("Fight not found");
 
         fight.Cancel();
@@ -80,7 +80,7 @@ public sealed class FightSimulationService(
         {
             fight.StartRound();
 
-            RoundScore score =_roundSimulator
+            RoundScore score = _roundSimulator
                 .Simulate(
                 fight.BoxerAId,
                     fight.BoxerBId);

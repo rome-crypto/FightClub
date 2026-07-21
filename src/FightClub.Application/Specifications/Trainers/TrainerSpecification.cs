@@ -1,8 +1,8 @@
+using System.Linq.Expressions;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Trainers;
 using FightClub.Application.Specifications.Common;
 using FightClub.Domain.Entities;
-using System.Linq.Expressions;
 
 namespace FightClub.Application.Specifications.Trainers;
 

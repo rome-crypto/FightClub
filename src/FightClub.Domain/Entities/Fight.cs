@@ -1,8 +1,8 @@
 using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 using FightClub.Domain.Exceptions;
 using FightClub.Domain.Policies;
 using FightClub.Domain.ValueObjects;
-using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.Entities;
 
@@ -21,7 +21,7 @@ public class Fight : AggregateRoot
     /// Лист раундов
     /// </summary>
     private readonly List<FightRound> _rounds = [];
-    
+
     /// <summary>
     /// ID боксера А
     /// </summary>
@@ -30,7 +30,7 @@ public class Fight : AggregateRoot
     /// ID боксера Б
     /// </summary>
     public Guid BoxerBId { get; private set; }
-    
+
     /// <summary>
     /// ID победителя
     /// </summary>
@@ -174,14 +174,14 @@ public class Fight : AggregateRoot
         }
 
         if (Status != FightStatus.InProgress)
-        { 
-            throw new DomainException("Fight not active"); 
+        {
+            throw new DomainException("Fight not active");
         }
 
 
         if (ActualRounds >= PlannedRounds)
-        { 
-            throw new DomainException("Maximum rounds reached"); 
+        {
+            throw new DomainException("Maximum rounds reached");
         }
 
         _rounds.Add(

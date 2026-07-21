@@ -1,9 +1,9 @@
-﻿namespace FightClub.Application.Exceptions;
+namespace FightClub.Application.Exceptions;
 
 public class AppException : Exception
 {
-    public int StatusCode { get;}
-    
+    public int StatusCode { get; }
+
     protected AppException(string message, int statusCode) : base(message)
     {
         StatusCode = statusCode;

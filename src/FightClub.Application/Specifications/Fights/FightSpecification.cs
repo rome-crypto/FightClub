@@ -1,8 +1,8 @@
+using System.Linq.Expressions;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Fights;
 using FightClub.Application.Specifications.Common;
 using FightClub.Domain.Entities;
-using System.Linq.Expressions;
 
 namespace FightClub.Application.Specifications.Fights;
 
@@ -15,7 +15,7 @@ public class FightSpecification : BaseSpecification<Fight>
             ["status"] = f => f.Status,
         };
 
-    
+
     public FightSpecification(FightQueryDto query)
     {
         AddCriteria(x =>

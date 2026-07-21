@@ -159,7 +159,7 @@ public class FightTests
 
         Assert.AreEqual(FightEndType.Knockout, fight.EndType);
     }
-    
+
     [TestMethod]
     public void CompleteShouldThrowWhenOutcomeNotFinished()
     {
@@ -431,7 +431,7 @@ public class FightTests
         fight.Start();
         fight.StartRound();
         fight.EndCurrentRound(new RoundScore(10, 9), new BoxingFightEndingPolicy());
-        
+
 
         Assert.ThrowsExactly<DomainException>(
             () => fight.RegisterEvent(roundEvent));
@@ -492,7 +492,7 @@ public class FightTests
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
-        var fight = new Fight(boxerA, boxerB,DateTime.UtcNow.AddDays(1), 1);
+        var fight = new Fight(boxerA, boxerB, DateTime.UtcNow.AddDays(1), 1);
         var roundScore = new RoundScore(10, 9);
         var policy = new BoxingFightEndingPolicy();
 
@@ -523,10 +523,10 @@ public class FightTests
     {
         var boxerA = Guid.NewGuid();
         var boxerB = Guid.NewGuid();
-        
+
         var fight = new Fight(boxerA, boxerB);
         var state1 = fight.IsAllowedChanges;
-        
+
         fight.Reschedule(DateTime.UtcNow.AddDays(5));
         var state2 = fight.IsAllowedChanges;
 

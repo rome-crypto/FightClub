@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using FightClub.Application.Interfaces;
-using FightClub.Infrastructure.Persistence;
 using FightClub.Application.Specifications.Common;
+using FightClub.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 namespace FightClub.Infrastructure.Repositories;
 
-public class Repository<T>(FightClubDbContext context) 
+public class Repository<T>(FightClubDbContext context)
     : IRepository<T> where T : class
 {
     private readonly FightClubDbContext _context = context;
@@ -38,7 +38,7 @@ public class Repository<T>(FightClubDbContext context)
     public async Task<int> CountAsync(ISpecification<T> specification)
     {
         IQueryable<T> query = SpecificationEvaluator.GetCountQuery(
-            _dbSet.AsQueryable(), 
+            _dbSet.AsQueryable(),
             specification);
 
         return await query.CountAsync();

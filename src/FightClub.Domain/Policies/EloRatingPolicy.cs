@@ -8,7 +8,7 @@ public sealed class EloRatingPolicy : IRatingPolicy
 
 
     public (int BoxerARating,
-        int BoxerBRating) 
+        int BoxerBRating)
         Calculate(Boxer boxerA,
         Boxer boxerB,
         Guid? winnerId)

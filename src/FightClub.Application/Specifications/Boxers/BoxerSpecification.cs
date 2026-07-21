@@ -1,8 +1,8 @@
+using System.Linq.Expressions;
 using FightClub.Application.DTOs.Boxers;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.Specifications.Common;
 using FightClub.Domain.Entities;
-using System.Linq.Expressions;
 
 namespace FightClub.Application.Specifications.Boxers;
 
@@ -26,7 +26,7 @@ public class BoxerSpecification : BaseSpecification<Boxer>
              x.FirstName.Contains(query.Search) ||
              x.LastName.Contains(query.Search)) &&
 
-            (query.WeightCategory != null  ||
+            (query.WeightCategory != null ||
              x.WeightCategory.Name == query.WeightCategory) &&
 
             (!query.MinAge.HasValue || x.Age >= query.MinAge.Value) &&

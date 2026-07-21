@@ -36,7 +36,7 @@ public class FightController(
 
         return Ok(result);
     }
-    
+
 
     /// <summary>
     /// Создание нового объекта 
@@ -98,7 +98,7 @@ public class FightController(
     /// <param name="id">ID боя</param>
     /// <returns>HTTP 204</returns>
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id) 
+    public async Task<IActionResult> Delete(Guid id)
     {
         await _service.DeleteAsync(id);
 

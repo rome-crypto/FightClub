@@ -26,13 +26,13 @@ public class BoxersController(IBoxerService service) : ControllerBase
     /// <param name="id">ID боксера</param>
     /// <returns>HTTP 200 и результат поиска</returns>
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id) 
+    public async Task<IActionResult> GetById(Guid id)
     {
         BoxerResponseDto result = await _boxerService.GetByIdAsync(id);
-        
+
         return Ok(result);
-    } 
-    
+    }
+
     /// <summary>
     /// Создание нового объекта
     /// </summary>
@@ -43,7 +43,7 @@ public class BoxersController(IBoxerService service) : ControllerBase
     {
         BoxerResponseDto boxer = await _boxerService.CreateAsync(data);
 
-        return CreatedAtAction(nameof(GetById), new {id = boxer.Id}, boxer);
+        return CreatedAtAction(nameof(GetById), new { id = boxer.Id }, boxer);
     }
 
     /// <summary>
@@ -67,9 +67,9 @@ public class BoxersController(IBoxerService service) : ControllerBase
     /// <returns>HTTP 204</returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
-    {            
+    {
         await _boxerService.DeleteAsync(id);
-        
+
         return NoContent();
     }
 
@@ -83,7 +83,7 @@ public class BoxersController(IBoxerService service) : ControllerBase
         [FromQuery] BoxerQueryDto query)
     {
         PagedResult<BoxerResponseDto> result = await _boxerService.GetPagedAsync(query);
-        
+
         return Ok(result);
     }
 }

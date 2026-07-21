@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FightClub.Application.DTOs.Fights;
 using FightClub.Application.DTOs.Fights.FightDetails;
 using FightClub.Domain.Entities;

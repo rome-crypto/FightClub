@@ -1,3 +1,4 @@
+using System.Reflection;
 using FightClub.Api.Middleware;
 using FightClub.Application;
 using FightClub.Infrastructure;
@@ -5,7 +6,6 @@ using FightClub.Infrastructure.Persistence;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 namespace FightClub.Api;
 
@@ -47,7 +47,7 @@ public class Program
             .AddNpgSql(
                 builder.Configuration.GetConnectionString("Default")!,
                 name: "PostgreSQL",
-                tags: ["db","postgresql"])
+                tags: ["db", "postgresql"])
             .AddDbContextCheck<FightClubDbContext>(
                 name: "FightClub EF Core",
                 tags: ["db", "efcore"]);

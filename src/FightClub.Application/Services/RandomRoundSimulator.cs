@@ -1,4 +1,4 @@
-﻿using FightClub.Application.Interfaces;
+using FightClub.Application.Interfaces;
 using FightClub.Domain.ValueObjects;
 
 

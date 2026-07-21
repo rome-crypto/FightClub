@@ -45,7 +45,7 @@ public sealed class FightConfiguration
             round.Property(x => x.ScoreB);
             round.Property(x => x.IsFinished);
 
-            
+
 
             round.OwnsMany(r => r.Events, e =>
             {

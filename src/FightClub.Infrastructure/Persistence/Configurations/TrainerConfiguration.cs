@@ -1,4 +1,4 @@
-﻿using FightClub.Domain.Entities;
+using FightClub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

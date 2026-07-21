@@ -1,12 +1,12 @@
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Trainers;
-using FightClub.Application.Interfaces;
 using FightClub.Application.Exceptions;
-using FightClub.Domain.Entities;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
+using FightClub.Application.Interfaces;
 using FightClub.Application.Specifications.Trainers;
+using FightClub.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FightClub.Application.Services;
 

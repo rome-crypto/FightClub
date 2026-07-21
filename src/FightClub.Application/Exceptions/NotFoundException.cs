@@ -1,4 +1,4 @@
-﻿global using System.Net;
+global using System.Net;
 
 namespace FightClub.Application.Exceptions;
 

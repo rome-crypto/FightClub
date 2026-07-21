@@ -1,4 +1,4 @@
-﻿namespace FightClub.Application.DTOs.Fights;
+namespace FightClub.Application.DTOs.Fights;
 
 public class FightCreateDto
 {

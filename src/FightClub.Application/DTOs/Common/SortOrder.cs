@@ -1,4 +1,4 @@
-﻿namespace FightClub.Application.DTOs.Common;
+namespace FightClub.Application.DTOs.Common;
 
 public enum SortOrder
 {

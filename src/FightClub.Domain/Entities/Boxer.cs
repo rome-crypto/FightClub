@@ -1,7 +1,7 @@
-using FightClub.Domain.Exceptions;
-using FightClub.Domain.ValueObjects;
 using FightClub.Domain.Common;
 using FightClub.Domain.Enums;
+using FightClub.Domain.Exceptions;
+using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Domain.Entities;
 
@@ -59,14 +59,14 @@ public class Boxer : AggregateRoot
         if (weight.HasValue)
         {
             SetWeight(weight.Value);
-        } 
+        }
     }
 
     private static int CalculateAge(DateTime birthDate)
     {
         DateTime today = DateTime.Today;
         var age = today.Year - birthDate.Year;
-        
+
         if (birthDate.Date > today.AddYears(-age))
         {
             age--;

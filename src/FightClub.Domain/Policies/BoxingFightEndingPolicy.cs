@@ -7,9 +7,9 @@ namespace FightClub.Domain.Policies;
 public sealed class BoxingFightEndingPolicy : IFightEndingPolicy
 {
     public FightOutcome Evaluate(
-        IReadOnlyCollection<FightRound> rounds, 
-        Guid boxerAId, 
-        Guid boxerBId, 
+        IReadOnlyCollection<FightRound> rounds,
+        Guid boxerAId,
+        Guid boxerBId,
         int plannedRounds)
     {
         if (rounds.Count(r => r.IsFinished) < plannedRounds)

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FightClub.Infrastructure.Persistence;
 
-public class FightClubDbContext(DbContextOptions<FightClubDbContext> options) 
+public class FightClubDbContext(DbContextOptions<FightClubDbContext> options)
     : DbContext(options)
 {
     public DbSet<Boxer> Boxers => Set<Boxer>();

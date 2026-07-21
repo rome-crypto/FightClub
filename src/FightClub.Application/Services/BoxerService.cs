@@ -20,10 +20,10 @@ public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
     public async Task<BoxerResponseDto> CreateAsync(BoxerCreateDto dto)
     {
         var boxer = new Boxer(
-            dto.FirstName, 
-            dto.LastName, 
-            dto.BirthDate, 
-            dto.Weight, 
+            dto.FirstName,
+            dto.LastName,
+            dto.BirthDate,
+            dto.Weight,
             dto.TrainerId);
 
         await _repository.AddAsync(boxer);
@@ -35,7 +35,7 @@ public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
     //command
     public async Task DeleteAsync(Guid id)
     {
-        Boxer boxer = await _repository.GetByIdAsync(id) 
+        Boxer boxer = await _repository.GetByIdAsync(id)
             ?? throw new NotFoundException("Boxer not found");
 
         _repository.Delete(boxer);
@@ -68,14 +68,14 @@ public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
             Items = items,
             TotalCount = total,
             Page = query.Page,
-            PageSize = query.PageSize            
+            PageSize = query.PageSize
         };
     }
 
     //command
     public async Task UpdateAsync(Guid id, BoxerUpdateDto dto)
     {
-        Boxer boxer = await _repository.GetByIdAsync(id) 
+        Boxer boxer = await _repository.GetByIdAsync(id)
             ?? throw new NotFoundException("Boxer not found");
 
         boxer.ChangeWeight(dto.Weight);

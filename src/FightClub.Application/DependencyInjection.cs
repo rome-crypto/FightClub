@@ -1,10 +1,10 @@
+using System.Reflection;
 using FightClub.Application.Interfaces;
 using FightClub.Application.Services;
 using FightClub.Domain.Policies;
 using FightClub.Domain.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace FightClub.Application;
 

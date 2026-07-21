@@ -1,4 +1,4 @@
-﻿using FightClub.Application.DTOs.Boxers;
+using FightClub.Application.DTOs.Boxers;
 using FluentValidation;
 
 namespace FightClub.Application.Validators.Boxers;
