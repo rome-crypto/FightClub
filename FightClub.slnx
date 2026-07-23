@@ -1,6 +1,12 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/FightClub/FightClub.csproj" />
+    <Project Path="src/FightClub.Api/FightClub.Api.csproj" />
+    <Project Path="src/FightClub.Application/FightClub.Application.csproj" />
+    <Project Path="src/FightClub.Domain/FightClub.Domain.csproj" />
+    <Project Path="src/FightClub.Infrastructure/FightClub.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/Tests/">
+    <Project Path="tests/FightClub.Api.Tests/FightClub.Api.Tests.csproj" />
+    <Project Path="tests/FightClub.Domain.Tests/FightClub.Domain.Tests.csproj" />
+  </Folder>
 </Solution>

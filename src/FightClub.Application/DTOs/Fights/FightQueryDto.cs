@@ -1,0 +1,13 @@
+﻿using FightClub.Application.DTOs.Common;
+using FightClub.Domain.Enums;
+
+namespace FightClub.Application.DTOs.Fights;
+
+public class FightQueryDto : BaseQueryDto
+{
+    public FightStatus? Status { get; set; }
+    public Guid? BoxerId { get; set; }
+    public Guid? WinnerId { get; set; }
+    public DateTime? From { get; set; }
+    public DateTime? To { get; set; }
+}
