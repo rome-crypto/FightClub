@@ -1,4 +1,4 @@
-using FightClub.Application.DTOs.Boxers;
+﻿using FightClub.Application.DTOs.Boxers;
 using FightClub.Application.DTOs.Common;
 
 namespace FightClub.Application.Interfaces;

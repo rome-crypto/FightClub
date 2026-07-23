@@ -1,4 +1,4 @@
-using FightClub.Application.Interfaces;
+﻿using FightClub.Application.Interfaces;
 using FightClub.Application.Specifications.Common;
 using FightClub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;

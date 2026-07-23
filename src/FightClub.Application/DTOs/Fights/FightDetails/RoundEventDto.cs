@@ -1,4 +1,4 @@
-using FightClub.Domain.Enums;
+﻿using FightClub.Domain.Enums;
 
 namespace FightClub.Application.DTOs.Fights.FightDetails;
 

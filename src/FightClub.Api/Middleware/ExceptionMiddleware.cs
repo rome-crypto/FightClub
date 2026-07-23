@@ -1,4 +1,4 @@
-using FightClub.Application.Exceptions;
+﻿using FightClub.Application.Exceptions;
 
 namespace FightClub.Api.Middleware;
 

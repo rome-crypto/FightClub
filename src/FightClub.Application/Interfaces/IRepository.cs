@@ -1,4 +1,4 @@
-using FightClub.Application.Specifications.Common;
+﻿using FightClub.Application.Specifications.Common;
 
 namespace FightClub.Application.Interfaces;
 

@@ -1,4 +1,4 @@
-namespace FightClub.Domain.Tests.ValueObjects;
+﻿namespace FightClub.Domain.Tests.ValueObjects;
 
 [TestClass]
 public sealed class BoxerStatisticsTests

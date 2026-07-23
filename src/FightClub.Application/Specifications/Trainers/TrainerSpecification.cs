@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.DTOs.Trainers;
 using FightClub.Application.Specifications.Common;

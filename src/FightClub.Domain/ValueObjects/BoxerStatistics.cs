@@ -1,4 +1,4 @@
-using FightClub.Domain.Common;
+﻿using FightClub.Domain.Common;
 
 namespace FightClub.Domain.ValueObjects;
 

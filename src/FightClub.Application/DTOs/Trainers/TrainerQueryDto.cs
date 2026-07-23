@@ -1,4 +1,4 @@
-using FightClub.Application.DTOs.Common;
+﻿using FightClub.Application.DTOs.Common;
 
 namespace FightClub.Application.DTOs.Trainers;
 

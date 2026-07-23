@@ -1,4 +1,4 @@
-namespace FightClub.Domain.Tests.Services;
+﻿namespace FightClub.Domain.Tests.Services;
 
 [TestClass]
 public sealed class FightClubServiceTests

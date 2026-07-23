@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using FightClub.Application.Interfaces;
 using FightClub.Application.Services;
 using FightClub.Domain.Policies;

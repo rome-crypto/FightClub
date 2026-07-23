@@ -1,4 +1,4 @@
-namespace FightClub.Domain.Common;
+﻿namespace FightClub.Domain.Common;
 
 public abstract class AggregateRoot : Entity
 {

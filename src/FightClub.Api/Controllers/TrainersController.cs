@@ -1,4 +1,4 @@
-using FightClub.Application.DTOs.Trainers;
+﻿using FightClub.Application.DTOs.Trainers;
 using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

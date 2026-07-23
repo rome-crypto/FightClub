@@ -1,4 +1,4 @@
-using FightClub.Application.Exceptions;
+﻿using FightClub.Application.Exceptions;
 using FightClub.Application.Interfaces;
 using FightClub.Domain.Entities;
 using FightClub.Domain.Enums;

@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using FightClub.Api.Middleware;
 using FightClub.Application;
 using FightClub.Infrastructure;

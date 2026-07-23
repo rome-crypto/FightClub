@@ -1,4 +1,4 @@
-using FightClub.Domain.ValueObjects;
+﻿using FightClub.Domain.ValueObjects;
 
 namespace FightClub.Application.Interfaces;
 

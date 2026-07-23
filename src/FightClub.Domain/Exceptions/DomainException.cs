@@ -1,4 +1,4 @@
-namespace FightClub.Domain.Exceptions;
+﻿namespace FightClub.Domain.Exceptions;
 
 public class DomainException : Exception
 {

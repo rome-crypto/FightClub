@@ -1,4 +1,4 @@
-using FightClub.Application.DTOs.Fights;
+﻿using FightClub.Application.DTOs.Fights;
 using FluentValidation;
 
 namespace FightClub.Application.Validators.Fights;

@@ -1,4 +1,4 @@
-using FightClub.Application.DTOs.Boxers;
+﻿using FightClub.Application.DTOs.Boxers;
 using FightClub.Application.DTOs.Common;
 using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;

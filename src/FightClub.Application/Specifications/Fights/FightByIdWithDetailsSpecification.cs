@@ -1,4 +1,4 @@
-using FightClub.Application.Specifications.Common;
+﻿using FightClub.Application.Specifications.Common;
 using FightClub.Domain.Entities;
 
 namespace FightClub.Application.Specifications.Fights;

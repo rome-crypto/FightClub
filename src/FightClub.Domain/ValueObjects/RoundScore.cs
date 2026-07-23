@@ -1,4 +1,4 @@
-using FightClub.Domain.Common;
+﻿using FightClub.Domain.Common;
 using FightClub.Domain.Exceptions;
 
 namespace FightClub.Domain.ValueObjects;

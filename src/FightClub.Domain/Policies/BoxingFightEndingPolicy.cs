@@ -1,4 +1,4 @@
-using FightClub.Domain.Entities;
+﻿using FightClub.Domain.Entities;
 using FightClub.Domain.Enums;
 using FightClub.Domain.ValueObjects;
 

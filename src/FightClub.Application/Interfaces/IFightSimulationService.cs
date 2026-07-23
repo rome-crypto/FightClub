@@ -1,4 +1,4 @@
-namespace FightClub.Application.Interfaces;
+﻿namespace FightClub.Application.Interfaces;
 
 public interface IFightSimulationService
 {

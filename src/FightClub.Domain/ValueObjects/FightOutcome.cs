@@ -1,4 +1,4 @@
-using FightClub.Domain.Common;
+﻿using FightClub.Domain.Common;
 using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.ValueObjects;

@@ -1,4 +1,4 @@
-namespace FightClub.Api.Tests;
+﻿namespace FightClub.Api.Tests;
 
 [TestClass]
 public sealed class Test1

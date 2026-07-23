@@ -1,4 +1,4 @@
-namespace FightClub.Domain.Enums;
+﻿namespace FightClub.Domain.Enums;
 
 public enum FightEndType
 {
