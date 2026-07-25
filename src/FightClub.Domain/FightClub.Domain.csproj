@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup />
-
-	<ItemGroup>
-	  <Folder Include="Entities\Auth\" />
-	</ItemGroup>
 	
 </Project>
