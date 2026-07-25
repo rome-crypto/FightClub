@@ -1,23 +1,20 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using FightClub.Application.Common.Interfaces.Authentication;
 using FightClub.Application.Common.Options;
+using FightClub.Application.Interfaces;
 using FightClub.Domain.Entities.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FightClub.Infrastructure.Authentication;
 
-internal sealed class JwtProvider : IJwtProvider
+internal sealed class JwtProvider(IOptions<JwtOptions> options, IDateTimeProvider dateTimeProvider) : IJwtProvider
 {
-    private readonly JwtOptions _options;
-
-    public JwtProvider(IOptions<JwtOptions> options)
-    {
-        _options = options.Value;
-    }
+    private readonly JwtOptions _options = options.Value;
+    private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
 
     public string GenerateAccessToken(User user)
     {
@@ -38,9 +35,9 @@ internal sealed class JwtProvider : IJwtProvider
         // Это нужно чтобы в контроллерах использовать [Authorize(Roles = "Admin")]
         // UserRole - это связующая таблица, в ней только RoleId
         // Для полноценной работы нужно будет загружать сами Role через Include
-        foreach (var userRole in user.Roles)
+        foreach (UserRole userRole in user.Roles)
         {
-            claims.Add(new Claim(ClaimTypes.Role, userRole.RoleId.ToString()));
+            claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name ?? string.Empty));
         }
 
         // SigningCredentials - ключ для подписи токена
@@ -55,7 +52,7 @@ internal sealed class JwtProvider : IJwtProvider
             issuer: _options.Issuer,           // кто выдал токен (наш сервер)
             audience: _options.Audience,       // для кого токен (наше приложение)
             claims: claims,                     // данные в токене
-            expires: DateTime.UtcNow.AddMinutes(_options.ExpirationMinutes), // когда истекает
+            expires: _dateTimeProvider.UtcNow.AddMinutes(_options.ExpirationMinutes), // когда истекает
             signingCredentials: signingCredentials); // подпись
 
         // Преобразуем токен в строку
@@ -92,7 +89,7 @@ internal sealed class JwtProvider : IJwtProvider
         try
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(
                 token,
                 tokenValidationParameters,
                 out SecurityToken validatedToken);

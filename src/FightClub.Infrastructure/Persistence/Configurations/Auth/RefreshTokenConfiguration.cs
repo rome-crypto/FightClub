@@ -1,4 +1,4 @@
-using FightClub.Domain.Entities.Auth;
+﻿using FightClub.Domain.Entities.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,6 +16,11 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
         builder.Property(x => x.Token)
             .HasMaxLength(255)
             .IsRequired();
+
+        builder.HasOne(rt => rt.User)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Почему HasIndex: быстрый поиск токена при refresh
         // IsUnique: каждый refresh token уникален

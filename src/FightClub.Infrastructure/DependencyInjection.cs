@@ -96,6 +96,8 @@ public static class DependencyInjection
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+
         return services;
     }
 }

@@ -64,6 +64,8 @@ public sealed class AuthService(
         // Атакующий не должен знать существует ли email в системе
         User user = await _userRepository
             .Query(new UserByEmailSpecification(loginDto.Email))
+            .Include(u => u.Roles)
+            .ThenInclude(ur => ur.Role)
             .FirstOrDefaultAsync(cancellationToken) 
             ?? throw new Exception("Invalid email or password");
 

@@ -10,6 +10,7 @@ namespace FightClub.Domain.Entities.Auth;
 public sealed class RefreshToken : Entity
 {
     public Guid UserId { get; private set; }
+    public User User { get; private set; } = null!;
 
     public string Token { get; private set; } = string.Empty;
 

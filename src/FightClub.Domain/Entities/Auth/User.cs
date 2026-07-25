@@ -22,6 +22,11 @@ public sealed class User : Entity
     public IReadOnlyCollection<UserRole> Roles => _roles;
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
 
+    public IReadOnlyCollection<string> RoleNames => 
+        _roles.Select(x => x.Role.Name ?? string.Empty)
+        .Where(n => !string.IsNullOrEmpty(n))
+        .ToList();
+
     private User() { }
 
     public User(
@@ -50,7 +55,23 @@ public sealed class User : Entity
         {
             throw new InvalidOperationException("User deactivated");
         }
-        _roles.Add(new UserRole(Id, role.Id));
+
+        if (_roles.Any(x => x.RoleId == role.Id))
+        {
+            throw new InvalidOperationException("Role already assigned");
+        }
+
+        _roles.Add(new UserRole(Id, role));
+    }
+
+    public void AddRole(Guid roleId)
+    {
+        if (!IsActive)
+        {
+            throw new InvalidOperationException("User deactivated");
+        }
+
+        _roles.Add(new UserRole(Id, roleId));
     }
 
     public void RemoveRole(Guid roleId)
@@ -59,9 +80,9 @@ public sealed class User : Entity
         {
             throw new InvalidOperationException("User deactivated");
         }
-        UserRole role = _roles.Find(x => x.Id == roleId) 
+        UserRole userRole = _roles.Find(x => x.Id == roleId) 
             ?? throw new InvalidOperationException("Role not found");
-        _roles.Remove(role);
+        _roles.Remove(userRole);
     }
 
     public void AddRefreshToken(RefreshToken token)

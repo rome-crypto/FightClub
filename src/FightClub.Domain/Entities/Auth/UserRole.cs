@@ -13,7 +13,16 @@ public sealed class UserRole : Entity
 
     public Guid RoleId { get; private set; }
 
+
+    public Role Role { get; private set; } = null!;
+
     private UserRole() { }
+
+    public UserRole(Guid userId, Role role)
+    {
+        UserId = userId;
+        RoleId = role.Id;
+    }
 
     public UserRole(Guid userId, Guid roleId)
     {
