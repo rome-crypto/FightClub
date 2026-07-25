@@ -11,7 +11,7 @@ public sealed class Role : Entity
 {
     private readonly List<RolePermission> _permissions = [];
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
 
     public IReadOnlyCollection<RolePermission> Permissions => _permissions;
 
@@ -22,7 +22,16 @@ public sealed class Role : Entity
         Name = name;
     }
 
-    public void AddPermission(Permission permission);
+    public void AddPermission(Permission permission)
+    {
+        ArgumentNullException.ThrowIfNull(permission);
+        _permissions.Add(new RolePermission(Id, permission.Id));
+    }
 
-    public void RemovePermission(Guid permissionId);
+    public void RemovePermission(Guid permissionId)
+    {
+        RolePermission permission = _permissions.Find(x => x.Id == permissionId) 
+            ?? throw new Exception("Permission not found");
+        _permissions.Remove(permission);
+    }
 }

@@ -11,11 +11,11 @@ public sealed class RefreshToken : Entity
 {
     public Guid UserId { get; private set; }
 
-    public string Token { get; private set; }
+    public string Token { get; private set; } = string.Empty;
 
     public DateTime CreatedAt { get; private set; }
 
-    public DateTime ExpiresAt { get; private set; }
+    public DateTime ExpiresAt { get; private set; } 
 
     public DateTime? RevokedAt { get; private set; }
 
@@ -39,5 +39,8 @@ public sealed class RefreshToken : Entity
         ExpiresAt = expiresAt;
     }
 
-    public void Revoke(DateTime revokedAt);
+    public void Revoke(DateTime revokedAt)
+    {
+        RevokedAt = revokedAt;
+    }
 }

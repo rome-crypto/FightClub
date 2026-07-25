@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IFightResultService, FightResultService>();
         services.AddScoped<IFightEndingPolicy, BoxingFightEndingPolicy>();
         services.AddScoped<IRatingPolicy, EloRatingPolicy>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
