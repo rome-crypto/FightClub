@@ -102,7 +102,7 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options, IDateTimeProvide
             if (validatedToken is not JwtSecurityToken jwtToken ||
                 !jwtToken.Header.Alg.Equals(
                     SecurityAlgorithms.HmacSha256,
-                    StringComparison.InvariantCultureIgnoreCase))
+                    StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }

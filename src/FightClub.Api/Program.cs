@@ -11,7 +11,7 @@ namespace FightClub.Api;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +36,32 @@ public class Program
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             options.IncludeXmlComments(xmlPath);
+
+            // Добавляем JWT авторизацию в Swagger
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Введите JWT токен в формате: Bearer {token}"
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                Array.Empty<string>()
+                }
+            });
         });
 
         // Dependency Injection
@@ -70,6 +96,8 @@ public class Program
             FightClubDbContext db = scope.ServiceProvider.GetRequiredService<FightClubDbContext>();
 
             db.Database.Migrate();
+
+            await SeedData.InitializeAsync(scope.ServiceProvider);
         }
 
         app.MapHealthChecks("/health");
@@ -79,6 +107,6 @@ public class Program
 
         app.MapControllers();
 
-        app.Run();
+        await app.RunAsync();
     }
 }
