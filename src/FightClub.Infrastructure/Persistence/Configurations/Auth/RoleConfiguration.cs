@@ -1,4 +1,4 @@
-using FightClub.Domain.Entities.Auth;
+﻿using FightClub.Domain.Entities.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,5 +23,10 @@ public sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
             .WithOne()
             .HasForeignKey(rp => rp.RoleId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany<UserRole>()
+            .WithOne()
+            .HasForeignKey(ur => ur.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

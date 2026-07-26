@@ -22,6 +22,7 @@ public sealed class UserRole : Entity
     {
         UserId = userId;
         RoleId = role.Id;
+        Role = role;
     }
 
     public UserRole(Guid userId, Guid roleId)

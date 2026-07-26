@@ -32,10 +32,10 @@ public static class DependencyInjection
         // Authentication
         // Почему Configure<JwtOptions>: загружаем настройки JWT из appsettings.json
         // Options pattern позволяет инжектить IOptions<JwtOptions> в сервисы
-        var jwtSection = configuration.GetSection("JwtOptions");
+        IConfigurationSection jwtSection = configuration.GetSection("JwtOptions");
         services.Configure<JwtOptions>(jwtSection);
 
-        var jwtOptions = jwtSection.Get<JwtOptions>();
+        JwtOptions? jwtOptions = jwtSection.Get<JwtOptions>();
 
         // Регистрируем JWT аутентификацию
         // Почему AddAuthentication: настраиваем ASP.NET Core для работы с JWT

@@ -28,16 +28,20 @@ internal sealed class JwtProvider(IOptions<JwtOptions> options, IDateTimeProvide
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Name, user.UserName),
-            new(JwtRegisteredClaimNames.Email, user.Email)
+            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         // Добавляем роли в claims
         // Это нужно чтобы в контроллерах использовать [Authorize(Roles = "Admin")]
         // UserRole - это связующая таблица, в ней только RoleId
         // Для полноценной работы нужно будет загружать сами Role через Include
-        foreach (UserRole userRole in user.Roles)
+        foreach (var roleName in user.RoleNames)
         {
-            claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name ?? string.Empty));
+            if (!string.IsNullOrEmpty(roleName))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, roleName));
+            }
         }
 
         // SigningCredentials - ключ для подписи токена

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FightClub.Domain.Common;
+using FightClub.Domain.Enums;
 
 namespace FightClub.Domain.Entities.Auth;
 
@@ -27,6 +28,16 @@ public sealed class User : Entity
         .Where(n => !string.IsNullOrEmpty(n))
         .ToList();
 
+    public bool HasRole(string roleName)
+    {
+        return _roles.Any(r => r.Role != null && r.Role.Name == roleName);
+    }
+
+    public bool HasRole(RoleType roleType)
+    {
+        return _roles.Any(r => r.Role != null && r.Role.Name == roleType.ToString());
+    }
+
     private User() { }
 
     public User(
@@ -47,6 +58,25 @@ public sealed class User : Entity
             throw new InvalidOperationException("User deactivated");
         }
         PasswordHash = passwordHash ?? string.Empty;
+    }
+
+    public void AddRole(RoleType roleType)
+    {
+        if (!IsActive)
+        {
+            throw new InvalidOperationException("User deactivated");
+        }
+
+        var roleName = roleType.ToString();
+
+        if (_roles.Any(x => x.Role != null && x.Role.Name == roleName))
+        {
+            throw new InvalidOperationException($"Role {roleName} already assigned");
+        }
+
+        // Создаем роль (нужно будет загрузить из БД)
+        var role = new Role(roleName);
+        _roles.Add(new UserRole(Id, role));
     }
 
     public void AddRole(Role role)
@@ -100,8 +130,10 @@ public sealed class User : Entity
         {
             throw new InvalidOperationException("User deactivated");
         }
+        
         RefreshToken token = _refreshTokens.Find(x => x.Id == tokenId)
             ?? throw new InvalidOperationException("Token not found");
+
         token.Revoke(DateTime.UtcNow);
     }
 

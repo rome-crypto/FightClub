@@ -94,15 +94,11 @@ public sealed class AuthService(
         CancellationToken cancellationToken = default)
     {
         // Ищем refresh token в БД
-        var refreshToken = await _refreshTokenRepository
+        RefreshToken? refreshToken = await _refreshTokenRepository
             .Query(new RefreshTokenByTokenSpecification(refreshTokenDto.RefreshToken))
-            .Include(rt => rt.UserId) // Почему Include: нам нужен User для генерации нового access token
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (refreshToken == null)
-        {
-            throw new Exception("Invalid refresh token");
-        }
+            .Include(rt => rt.User)
+            .FirstOrDefaultAsync(cancellationToken) 
+            ?? throw new Exception("Invalid refresh token");
 
         // Проверяем что токен активен (не истек и не отозван)
         if (!refreshToken.IsActive)
@@ -111,7 +107,8 @@ public sealed class AuthService(
         }
 
         // Проверяем что пользователь активен
-        var user = await _userRepository.GetByIdAsync(refreshToken.UserId);
+        User? user = await _userRepository.GetByIdAsync(refreshToken.UserId);
+
         if (user == null || !user.IsActive)
         {
             throw new Exception("User account is deactivated");
@@ -131,14 +128,10 @@ public sealed class AuthService(
         string refreshToken,
         CancellationToken cancellationToken = default)
     {
-        var token = await _refreshTokenRepository
+        RefreshToken token = await _refreshTokenRepository
             .Query(new RefreshTokenByTokenSpecification(refreshToken))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (token == null)
-        {
-            throw new Exception("Invalid refresh token");
-        }
+            .FirstOrDefaultAsync(cancellationToken)
+            ?? throw new Exception("Invalid refresh token");
 
         if (!token.IsActive)
         {

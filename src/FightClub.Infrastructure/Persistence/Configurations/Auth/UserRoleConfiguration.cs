@@ -1,4 +1,4 @@
-using FightClub.Domain.Entities.Auth;
+﻿using FightClub.Domain.Entities.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,5 +20,10 @@ public sealed class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
         // IsUnique: один пользователь не может иметь одну роль дважды
         builder.HasIndex(x => new { x.UserId, x.RoleId })
             .IsUnique();
+
+        builder.HasOne(ur => ur.Role)
+            .WithMany()
+            .HasForeignKey(ur => ur.RoleId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
