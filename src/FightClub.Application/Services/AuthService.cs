@@ -4,7 +4,7 @@ using FightClub.Application.DTOs.Auth;
 using FightClub.Application.Exceptions;
 using FightClub.Application.Interfaces;
 using FightClub.Application.Specifications.Auth;
-using FightClub.Domain.Entities.Auth;
+using FightClub.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -48,8 +48,8 @@ public sealed class AuthService(
             registerDto.Email,
             passwordHash);
 
-        await _userRepository.AddAsync(user);
-        await _userRepository.SaveChangesAsync();
+        await _userRepository.AddAsync(user, cancellationToken);
+        await _userRepository.SaveChangesAsync(cancellationToken);
 
         // Генерируем токены
         return await GenerateAuthResponse(user, cancellationToken);
@@ -107,7 +107,7 @@ public sealed class AuthService(
         }
 
         // Проверяем что пользователь активен
-        User? user = await _userRepository.GetByIdAsync(refreshToken.UserId);
+        User? user = await _userRepository.GetByIdAsync(refreshToken.UserId, cancellationToken);
 
         if (user == null || !user.IsActive)
         {
@@ -140,20 +140,21 @@ public sealed class AuthService(
 
         token.Revoke(DateTime.UtcNow);
         _refreshTokenRepository.Update(token);
-        await _refreshTokenRepository.SaveChangesAsync();
+        await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
     }
 
     // Приватный метод для генерации токенов
     // Почему отдельный метод: DRY - используется в Register, Login и RefreshToken
-    private async Task<AuthResponseDto> GenerateAuthResponse(
+    private async  Task<AuthResponseDto> GenerateAuthResponse(
         User user,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         // Генерируем access token (JWT)
         var accessToken = _jwtProvider.GenerateAccessToken(user);
 
         // Генерируем refresh token (случайная строка)
         var refreshTokenString = _jwtProvider.GenerateRefreshToken();
+        
 
         // Создаем entity для refresh token
         var refreshToken = new RefreshToken(
@@ -163,8 +164,8 @@ public sealed class AuthService(
             DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationDays));
 
         // Сохраняем refresh token в БД
-        await _refreshTokenRepository.AddAsync(refreshToken);
-        await _refreshTokenRepository.SaveChangesAsync();
+        await _refreshTokenRepository.AddAsync(refreshToken, cancellationToken);
+        await _refreshTokenRepository.SaveChangesAsync(cancellationToken);
 
         // Возвращаем оба токена клиенту
         return new AuthResponseDto

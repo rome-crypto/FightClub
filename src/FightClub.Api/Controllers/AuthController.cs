@@ -64,12 +64,13 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// - 409 Conflict: Пользователь с таким email уже существует
     /// </remarks>
     /// <param name="registerDto">Данные для регистрации</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Токены доступа (access + refresh)</returns>
     [HttpPost("register")]
     [AllowAnonymous] 
-    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterDto registerDto, CancellationToken cancellationToken)
     {
-        AuthResponseDto result = await _authService.RegisterAsync(registerDto);
+        AuthResponseDto result = await _authService.RegisterAsync(registerDto, cancellationToken);
         return Ok(result);
     }
 
@@ -104,12 +105,13 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// чтобы предотвратить перебор (enumeration attacks).
     /// </remarks>
     /// <param name="loginDto">Учётные данные</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Токены доступа (access + refresh)</returns>
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+    public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginDto loginDto, CancellationToken cancellationToken)
     {
-        AuthResponseDto result = await _authService.LoginAsync(loginDto);
+        AuthResponseDto result = await _authService.LoginAsync(loginDto, cancellationToken);
         return Ok(result);
     }
 
@@ -149,12 +151,13 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// Каждый refresh-токен можно использовать только один раз.
     /// </remarks>
     /// <param name="refreshTokenDto">Refresh-токен</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Новая пара токенов (access + refresh)</returns>
     [HttpPost("refresh")]
     [AllowAnonymous]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
+    public async Task<ActionResult<AuthResponseDto>> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto, CancellationToken cancellationToken)
     {
-        AuthResponseDto result = await _authService.RefreshTokenAsync(refreshTokenDto);
+        AuthResponseDto result = await _authService.RefreshTokenAsync(refreshTokenDto, cancellationToken);
         return Ok(result);
     }
 
@@ -188,12 +191,13 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// Для полного выхода клиент должен удалить оба токена.
     /// </remarks>
     /// <param name="refreshTokenDto">Refresh-токен для отзыва</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpPost("logout")]
     [AllowAnonymous]
-    public async Task<IActionResult> Logout([FromBody] RefreshTokenDto refreshTokenDto)
+    public async Task<IActionResult> Logout([FromBody] RefreshTokenDto refreshTokenDto, CancellationToken cancellationToken)
     {
-        await _authService.RevokeTokenAsync(refreshTokenDto.RefreshToken);
+        await _authService.RevokeTokenAsync(refreshTokenDto.RefreshToken, cancellationToken);
         return NoContent();
     }
 

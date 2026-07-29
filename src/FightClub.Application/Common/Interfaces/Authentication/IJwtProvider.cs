@@ -1,5 +1,5 @@
-using System.Security.Claims;
-using FightClub.Domain.Entities.Auth;
+﻿using System.Security.Claims;
+using FightClub.Domain.Identity;
 
 namespace FightClub.Application.Common.Interfaces.Authentication;
 

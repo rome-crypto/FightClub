@@ -43,14 +43,14 @@ public sealed class FightSimulationService(
     /// <param name="fightId">ID боя</param>
     /// <returns></returns>
     /// <exception cref="NotFoundException">Исключение поиска</exception>
-    public async Task CancelAsync(Guid fightId)
+    public async Task CancelAsync(Guid fightId, CancellationToken cancellationToken = default)
     {
         Fight fight = await _fightRepository
-            .GetByIdAsync(fightId)
+            .GetByIdAsync(fightId, cancellationToken)
             ?? throw new NotFoundException("Fight not found");
 
         fight.Cancel();
-        await _fightRepository.SaveChangesAsync();
+        await _fightRepository.SaveChangesAsync(cancellationToken);
     }
 
     /// <summary>
@@ -60,18 +60,19 @@ public sealed class FightSimulationService(
     /// <returns></returns>
     /// <exception cref="NotFoundException">Исключение поиска</exception>
     public async Task ExecuteAsync(
-        Guid fightId)
+        Guid fightId,
+        CancellationToken cancellationToken = default)
     {
         Fight fight = await _fightRepository
-            .GetByIdAsync(fightId)
+            .GetByIdAsync(fightId, cancellationToken)
             ?? throw new NotFoundException("Fight not found");
 
         Boxer boxerA = await _boxerRepository
-            .GetByIdAsync(fight.BoxerAId)
+            .GetByIdAsync(fight.BoxerAId, cancellationToken)
             ?? throw new NotFoundException("Boxer A not found");
 
         Boxer boxerB = await _boxerRepository
-            .GetByIdAsync(fight.BoxerBId)
+            .GetByIdAsync(fight.BoxerBId, cancellationToken)
             ?? throw new NotFoundException("Boxer B not found");
 
         fight.Start();
@@ -95,6 +96,6 @@ public sealed class FightSimulationService(
             boxerA,
             boxerB);
 
-        await _fightRepository.SaveChangesAsync();
+        await _fightRepository.SaveChangesAsync(cancellationToken);
     }
 }

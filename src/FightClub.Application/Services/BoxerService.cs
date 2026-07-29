@@ -17,7 +17,7 @@ public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
     private readonly IRepository<Boxer> _repository = repo;
 
     //command
-    public async Task<BoxerResponseDto> CreateAsync(BoxerCreateDto dto)
+    public async Task<BoxerResponseDto> CreateAsync(BoxerCreateDto dto, CancellationToken cancellationToken = default)
     {
         var boxer = new Boxer(
             dto.FirstName,
@@ -26,42 +26,42 @@ public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
             dto.Weight,
             dto.TrainerId);
 
-        await _repository.AddAsync(boxer);
-        await _repository.SaveChangesAsync();
+        await _repository.AddAsync(boxer, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
 
         return _mapper.Map<BoxerResponseDto>(boxer);
     }
 
     //command
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        Boxer boxer = await _repository.GetByIdAsync(id)
+        Boxer boxer = await _repository.GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException("Boxer not found");
 
         _repository.Delete(boxer);
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(cancellationToken);
     }
 
     //query
-    public async Task<BoxerResponseDto> GetByIdAsync(Guid id)
+    public async Task<BoxerResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        Boxer boxer = await _repository.GetByIdAsync(id)
+        Boxer boxer = await _repository.GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException("Boxer not found");
 
         return _mapper.Map<BoxerResponseDto>(boxer);
     }
 
     //query
-    public async Task<PagedResult<BoxerResponseDto>> GetPagedAsync(BoxerQueryDto query)
+    public async Task<PagedResult<BoxerResponseDto>> GetPagedAsync(BoxerQueryDto query, CancellationToken cancellationToken = default)
     {
         var spec = new BoxerSpecification(query);
 
         List<BoxerResponseDto> items = await _repository
             .Query(spec)
             .ProjectTo<BoxerResponseDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        var total = await _repository.CountAsync(spec);
+        var total = await _repository.CountAsync(spec, cancellationToken);
 
         return new PagedResult<BoxerResponseDto>()
         {
@@ -73,9 +73,9 @@ public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
     }
 
     //command
-    public async Task UpdateAsync(Guid id, BoxerUpdateDto dto)
+    public async Task UpdateAsync(Guid id, BoxerUpdateDto dto, CancellationToken cancellationToken = default)
     {
-        Boxer boxer = await _repository.GetByIdAsync(id)
+        Boxer boxer = await _repository.GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException("Boxer not found");
 
         boxer.ChangeWeight(dto.Weight);
@@ -83,6 +83,6 @@ public class BoxerService(IRepository<Boxer> repo, IMapper mapper)
         boxer.Rename(dto.FirstName, dto.LastName);
         boxer.AssignTrainer(dto.TrainerId);
 
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(cancellationToken);
     }
 }

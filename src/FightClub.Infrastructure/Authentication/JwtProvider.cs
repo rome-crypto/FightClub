@@ -5,7 +5,7 @@ using System.Text;
 using FightClub.Application.Common.Interfaces.Authentication;
 using FightClub.Application.Common.Options;
 using FightClub.Application.Interfaces;
-using FightClub.Domain.Entities.Auth;
+using FightClub.Domain.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

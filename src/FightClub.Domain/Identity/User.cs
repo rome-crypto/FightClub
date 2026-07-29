@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using FightClub.Domain.Common;
 using FightClub.Domain.Enums;
 
-namespace FightClub.Domain.Entities.Auth;
+namespace FightClub.Domain.Identity;
 
 public sealed class User : Entity
 {

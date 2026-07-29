@@ -1,5 +1,5 @@
-using FightClub.Application.Specifications.Common;
-using FightClub.Domain.Entities.Auth;
+﻿using FightClub.Application.Specifications.Common;
+using FightClub.Domain.Identity;
 
 namespace FightClub.Application.Specifications.Auth;
 

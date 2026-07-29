@@ -18,51 +18,51 @@ public class TrainerService(
     private readonly IRepository<Trainer> _repository = repo;
 
     //command
-    public async Task<TrainerResponseDto> CreateAsync(TrainerCreateDto dto)
+    public async Task<TrainerResponseDto> CreateAsync(TrainerCreateDto dto, CancellationToken cancellationToken = default)
     {
         var trainer = new Trainer(
             dto.FirstName,
             dto.LastName,
             dto.BirthDate);
 
-        await _repository.AddAsync(trainer);
-        await _repository.SaveChangesAsync();
+        await _repository.AddAsync(trainer, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
 
         return _mapper.Map<TrainerResponseDto>(trainer);
     }
 
     //command
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         Trainer trainer = await _repository
-            .GetByIdAsync(id)
+            .GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException("Trainer not found");
 
         _repository.Delete(trainer);
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(cancellationToken);
     }
 
     //query
-    public async Task<TrainerResponseDto> GetByIdAsync(Guid id)
+    public async Task<TrainerResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        Trainer trainer = await _repository.GetByIdAsync(id)
+        Trainer trainer = await _repository.GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException("Trainer not found");
 
         return _mapper.Map<TrainerResponseDto>(trainer);
     }
 
     //query
-    public async Task<PagedResult<TrainerResponseDto>> GetPagedAsync(TrainerQueryDto query)
+    public async Task<PagedResult<TrainerResponseDto>> GetPagedAsync(TrainerQueryDto query, CancellationToken cancellationToken = default)
     {
         var spec = new TrainerSpecification(query);
 
         List<TrainerResponseDto> items = await _repository
             .Query(spec)
             .ProjectTo<TrainerResponseDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var total = await _repository
-            .CountAsync(spec);
+            .CountAsync(spec, cancellationToken);
 
         return new PagedResult<TrainerResponseDto>()
         {
@@ -74,15 +74,15 @@ public class TrainerService(
     }
 
     //command
-    public async Task UpdateAsync(Guid id, TrainerUpdateDto dto)
+    public async Task UpdateAsync(Guid id, TrainerUpdateDto dto, CancellationToken cancellationToken = default)
     {
         Trainer trainer = await _repository
-            .GetByIdAsync(id)
-            ?? throw new NotFoundException("Boxer not found");
+            .GetByIdAsync(id, cancellationToken)
+            ?? throw new NotFoundException("Trainer not found");
 
         trainer.ChangeBirthDate(dto.BirthDate);
         trainer.Rename(dto.FirstName, dto.LastName);
 
-        await _repository.SaveChangesAsync();
+        await _repository.SaveChangesAsync(cancellationToken);
     }
 }

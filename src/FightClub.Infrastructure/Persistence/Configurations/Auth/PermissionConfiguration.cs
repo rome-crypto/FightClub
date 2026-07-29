@@ -1,4 +1,4 @@
-using FightClub.Domain.Entities.Auth;
+﻿using FightClub.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

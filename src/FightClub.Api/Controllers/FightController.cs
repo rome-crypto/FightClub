@@ -89,9 +89,9 @@ public class FightController(
     /// <param name="query">Параметры фильтрации и пагинации</param>
     /// <returns>Страница боёв</returns>
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] FightQueryDto query)
+    public async Task<ActionResult<PagedResult<FightResponseDto>>> Get([FromQuery] FightQueryDto query, CancellationToken cancellationToken)
     {
-        PagedResult<FightResponseDto> result = await _service.GetPagedAsync(query);
+        PagedResult<FightResponseDto> result = await _service.GetPagedAsync(query, cancellationToken);
 
         return Ok(result);
     }
@@ -143,12 +143,13 @@ public class FightController(
     /// - 404 Not Found: Один или оба боксёра не найдены
     /// </remarks>
     /// <param name="data">Данные для создания боя</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Созданный бой с заголовком Location</returns>
     [HttpPost]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> Post([FromBody] FightCreateDto data)
+    public async Task<ActionResult<FightResponseDto>> Post([FromBody] FightCreateDto data, CancellationToken cancellationToken)
     {
-        FightResponseDto fight = await _service.CreateAsync(data);
+        FightResponseDto fight = await _service.CreateAsync(data, cancellationToken);
 
         return CreatedAtAction(nameof(GetById), new { id = fight.Id }, fight);
     }
@@ -185,12 +186,13 @@ public class FightController(
     /// Примечание: После выполнения обновляются статистика и ELO боксёров.
     /// </remarks>
     /// <param name="id">ID боя</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpPost("{id}/execute")]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> Execute(Guid id)
+    public async Task<IActionResult> Execute(Guid id, CancellationToken cancellationToken)
     {
-        await _simulation.ExecuteAsync(id);
+        await _simulation.ExecuteAsync(id, cancellationToken);
 
         return NoContent();
     }
@@ -241,11 +243,12 @@ public class FightController(
     /// - 404 Not Found: Бой не найден
     /// </remarks>
     /// <param name="id">ID боя</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Детали боя с раундами и событиями</returns>
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<FightResponseDto>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return Ok(await _service.GetByIdAsync(id));
+        return Ok(await _service.GetByIdAsync(id, cancellationToken));
     }
 
 
@@ -272,12 +275,13 @@ public class FightController(
     /// - 400 Bad Request: Бой не запланирован или уже завершён
     /// </remarks>
     /// <param name="id">ID боя</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpPost("{id}/cancel")]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> CancelFight(Guid id)
+    public async Task<IActionResult> CancelFight(Guid id, CancellationToken cancellationToken)
     {
-        await _simulation.CancelAsync(id);
+        await _simulation.CancelAsync(id, cancellationToken);
 
         return NoContent();
     }
@@ -309,12 +313,13 @@ public class FightController(
     /// - 400 Bad Request: Бой нельзя удалить (в процессе или завершён)
     /// </remarks>
     /// <param name="id">ID боя</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _service.DeleteAsync(id);
+        await _service.DeleteAsync(id, cancellationToken);
 
         return NoContent();
     }

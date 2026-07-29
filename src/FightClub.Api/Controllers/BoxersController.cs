@@ -61,11 +61,12 @@ public class BoxersController(IBoxerService service) : ControllerBase
     /// - 404 Not Found: Боксёр не найден
     /// </remarks>
     /// <param name="id">ID боксёра</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Данные боксёра</returns>
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<BoxerResponseDto>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        BoxerResponseDto result = await _boxerService.GetByIdAsync(id);
+        BoxerResponseDto result = await _boxerService.GetByIdAsync(id, cancellationToken);
 
         return Ok(result);
     }
@@ -120,12 +121,13 @@ public class BoxersController(IBoxerService service) : ControllerBase
     /// - 400 Bad Request: Ошибка валидации
     /// </remarks>
     /// <param name="data">Данные для создания боксёра</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Созданный боксёр с заголовком Location</returns>
     [HttpPost]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> Post([FromBody] BoxerCreateDto data)
+    public async Task<ActionResult<BoxerResponseDto>> Post([FromBody] BoxerCreateDto data, CancellationToken cancellationToken)
     {
-        BoxerResponseDto boxer = await _boxerService.CreateAsync(data);
+        BoxerResponseDto boxer = await _boxerService.CreateAsync(data, cancellationToken);
 
         return CreatedAtAction(nameof(GetById), new { id = boxer.Id }, boxer);
     }
@@ -159,12 +161,13 @@ public class BoxersController(IBoxerService service) : ControllerBase
     /// </remarks>
     /// <param name="id">ID боксёра</param>
     /// <param name="data">Данные для обновления (все поля опциональны)</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpPatch("{id}")]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> Patch(Guid id, [FromBody] BoxerUpdateDto data)
+    public async Task<IActionResult> Patch(Guid id, [FromBody] BoxerUpdateDto data, CancellationToken cancellationToken)
     {
-        await _boxerService.UpdateAsync(id, data);
+        await _boxerService.UpdateAsync(id, data, cancellationToken);
 
         return NoContent();
     }
@@ -193,12 +196,13 @@ public class BoxersController(IBoxerService service) : ControllerBase
     /// Внимание: Операция необратима.
     /// </remarks>
     /// <param name="id">ID боксёра</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _boxerService.DeleteAsync(id);
+        await _boxerService.DeleteAsync(id, cancellationToken);
 
         return NoContent();
     }
@@ -255,12 +259,12 @@ public class BoxersController(IBoxerService service) : ControllerBase
     /// - 400 Bad Request: Некорректные параметры запроса
     /// </remarks>
     /// <param name="query">Параметры фильтрации и пагинации</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Страница боксёров</returns>
     [HttpGet]
-    public async Task<IActionResult> Get(
-        [FromQuery] BoxerQueryDto query)
+    public async Task<ActionResult<PagedResult<BoxerResponseDto>>> Get([FromQuery] BoxerQueryDto query, CancellationToken cancellationToken)
     {
-        PagedResult<BoxerResponseDto> result = await _boxerService.GetPagedAsync(query);
+        PagedResult<BoxerResponseDto> result = await _boxerService.GetPagedAsync(query, cancellationToken);
 
         return Ok(result);
     }

@@ -1,4 +1,5 @@
-﻿using FightClub.Application.DTOs.Trainers;
+﻿using FightClub.Application.DTOs.Common;
+using FightClub.Application.DTOs.Trainers;
 using FightClub.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -64,12 +65,13 @@ public class TrainersController(ITrainerService service) : ControllerBase
     /// - 400 Bad Request: Ошибка валидации
     /// </remarks>
     /// <param name="dto">Данные для создания тренера</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Созданный тренер с заголовком Location</returns>
     [HttpPost]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> Post(TrainerCreateDto dto)
+    public async Task<ActionResult<TrainerResponseDto>> Post(TrainerCreateDto dto, CancellationToken cancellationToken)
     {
-        TrainerResponseDto result = await _service.CreateAsync(dto);
+        TrainerResponseDto result = await _service.CreateAsync(dto, cancellationToken);
 
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
@@ -100,11 +102,12 @@ public class TrainersController(ITrainerService service) : ControllerBase
     /// - 404 Not Found: Тренер не найден
     /// </remarks>
     /// <param name="id">ID тренера</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Данные тренера</returns>
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<ActionResult<TrainerResponseDto>> GetById(Guid id, CancellationToken cancellationToken)
     {
-        return Ok(await _service.GetByIdAsync(id));
+        return Ok(await _service.GetByIdAsync(id, cancellationToken));
     }
 
     /// <summary>
@@ -150,11 +153,12 @@ public class TrainersController(ITrainerService service) : ControllerBase
     /// - 400 Bad Request: Некорректные параметры запроса
     /// </remarks>
     /// <param name="query">Параметры фильтрации и пагинации</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Страница тренеров</returns>
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] TrainerQueryDto query)
+    public async Task<ActionResult<PagedResult<TrainerResponseDto>>> Get([FromQuery] TrainerQueryDto query, CancellationToken cancellationToken)
     {
-        return Ok(await _service.GetPagedAsync(query));
+        return Ok(await _service.GetPagedAsync(query, cancellationToken));
     }
 
     /// <summary>
@@ -185,12 +189,13 @@ public class TrainersController(ITrainerService service) : ControllerBase
     /// </remarks>
     /// <param name="id">ID тренера</param>
     /// <param name="dto">Данные для обновления (все поля опциональны)</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpPatch("{id}")]
     [Authorize(Roles = "Admin,Manager")]
-    public async Task<IActionResult> Patch(Guid id, TrainerUpdateDto dto)
+    public async Task<IActionResult> Patch(Guid id, TrainerUpdateDto dto, CancellationToken cancellationToken)
     {
-        await _service.UpdateAsync(id, dto);
+        await _service.UpdateAsync(id, dto, cancellationToken);
 
         return NoContent();
     }
@@ -219,12 +224,13 @@ public class TrainersController(ITrainerService service) : ControllerBase
     /// Внимание: Операция необратима.
     /// </remarks>
     /// <param name="id">ID тренера</param>
+    /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>204 No Content при успехе</returns>
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        await _service.DeleteAsync(id);
+        await _service.DeleteAsync(id, cancellationToken);
 
         return NoContent();
     }

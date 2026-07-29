@@ -2,6 +2,6 @@
 
 public interface IFightSimulationService
 {
-    public Task CancelAsync(Guid fightId);
-    public Task ExecuteAsync(Guid fightId);
+    public Task CancelAsync(Guid fightId, CancellationToken cancellationToken);
+    public Task ExecuteAsync(Guid fightId, CancellationToken cancellationToken);
 }

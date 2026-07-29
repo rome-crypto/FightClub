@@ -21,7 +21,7 @@ public sealed class FightService(
 
     //command
     public async Task<FightResponseDto> CreateAsync(
-        FightCreateDto dto)
+        FightCreateDto dto, CancellationToken cancellationToken = default)
     {
         var spec = new EntityByIdsSpecification<Boxer>(
                     dto.BoxerAId,
@@ -29,7 +29,7 @@ public sealed class FightService(
 
         List<Boxer> boxers = await _boxerRepository
             .Query(spec)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
 
         if (boxers.Count != 2)
@@ -43,50 +43,50 @@ public sealed class FightService(
             dto.Rounds);
 
 
-        await _fightRepository.AddAsync(fight);
+        await _fightRepository.AddAsync(fight, cancellationToken);
 
-        await _fightRepository.SaveChangesAsync();
+        await _fightRepository.SaveChangesAsync(cancellationToken);
 
         return _mapper.Map<FightResponseDto>(fight);
     }
 
     //query
-    public async Task<FightResponseDto> GetByIdAsync(Guid id)
+    public async Task<FightResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         Fight fight = await _fightRepository
-            .GetByIdAsync(id)
+            .GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException($"Fight not found");
 
         return _mapper.Map<FightResponseDto>(fight);
     }
 
     //comand
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         Fight fight = await _fightRepository
-            .GetByIdAsync(id)
+            .GetByIdAsync(id, cancellationToken)
             ?? throw new NotFoundException($"Fight not found");
 
         fight.EnsureCanBeDeleted();
 
         _fightRepository.Delete(fight);
 
-        await _fightRepository.SaveChangesAsync();
+        await _fightRepository.SaveChangesAsync(cancellationToken);
     }
 
     //query
     public async Task<PagedResult<FightResponseDto>> GetPagedAsync(
-        FightQueryDto query)
+        FightQueryDto query, CancellationToken cancellationToken = default)
     {
         var spec = new FightSpecification(query);
 
         var total = await _fightRepository
-            .CountAsync(spec);
+            .CountAsync(spec, cancellationToken);
 
         List<FightResponseDto> items = await _fightRepository
             .Query(spec)
             .ProjectTo<FightResponseDto>(_mapper.ConfigurationProvider)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return new PagedResult<FightResponseDto>
         {

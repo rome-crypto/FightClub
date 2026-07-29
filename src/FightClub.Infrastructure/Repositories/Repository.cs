@@ -10,9 +10,9 @@ public class Repository<T>(FightClubDbContext context)
     private readonly FightClubDbContext _context = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();
 
-    public async Task AddAsync(T entity)
+    public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
-        await _dbSet.AddAsync(entity);
+        await _dbSet.AddAsync(entity, cancellationToken);
     }
 
     public void Delete(T entity)
@@ -20,14 +20,14 @@ public class Repository<T>(FightClubDbContext context)
         _dbSet.Remove(entity);
     }
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbSet.FindAsync(id);
+        return await _dbSet.FindAsync([id], cancellationToken);
     }
 
-    public async Task SaveChangesAsync()
+    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public void Update(T entity)
@@ -35,22 +35,22 @@ public class Repository<T>(FightClubDbContext context)
         _dbSet.Update(entity);
     }
 
-    public async Task<int> CountAsync(ISpecification<T> specification)
+    public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = SpecificationEvaluator.GetCountQuery(
             _dbSet.AsQueryable(),
             specification);
 
-        return await query.CountAsync();
+        return await query.CountAsync(cancellationToken);
     }
 
-    public async Task<bool> AnyAsync(ISpecification<T> specification)
+    public async Task<bool> AnyAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = SpecificationEvaluator.GetCountQuery(
             _dbSet.AsQueryable(),
             specification);
 
-        return await query.AnyAsync();
+        return await query.AnyAsync(cancellationToken);
     }
 
     public IQueryable<T> Query(ISpecification<T> spec)

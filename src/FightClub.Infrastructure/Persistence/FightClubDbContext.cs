@@ -1,5 +1,5 @@
 ﻿using FightClub.Domain.Entities;
-using FightClub.Domain.Entities.Auth;
+using FightClub.Domain.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace FightClub.Infrastructure.Persistence;
