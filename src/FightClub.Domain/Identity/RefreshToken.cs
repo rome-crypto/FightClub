@@ -16,7 +16,7 @@ public sealed class RefreshToken : Entity
 
     public DateTime CreatedAt { get; private set; }
 
-    public DateTime ExpiresAt { get; private set; } 
+    public DateTime ExpiresAt { get; private set; }
 
     public DateTime? RevokedAt { get; private set; }
 

@@ -67,7 +67,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>Токены доступа (access + refresh)</returns>
     [HttpPost("register")]
-    [AllowAnonymous] 
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterDto registerDto, CancellationToken cancellationToken)
     {
         AuthResponseDto result = await _authService.RegisterAsync(registerDto, cancellationToken);

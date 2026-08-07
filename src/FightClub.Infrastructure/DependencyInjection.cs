@@ -61,7 +61,7 @@ public static class DependencyInjection
                 IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(jwtOptions?.SecretKey ?? string.Empty)),
                 ClockSkew = TimeSpan.Zero           // убираем допуск по времени (по умолчанию 5 минут)
-                                                   // Почему Zero: токен истекает ровно в указанное время
+                                                    // Почему Zero: токен истекает ровно в указанное время
             };
 
             // События для логирования ошибок аутентификации

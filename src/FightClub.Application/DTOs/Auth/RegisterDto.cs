@@ -1,4 +1,4 @@
-namespace FightClub.Application.DTOs.Auth;
+﻿namespace FightClub.Application.DTOs.Auth;
 
 public sealed class RegisterDto
 {

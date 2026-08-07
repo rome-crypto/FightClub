@@ -1,4 +1,4 @@
-namespace FightClub.Application.Common.Interfaces.Authentication;
+﻿namespace FightClub.Application.Common.Interfaces.Authentication;
 
 public interface IPasswordHasher
 {

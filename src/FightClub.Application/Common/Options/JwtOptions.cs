@@ -1,4 +1,4 @@
-namespace FightClub.Application.Common.Options;
+﻿namespace FightClub.Application.Common.Options;
 
 public sealed class JwtOptions
 {

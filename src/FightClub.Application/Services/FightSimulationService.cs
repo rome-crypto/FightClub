@@ -41,6 +41,7 @@ public sealed class FightSimulationService(
     /// Отмена боя
     /// </summary>
     /// <param name="fightId">ID боя</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundException">Исключение поиска</exception>
     public async Task CancelAsync(Guid fightId, CancellationToken cancellationToken = default)
@@ -57,6 +58,7 @@ public sealed class FightSimulationService(
     /// Запуск боя
     /// </summary>
     /// <param name="fightId">ID боя</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundException">Исключение поиска</exception>
     public async Task ExecuteAsync(

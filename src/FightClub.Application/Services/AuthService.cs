@@ -66,7 +66,7 @@ public sealed class AuthService(
             .Query(new UserByEmailSpecification(loginDto.Email))
             .Include(u => u.Roles)
             .ThenInclude(ur => ur.Role)
-            .FirstOrDefaultAsync(cancellationToken) 
+            .FirstOrDefaultAsync(cancellationToken)
             ?? throw new Exception("Invalid email or password");
 
         // Проверяем активен ли пользователь
@@ -97,7 +97,7 @@ public sealed class AuthService(
         RefreshToken? refreshToken = await _refreshTokenRepository
             .Query(new RefreshTokenByTokenSpecification(refreshTokenDto.RefreshToken))
             .Include(rt => rt.User)
-            .FirstOrDefaultAsync(cancellationToken) 
+            .FirstOrDefaultAsync(cancellationToken)
             ?? throw new Exception("Invalid refresh token");
 
         // Проверяем что токен активен (не истек и не отозван)
@@ -145,7 +145,7 @@ public sealed class AuthService(
 
     // Приватный метод для генерации токенов
     // Почему отдельный метод: DRY - используется в Register, Login и RefreshToken
-    private async  Task<AuthResponseDto> GenerateAuthResponse(
+    private async Task<AuthResponseDto> GenerateAuthResponse(
         User user,
         CancellationToken cancellationToken = default)
     {
@@ -154,7 +154,7 @@ public sealed class AuthService(
 
         // Генерируем refresh token (случайная строка)
         var refreshTokenString = _jwtProvider.GenerateRefreshToken();
-        
+
 
         // Создаем entity для refresh token
         var refreshToken = new RefreshToken(

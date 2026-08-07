@@ -1,4 +1,4 @@
-using FightClub.Application.Common.Interfaces.Authentication;
+﻿using FightClub.Application.Common.Interfaces.Authentication;
 
 namespace FightClub.Infrastructure.Authentication;
 

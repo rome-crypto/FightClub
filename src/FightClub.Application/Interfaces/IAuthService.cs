@@ -1,4 +1,4 @@
-using FightClub.Application.DTOs.Auth;
+﻿using FightClub.Application.DTOs.Auth;
 
 namespace FightClub.Application.Interfaces;
 

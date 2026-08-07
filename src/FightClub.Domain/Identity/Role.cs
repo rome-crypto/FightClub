@@ -30,7 +30,7 @@ public sealed class Role : Entity
 
     public void RemovePermission(Guid permissionId)
     {
-        RolePermission permission = _permissions.Find(x => x.Id == permissionId) 
+        RolePermission permission = _permissions.Find(x => x.Id == permissionId)
             ?? throw new Exception("Permission not found");
 
         _permissions.Remove(permission);

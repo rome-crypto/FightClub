@@ -23,7 +23,7 @@ public sealed class User : Entity
     public IReadOnlyCollection<UserRole> Roles => _roles;
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens;
 
-    public IReadOnlyCollection<string> RoleNames => 
+    public IReadOnlyCollection<string> RoleNames =>
         _roles.Select(x => x.Role.Name ?? string.Empty)
         .Where(n => !string.IsNullOrEmpty(n))
         .ToList();
@@ -110,7 +110,7 @@ public sealed class User : Entity
         {
             throw new InvalidOperationException("User deactivated");
         }
-        UserRole userRole = _roles.Find(x => x.Id == roleId) 
+        UserRole userRole = _roles.Find(x => x.Id == roleId)
             ?? throw new InvalidOperationException("Role not found");
         _roles.Remove(userRole);
     }
@@ -130,7 +130,7 @@ public sealed class User : Entity
         {
             throw new InvalidOperationException("User deactivated");
         }
-        
+
         RefreshToken token = _refreshTokens.Find(x => x.Id == tokenId)
             ?? throw new InvalidOperationException("Token not found");
 
