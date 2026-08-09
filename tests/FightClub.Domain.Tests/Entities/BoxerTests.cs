@@ -35,7 +35,7 @@ public sealed class BoxerTests
     //[TestMethod]
     //public void RegisterWinWithValidParameters()
     //{
-        
+
     //}
 }
 
