@@ -1,3 +1,8 @@
+api:
+  build:
+    context: ./src/FightClub.Api
+    dockerfile: Dockerfileversion: "3.9"
+
 services:
 
   api:
@@ -5,13 +10,13 @@ services:
 
     build:
       context: .
-      dockerfile: src/FightClub.Api/Dockerfile
+      dockerfile: src/FightClub/Dockerfile
 
     env_file:
       - .env
 
     ports:
-      - "8080:8080"
+      - "5000:8080"
 
     depends_on:
       db:
@@ -48,13 +53,17 @@ services:
   pgadmin:
     container_name: fightclub.pgadmin
     image: dpage/pgadmin4
+
     env_file:
       - .env
+
     ports:
       - "5050:80"
+
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_started
+
     networks:
       - fightclub-net
 
