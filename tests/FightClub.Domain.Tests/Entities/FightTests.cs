@@ -546,4 +546,185 @@ public class FightTests
         Assert.IsFalse(state4);
         Assert.IsFalse(state5);
     }
+
+    [TestMethod]
+    public void FightWithMaxPlannedRoundsShouldSucceed()
+    {
+        // Arrange & Act
+        var fight = new Fight(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow.AddDays(7),
+            Fight.MaxPlannedRounds);
+
+        // Assert
+        Assert.AreEqual(Fight.MaxPlannedRounds, fight.PlannedRounds);
+    }
+
+    [TestMethod]
+    public void FightWithPlannedRoundsLessThanMinimumShouldThrow()
+    {
+        // Arrange & Act & Assert
+        Assert.ThrowsExactly<DomainException>(() =>
+            new Fight(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                DateTime.UtcNow.AddDays(7),
+                0));
+    }
+
+    [TestMethod]
+    public void StartWhenFightIsCreatedShouldThrow()
+    {
+        // Arrange
+        var fight = new Fight(Guid.NewGuid(), Guid.NewGuid());
+
+        // Act & Assert
+        Assert.ThrowsExactly<DomainException>(() => fight.Start());
+    }
+
+    [TestMethod]
+    public void CancelWhenFightIsCreatedShouldThrow()
+    {
+        // Arrange
+        var fight = new Fight(Guid.NewGuid(), Guid.NewGuid());
+
+        // Act & Assert
+        Assert.ThrowsExactly<DomainException>(() => fight.Cancel());
+    }
+
+    [TestMethod]
+    public void EnsureCanBeDeletedScheduledFightShouldSucceed()
+    {
+        // Arrange
+        var fight = new Fight(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow.AddDays(7));
+
+        // Act
+        fight.EnsureCanBeDeleted();
+
+        // Assert - no exception
+    }
+
+    [TestMethod]
+    public void EnsureCanBeDeletedInProgressFightShouldThrow()
+    {
+        // Arrange
+        var fight = new Fight(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow.AddDays(7));
+        fight.Start();
+
+        // Act & Assert
+        Assert.ThrowsExactly<DomainException>(() => fight.EnsureCanBeDeleted());
+    }
+
+    [TestMethod]
+    public void EnsureCanBeDeletedFinishedFightShouldThrow()
+    {
+        // Arrange
+        var fight = new Fight(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow.AddDays(7));
+        fight.Start();
+        fight.Complete(FightOutcome.Finish(
+            fight.BoxerAId,
+            FightEndType.Decision));
+
+        // Act & Assert
+        Assert.ThrowsExactly<DomainException>(() => fight.EnsureCanBeDeleted());
+    }
+
+    [TestMethod]
+    public void CompleteFightWithWinnerShouldSetWinnerAndEndType()
+    {
+        // Arrange
+        var boxerAId = Guid.NewGuid();
+        var boxerBId = Guid.NewGuid();
+        var fight = new Fight(boxerAId, boxerBId, DateTime.UtcNow.AddDays(7));
+        fight.Start();
+
+        // Act
+        var outcome = FightOutcome.Finish(boxerAId, FightEndType.Knockout);
+        fight.Complete(outcome);
+
+        // Assert
+        Assert.AreEqual(FightStatus.Finished, fight.Status);
+        Assert.AreEqual(boxerAId, fight.WinnerId);
+        Assert.AreEqual(FightEndType.Knockout, fight.EndType);
+    }
+
+    [TestMethod]
+    public void CompleteFightWithDrawShouldHaveNoWinner()
+    {
+        // Arrange
+        var boxerAId = Guid.NewGuid();
+        var boxerBId = Guid.NewGuid();
+        var fight = new Fight(boxerAId, boxerBId, DateTime.UtcNow.AddDays(7));
+        fight.Start();
+
+        // Act
+        var outcome = FightOutcome.Finish(null, FightEndType.Draw);
+        fight.Complete(outcome);
+
+        // Assert
+        Assert.AreEqual(FightStatus.Finished, fight.Status);
+        Assert.IsNull(fight.WinnerId);
+        Assert.AreEqual(FightEndType.Draw, fight.EndType);
+    }
+
+    [TestMethod]
+    public void FullFightSimulationWithThreeRoundsShouldFinishCorrectly()
+    {
+        // Arrange
+        var boxerAId = Guid.NewGuid();
+        var boxerBId = Guid.NewGuid();
+        var fight = new Fight(boxerAId, boxerBId, DateTime.UtcNow.AddDays(7), 3);
+        var policy = new BoxingFightEndingPolicy();
+
+        fight.Start();
+
+        // Act - Round 1
+        fight.StartRound();
+        fight.EndCurrentRound(new RoundScore(10, 9), policy);
+
+        // Round 2
+        fight.StartRound();
+        fight.EndCurrentRound(new RoundScore(10, 8), policy);
+
+        // Round 3
+        fight.StartRound();
+        fight.EndCurrentRound(new RoundScore(9, 10), policy);
+
+        // Assert
+        Assert.AreEqual(FightStatus.Finished, fight.Status);
+        Assert.AreEqual(3, fight.ActualRounds);
+        Assert.AreEqual(boxerAId, fight.WinnerId);
+        Assert.AreEqual(FightEndType.Decision, fight.EndType);
+        Assert.AreEqual(29, fight.Rounds.Sum(r => r.ScoreA));
+        Assert.AreEqual(27, fight.Rounds.Sum(r => r.ScoreB));
+    }
+
+    [TestMethod]
+    public void StartRoundWhenFightFinishedShouldThrow()
+    {
+        // Arrange
+        var fight = new Fight(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            DateTime.UtcNow.AddDays(7),
+            1);
+        var policy = new BoxingFightEndingPolicy();
+
+        fight.Start();
+        fight.StartRound();
+        fight.EndCurrentRound(new RoundScore(10, 9), policy);
+
+        // Act & Assert
+        Assert.ThrowsExactly<DomainException>(() => fight.StartRound());
+    }
 }

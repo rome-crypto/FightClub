@@ -20,6 +20,12 @@ services:
     networks:
       - fightclub-net
 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
 
   db:
     container_name: fightclub.db
